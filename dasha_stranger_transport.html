@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>V4 — Даша: Побег из Изнанки</title>
+<style>
+:root{
+  --bg:#070913;
+  --card:#141a2d;
+  --card2:#1e2743;
+  --red:#ff3045;
+  --red2:#b31326;
+  --cyan:#67e8f9;
+  --yellow:#ffe14d;
+  --green:#6dff8f;
+  --purple:#a78bfa;
+  --text:#f7f8ff;
+  --muted:#b8c0d9;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--text);background:var(--bg)}
+body{
+  background:
+  radial-gradient(circle at 10% 0%, rgba(255,48,69,.22), transparent 25%),
+  radial-gradient(circle at 80% 10%, rgba(103,232,249,.15), transparent 30%),
+  linear-gradient(140deg,#070913,#0e1427 50%,#05060a);
+  overflow-x:hidden;
+}
+body.shake{animation:shake .18s linear 3}
+@keyframes shake{0%{transform:translate(0)}25%{transform:translate(3px,-2px)}50%{transform:translate(-3px,2px)}75%{transform:translate(2px,3px)}100%{transform:translate(0)}}
+.wrap{max-width:1150px;margin:0 auto;padding:16px}
+.hero,.panel{
+  border:1px solid rgba(255,255,255,.13);
+  background:linear-gradient(135deg,rgba(20,26,45,.96),rgba(30,39,67,.92));
+  border-radius:28px;
+  padding:22px;
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+  position:relative;
+  overflow:hidden;
+}
+.hero:before,.panel:before{
+  content:"";position:absolute;inset:-60px;opacity:.09;pointer-events:none;
+  background-image:linear-gradient(90deg,var(--red) 1px,transparent 1px),linear-gradient(var(--cyan) 1px,transparent 1px);
+  background-size:32px 32px;transform:rotate(-7deg)
+}
+.hero>* , .panel>*{position:relative}
+h1{font-size:clamp(30px,5vw,58px);margin:0 0 8px;letter-spacing:.5px}
+h2{font-size:clamp(24px,3vw,36px);margin:0 0 8px}
+p{line-height:1.45}
+.subtitle{color:var(--muted);font-size:18px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.badge{
+  display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:8px 12px;margin:4px 4px 4px 0
+}
+button{
+  border:0;border-radius:16px;padding:12px 16px;background:linear-gradient(135deg,var(--red),#ff7b3d);
+  color:white;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 10px 24px rgba(255,48,69,.2)
+}
+button:hover{filter:brightness(1.1)}
+button:disabled{opacity:.55;cursor:not-allowed}
+button.secondary{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);box-shadow:none}
+button.blue{background:linear-gradient(135deg,#0ea5e9,#22d3ee)}
+button.green{background:linear-gradient(135deg,#22c55e,#84cc16)}
+button.purple{background:linear-gradient(135deg,#8b5cf6,#ec4899)}
+.stats{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:14px 0
+}
+.stat{
+  background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12);
+  border-radius:18px;padding:10px;text-align:center
+}
+.stat b{display:block;font-size:25px;color:var(--yellow)}
+.progress{height:14px;border-radius:999px;background:rgba(255,255,255,.12);overflow:hidden;margin:12px 0}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--yellow),var(--cyan));transition:.3s}
+.panel{margin-top:16px;display:none}
+.panel.active{display:block}
+.task{
+  margin-top:12px;border-radius:24px;padding:16px;background:rgba(0,0,0,.24);
+  border:1px solid rgba(255,255,255,.12)
+}
+.options{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px;margin-top:12px}
+.option{
+  min-height:70px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;padding:14px;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-weight:800;font-size:18px
+}
+.option.selected{outline:3px solid var(--yellow);background:rgba(255,225,77,.18)}
+.feedback{min-height:32px;margin-top:12px;font-size:18px;font-weight:900}
+.ok{color:var(--green)}.bad{color:#ff8b8b}.warn{color:var(--yellow)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.card{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.13);border-radius:20px;padding:14px
+}
+.bigcn{font-size:34px;font-weight:900}
+.py{color:var(--cyan);font-weight:800}.ru{color:var(--muted)}
+.small{font-size:14px;color:var(--muted)}
+.monsterBox{position:relative;height:90px;background:rgba(255,255,255,.06);border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12);margin:10px 0}
+.monster{position:absolute;left:8px;top:12px;font-size:52px;transition:left .3s;filter:drop-shadow(0 8px 12px rgba(0,0,0,.4))}
+.safeDoor{position:absolute;right:12px;top:18px;font-size:42px}
+.timerRing{font-size:42px;color:var(--yellow);font-weight:900}
+.sixseven{
+  display:none;position:fixed;inset:0;z-index:10;background:rgba(5,6,10,.82);
+  align-items:center;justify-content:center;flex-direction:column;text-align:center
+}
+.sixseven.show{display:flex;animation:flash .4s linear 2}
+.sixseven div:first-child{font-size:clamp(48px,11vw,120px);font-weight:1000;color:var(--yellow);text-shadow:0 0 25px rgba(255,225,77,.6)}
+@keyframes flash{0%,100%{background:rgba(5,6,10,.82)}50%{background:rgba(255,48,69,.5)}}
+.word{display:inline-block;margin:5px;padding:10px 13px;border-radius:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);cursor:pointer;font-weight:800}
+.word.used{opacity:.35;pointer-events:none}
+.drop{min-height:64px;border:2px dashed rgba(103,232,249,.55);border-radius:18px;padding:12px;margin:10px 0;font-size:20px}
+.foodGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.foodItem{font-size:42px;padding:15px;border-radius:18px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);cursor:pointer;text-align:center}
+.foodItem.selected{outline:3px solid var(--green);background:rgba(109,255,143,.14)}
+.map{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.portal{
+  min-height:120px;border-radius:22px;background:radial-gradient(circle,rgba(103,232,249,.22),rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;flex-direction:column;font-size:36px;cursor:pointer
+}
+.portal span{font-size:18px;font-weight:900;margin-top:8px}
+.final{text-align:center;padding:30px}
+
+
+.recordBox{
+  margin-top:14px;
+  padding:14px;
+  border-radius:20px;
+  background:rgba(255,255,255,.075);
+  border:1px solid rgba(255,255,255,.14);
+}
+.audioPreview{
+  width:100%;
+  margin-top:10px;
+}
+.locked{
+  opacity:.55;
+  filter:grayscale(.3);
+}
+.emojiChoice{
+  font-size:42px;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);
+  cursor:pointer;
+  text-align:center;
+}
+.emojiChoice.selected{
+  outline:3px solid var(--yellow);
+  background:rgba(255,225,77,.18);
+}
+
+.cringeCard{
+  background:rgba(255,255,255,.085);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:18px;
+  padding:14px;
+  cursor:pointer;
+  min-height:78px;
+  font-size:19px;
+  font-weight:850;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.cringeCard:hover{outline:3px solid rgba(255,225,77,.45)}
+.cringeCard.marked{outline:3px solid var(--yellow);background:rgba(255,225,77,.18)}
+.cringeLabel{font-size:13px;color:var(--muted);margin-top:6px;font-weight:500}
+
+@media(max-width:720px){
+  .wrap{padding:10px}.hero,.panel{padding:16px;border-radius:22px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .map{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="sixseven" id="sixseven"><div>SIX SEVEN!!!</div><p>быстро-быстро, портал глючит 😎</p></div>
+<div class="wrap">
+  <section class="hero" id="home">
+    <h1>🚪 Даша: побег из Изнанки</h1>
+    <div class="subtitle">
+      Это уже не тест, а мини-игра: портал, монстр, таймер, еда, транспорт и внезапное <b>SIX SEVEN!!!</b>.
+      Нужно закрыть 7 разломов, а потом прочитать финальное китайское заклинание и не дать монстру догнать тебя.
+    </div>
+    <div style="margin:12px 0">
+      <span class="badge">🚇 坐地铁</span>
+      <span class="badge">🚲 骑自行车</span>
+      <span class="badge">✈️ 坐飞机</span>
+      <span class="badge">🏫 学校</span>
+      <span class="badge">🏪 商店</span>
+      <span class="badge">🍜 饭馆</span>
+      <span class="badge">🧇 вафли</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="score">0</b>очки</div>
+      <div class="stat"><b id="rifts">0/8</b>разломы</div>
+      <div class="stat"><b id="combo">0</b>combo</div>
+      <div class="stat"><b id="hp">5</b>жизни</div>
+      <div class="stat"><b id="time">—</b>таймер</div>
+    </div>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <div class="row">
+      <button onclick="startGame()">🎮 Играть</button>
+      <button class="secondary" onclick="openTraining()">📚 Быстро повторить слова</button>
+      <button class="blue" onclick="speak('我坐地铁去学校。')">🔊 Проверить китайский звук</button>
+    </div>
+  </section>
+
+  <section class="panel" id="training">
+    <h2>📚 Мини-повторение</h2>
+    <p class="small">Можно показать перед игрой на 1 минуту, потом закрыть.</p>
+    <div class="grid">
+      <div class="card"><div class="bigcn">家</div><div class="py">jiā</div><div class="ru">дом</div></div>
+      <div class="card"><div class="bigcn">学校</div><div class="py">xuéxiào</div><div class="ru">школа</div></div>
+      <div class="card"><div class="bigcn">中国</div><div class="py">Zhōngguó</div><div class="ru">Китай</div></div>
+      <div class="card"><div class="bigcn">商店</div><div class="py">shāngdiàn</div><div class="ru">магазин</div></div>
+      <div class="card"><div class="bigcn">饭馆</div><div class="py">fànguǎn</div><div class="ru">ресторан / кафе</div></div>
+      <div class="card"><div class="bigcn">走路</div><div class="py">zǒulù</div><div class="ru">идти пешком</div></div>
+      <div class="card"><div class="bigcn">坐地铁</div><div class="py">zuò dìtiě</div><div class="ru">ехать на метро</div></div>
+      <div class="card"><div class="bigcn">骑自行车</div><div class="py">qí zìxíngchē</div><div class="ru">ехать на велосипеде</div></div>
+    </div>
+    <p><button class="secondary" onclick="training.style.display='none'">Закрыть повторение</button></p>
+  </section>
+
+  <section class="panel" id="game">
+    <h2 id="title">Миссия</h2>
+    <div class="monsterBox">
+      <div class="monster" id="monster">👾</div>
+      <div class="safeDoor">🚪</div>
+    </div>
+    <div id="content"></div>
+  </section>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const training = $("training");
+let score=0, rifts=0, combo=0, hp=5, timer=null, timeLeft=0, monsterStep=0;
+let current=null, picked=[], selectedMulti=[];
+let mediaRecorder=null, recordedChunks=[], hasRecording=false;
+
+const places = [
+  {cn:"学校", ru:"школу", emoji:"🏫"},
+  {cn:"商店", ru:"магазин", emoji:"🏪"},
+  {cn:"饭馆", ru:"ресторан", emoji:"🍜"},
+  {cn:"家", ru:"дом", emoji:"🏠"},
+  {cn:"中国", ru:"Китай", emoji:"🇨🇳"}
+];
+
+const transports = [
+  {cn:"坐地铁", ru:"ехать на метро", emoji:"🚇"},
+  {cn:"坐公共汽车", ru:"ехать на автобусе", emoji:"🚌"},
+  {cn:"骑自行车", ru:"ехать на велосипеде", emoji:"🚲"},
+  {cn:"坐飞机", ru:"лететь на самолёте", emoji:"✈️"},
+  {cn:"走路", ru:"идти пешком", emoji:"🚶"}
+];
+
+const foods = [
+  {cn:"面条", ru:"лапша", emoji:"🍜", edible:true},
+  {cn:"饺子", ru:"пельмени", emoji:"🥟", edible:true},
+  {cn:"米饭", ru:"рис", emoji:"🍚", edible:true},
+  {cn:"包子", ru:"баоцзы", emoji:"🥟", edible:true},
+  {cn:"水", ru:"вода", emoji:"💧", edible:true},
+  {cn:"椅子", ru:"стул", emoji:"🪑", edible:false},
+  {cn:"床", ru:"кровать", emoji:"🛏️", edible:false},
+  {cn:"鞋", ru:"обувь", emoji:"👟", edible:false},
+  {cn:"地铁", ru:"метро", emoji:"🚇", edible:false},
+  {cn:"衣服", ru:"одежда", emoji:"👕", edible:false}
+];
+
+function shuffle(arr){
+  const a=[...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
+function safe(s){return String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\n/g," ")}
+function update(){
+  $("score").textContent=score;
+  $("rifts").textContent=rifts+"/7";
+  $("combo").textContent=combo;
+  $("hp").textContent=hp;
+  $("time").textContent=timer ? timeLeft : "—";
+  $("bar").style.width=(rifts/8*100)+"%";
+  $("monster").style.left = Math.min(monsterStep*12,75) + "%";
+}
+function openTraining(){training.style.display = training.style.display==="block" ? "none" : "block"}
+function speak(text){
+  if(!("speechSynthesis" in window)){alert("Звук не поддерживается этим браузером");return;}
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="zh-CN"; u.rate=.82; u.pitch=1.05;
+  speechSynthesis.speak(u);
+}
+
+function startGame(){
+  $("home").style.display="none";
+  training.style.display="none";
+  $("game").classList.add("active");
+  score=0; rifts=0; combo=0; hp=5; monsterStep=0;
+  update();
+  setGame("🚪 Сигнал из Изнанки",
+  `<div class="task">
+    <h2>Раунд начинается!</h2>
+    <p>Правила простые: отвечай быстро, собирай разломы, не давай монстру приблизиться.</p>
+    <p>Иногда экран будет кричать <b>SIX SEVEN!!!</b> — это нормально 😎</p>
+    <button class="green" onclick="nextRound()">Погнали!</button>
+    <div class="feedback" id="fb"></div>
+  </div>`);
+}
+
+function startTimer(seconds){
+  clearInterval(timer);
+  timeLeft=seconds; update();
+  timer=setInterval(()=>{
+    timeLeft--; update();
+    if(timeLeft<=0){
+      clearInterval(timer); timer=null;
+      fail("Время вышло! Монстр ближе 😈");
+    }
+  },1000);
+}
+function stopTimer(){clearInterval(timer);timer=null;update()}
+function setGame(title, html, seconds=0){
+  $("game").classList.add("active");
+  $("title").innerHTML=title;
+  $("content").innerHTML=html;
+  if(seconds) startTimer(seconds); else stopTimer();
+}
+function success(msg="Разлом закрыт ✨", pts=10){
+  stopTimer();
+  combo++;
+  const speedBonus = Math.max(0,timeLeft)*2;
+  score += pts + combo*3 + speedBonus;
+  rifts++;
+  monsterStep=Math.max(0,monsterStep-1);
+  update();
+  $("fb").innerHTML=`<span class="ok">${msg} +${pts+combo*3+speedBonus}</span>`;
+  document.querySelectorAll("button").forEach(b=>{ if(!b.classList.contains("keep")) b.disabled=true; });
+  maybeSixSeven();
+  setTimeout(()=> rifts>=7 ? finalBossIntro() : nextRound(), 950);
+}
+function fail(msg="Не-а!"){
+  combo=0; hp--; monsterStep++;
+  document.body.classList.add("shake");
+  setTimeout(()=>document.body.classList.remove("shake"),350);
+  update();
+  const fb=$("fb"); if(fb) fb.innerHTML=`<span class="bad">${msg}</span>`;
+  if(hp<=0){ setTimeout(gameOver,900); }
+}
+function maybeSixSeven(){
+  if(Math.random()<0.28 || combo===3){
+    $("sixseven").classList.add("show");
+    speak("Six Seven!");
+    setTimeout(()=>$("sixseven").classList.remove("show"),800);
+  }
+}
+function nextRound(){
+  const modes=[portalGame,audioTrap,feedMonster,findFake,cringeDetector,cringeTranslator,sentenceBuilder,transportLogic,speedSixSeven,memoryMeaning,rapidRun];
+  shuffle(modes)[0]();
+}
+
+function finalBossIntro(){
+  stopTimer();
+  setGame("👾 Финальный босс: монстр не уйдёт без чтения",
+  `<div class="task">
+    <div style="font-size:62px;text-align:center">👾🚪📖</div>
+    <h2>Осталось последнее: прочитать китайский текст вслух</h2>
+    <p>Монстр боится только китайского чтения. Нужно прослушать пример, прочитать самой и потом ответить на вопрос по тексту.</p>
+    <p class="small">Можно читать не идеально. Главное — вслух, смело и до конца.</p>
+    <button class="purple" onclick="finalReading()">Открыть текст-заклинание</button>
+    <div class="feedback" id="fb"></div>
+  </div>`);
+}
+
+function finalReading(){
+  hasRecording=false;
+  selectedMulti=[];
+  current = {
+    text:"你好！我是小怪物。我坐地铁去学校。我骑自行车去商店。我走路去饭馆。我喜欢吃面条和饺子。今天我很开心。再见！",
+    emojiCorrect:["👾","🚇","🏫","🚲","🏪","🚶","🍜","🥟","😊"],
+    emojiOptions:["👾","🚇","🏫","🚲","🏪","🚶","🍜","🥟","😊","✈️","🛏️","👟","🪑","🇨🇳","😡"]
+  };
+  setGame("📖 Финальное чтение: аудио-миссия",
+  `<div class="task">
+    <p><b>Шаг 1.</b> Послушай пример, потом прочитай текст сама и запиши аудио.</p>
+    <button class="blue" onclick="speak(current.text)">🔊 Послушать весь текст</button>
+    <button class="secondary" onclick="speak('你好！我是小怪物。')">🔊 1</button>
+    <button class="secondary" onclick="speak('我坐地铁去学校。')">🔊 2</button>
+    <button class="secondary" onclick="speak('我骑自行车去商店。')">🔊 3</button>
+    <button class="secondary" onclick="speak('我走路去饭馆。')">🔊 4</button>
+    <button class="secondary" onclick="speak('我喜欢吃面条和饺子。')">🔊 5</button>
+    <button class="secondary" onclick="speak('今天我很开心。再见！')">🔊 6</button>
+
+    <div style="margin-top:14px;padding:16px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:26px;line-height:1.7">
+      你好！我是小怪物。<br>
+      我坐地铁去学校。<br>
+      我骑自行车去商店。<br>
+      我走路去饭馆。<br>
+      我喜欢吃面条和饺子。<br>
+      今天我很开心。<br>
+      再见！
+    </div>
+
+    <div class="recordBox">
+      <p><b>Шаг 2.</b> Запиши, как ты читаешь этот текст. Без записи миссию отправить нельзя 😈</p>
+      <div class="row">
+        <button class="purple" onclick="startRecording()">🎙 Начать запись</button>
+        <button class="secondary" onclick="stopRecording()">⏹ Остановить запись</button>
+      </div>
+      <p class="small" id="recStatus">Статус: запись ещё не сделана.</p>
+      <audio id="audioPreview" class="audioPreview" controls style="display:none"></audio>
+    </div>
+
+    <p><b>Шаг 3.</b> После записи откроется кнопка отправки.</p>
+    <button id="sendReadingBtn" class="green locked" onclick="readingSent()" disabled>✅ Отправить аудио-миссию монстру</button>
+    <div class="feedback" id="fb"></div>
+  </div>`);
+}
+
+async function startRecording(){
+  try{
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+      $("recStatus").textContent="Браузер не дал доступ к микрофону. Можно прочитать вслух учителю, а учитель нажмёт «разрешить без записи».";
+      $("fb").innerHTML=`<span class="warn">Микрофон не поддерживается. Учитель может засчитать чтение вручную.</span><br><button class="secondary keep" onclick="manualReadingPass()">✅ Учитель подтверждает: текст прочитан вслух</button>`;
+      return;
+    }
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    recordedChunks=[];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      const blob = new Blob(recordedChunks, {type:"audio/webm"});
+      const url = URL.createObjectURL(blob);
+      const audio=$("audioPreview");
+      audio.src=url;
+      audio.style.display="block";
+      hasRecording=true;
+      const btn=$("sendReadingBtn");
+      btn.disabled=false;
+      btn.classList.remove("locked");
+      $("recStatus").textContent="Статус: аудио записано! Можно прослушать и отправить.";
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    mediaRecorder.start();
+    $("recStatus").textContent="Статус: идёт запись... читай текст вслух!";
+  }catch(e){
+    $("recStatus").textContent="Не получилось включить микрофон. Возможно, браузер заблокировал доступ.";
+    $("fb").innerHTML=`<span class="warn">Можно прочитать вслух учителю, а учитель нажмёт подтверждение.</span><br><button class="secondary keep" onclick="manualReadingPass()">✅ Учитель подтверждает: текст прочитан вслух</button>`;
+  }
+}
+
+function stopRecording(){
+  if(mediaRecorder && mediaRecorder.state==="recording"){
+    mediaRecorder.stop();
+  } else {
+    $("recStatus").textContent="Сначала нажми «Начать запись».";
+  }
+}
+
+function manualReadingPass(){
+  hasRecording=true;
+  const btn=$("sendReadingBtn");
+  btn.disabled=false;
+  btn.classList.remove("locked");
+  $("recStatus").textContent="Статус: учитель подтвердил чтение вслух.";
+}
+
+function readingSent(){
+  if(!hasRecording){
+    $("fb").innerHTML=`<span class="bad">Сначала нужно записать чтение или получить подтверждение учителя.</span>`;
+    return;
+  }
+  score += 30;
+  combo += 1;
+  update();
+  $("fb").innerHTML = `<span class="ok">Аудио-миссия отправлена! Теперь выбери эмодзи по тексту...</span>`;
+  setTimeout(finalEmojiTask,900);
+}
+
+function finalEmojiTask(){
+  selectedMulti=[];
+  const opts=shuffle(current.emojiOptions);
+  setGame("🧠 Финал: выбери эмодзи к тексту",
+  `<div class="task">
+    <p>Выбери только те эмодзи, которые подходят к тексту.</p>
+
+    <div style="margin:12px 0;padding:14px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:22px;line-height:1.6">
+      你好！我是小怪物。<br>
+      我坐地铁去学校。<br>
+      我骑自行车去商店。<br>
+      我走路去饭馆。<br>
+      我喜欢吃面条和饺子。<br>
+      今天我很开心。<br>
+      再见！
+    </div>
+
+    <p class="small">Теперь смотри на текст и выбирай эмодзи 👇</p>
+
+    <div class="foodGrid">
+      ${opts.map(e=>`<div class="emojiChoice" onclick="toggleEmoji(this,'${e}')">${e}</div>`).join("")}
+    </div>
+
+    <p><button class="green" onclick="checkFinalEmoji()">Проверить эмодзи</button></p>
+    <div class="feedback" id="fb"></div>
+  </div>`,20);
+}
+
+function toggleEmoji(el,e){
+  el.classList.toggle("selected");
+  if(selectedMulti.includes(e)) selectedMulti=selectedMulti.filter(x=>x!==e);
+  else selectedMulti.push(e);
+}
+
+function checkFinalEmoji(){
+  const got=selectedMulti.sort().join("|");
+  const correct=current.emojiCorrect.sort().join("|");
+  if(got===correct){
+    stopTimer();
+    score += 50 + combo*5 + Math.max(0,timeLeft)*2;
+    combo++;
+    update();
+    $("fb").innerHTML = `<span class="ok">Да! Текст прочитан, аудио отправлено, эмодзи выбраны. Монстр побеждён! 📖🎙✨</span>`;
+    document.querySelectorAll("button").forEach(b=>b.disabled=true);
+    setTimeout(finalScreen,1000);
+  } else {
+    fail("Почти! Но какие-то эмодзи лишние или чего-то не хватает.");
+  }
+}
+
+function finalScreen(){
+  stopTimer();
+  setGame("🎉 Финал: портал закрыт!",
+  `<div class="task final">
+    <div style="font-size:70px">🚪✨🧇</div>
+    <h2>Аудио-заклинание победило Изнанку!</h2>
+    <p>Очки: <b>${score}</b>. Combo финала: <b>${combo}</b>.</p>
+    <p>Монстр услышал китайское аудио, увидел правильные эмодзи и ушёл есть вафли.</p>
+    <button onclick="location.reload()">Играть ещё раз</button>
+  </div>`);
+}
+function gameOver(){
+  stopTimer();
+  setGame("😈 Монстр догнал!",
+  `<div class="task final">
+    <div style="font-size:70px">👾💨</div>
+    <h2>Не страшно, это тренировочный забег</h2>
+    <p>Очки: <b>${score}</b>. Закрыто разломов: <b>${rifts}/7</b>.</p>
+    <button onclick="location.reload()">Начать заново</button>
+  </div>`);
+}
+function optionHTML(opts, correct, fn="checkOne"){
+  return `<div class="options">` + shuffle(opts).map(o=>`<button class="option" onclick="${fn}('${safe(o)}','${safe(correct)}')">${o}</button>`).join("") + `</div><div class="feedback" id="fb"></div>`;
+}
+function checkOne(ans, correct){
+  if(ans===correct) success("Да! Правильно 🔥");
+  else fail("Не тот вариант. Думай быстрее!");
+}
+function portalGame(){
+  const place=pick(places.filter(p=>p.cn!=="中国"));
+  const tr=pick(transports.filter(t=> !(t.cn==="坐飞机" && place.cn!=="中国")));
+  const phrase=`我${tr.cn}去${place.cn}。`;
+  current={phrase, correct:place.cn};
+  const shown=shuffle(places.filter(p=>p.cn!=="中国").slice(0,4));
+  if(!shown.some(p=>p.cn===place.cn)){ shown[0]=place; }
+  setGame("🚪 Мини-игра: попади в портал",
+  `<div class="task">
+    <p>Слушай фразу и нажми нужный портал. Текста-подсказки нет 😈</p>
+    <button class="blue" onclick="speak(current.phrase)">🔊 Слушать</button>
+    <div class="map">
+      ${shuffle(shown).map(p=>`<div class="portal" onclick="checkPortal('${p.cn}')"><div>${p.emoji}</div><span>${p.cn}</span></div>`).join("")}
+    </div>
+    <div class="feedback" id="fb"></div>
+  </div>`,8);
+}
+function checkPortal(ans){
+  if(ans===current.correct) success("Портал выбран верно 🚪✨",12);
+  else fail("Не тот портал! Монстр услышал шум.");
+}
+function audioTrap(){
+  const place=pick(places);
+  let tr= place.cn==="中国" ? pick(transports.filter(t=>["坐飞机","坐公共汽车"].includes(t.cn))) : pick(transports.filter(t=>t.cn!=="坐飞机"));
+  const phrase=`我${tr.cn}去${place.cn}。`;
+  const correct=`我${tr.cn}去${place.cn}`;
+  let opts=[
+    correct,
+    `我${pick(transports.filter(t=>t.cn!==tr.cn)).cn}去${place.cn}`,
+    `我${tr.cn}去${pick(places.filter(p=>p.cn!==place.cn)).cn}`,
+    `我吃${pick(foods.filter(f=>f.edible)).cn}`
+  ];
+  current={phrase};
+  setGame("🔊 Мини-игра: фальшивый звук",
+  `<div class="task">
+    <p>Послушай и выбери точное предложение. Варианты похожие!</p>
+    <button class="blue" onclick="speak(current.phrase)">🔊 Слушать</button>
+    ${optionHTML(opts,correct)}
+  </div>`,10);
+}
+function feedMonster(){
+  selectedMulti=[];
+  const options=shuffle([...foods]).slice(0,6);
+  if(!options.some(f=>f.edible)) options[0]=pick(foods.filter(f=>f.edible));
+  if(!options.some(f=>!f.edible)) options[1]=pick(foods.filter(f=>!f.edible));
+  current={correct:options.filter(f=>f.edible).map(f=>f.cn).sort().join("|")};
+  setGame("🍜 Мини-игра: накорми монстра",
+  `<div class="task">
+    <p>Монстр кричит: <b>我饿了!!!</b> Выбери ВСЁ, что можно есть или пить.</p>
+    <div class="foodGrid">
+      ${options.map(f=>`<div class="foodItem" onclick="toggleFood(this,'${f.cn}')"><div>${f.emoji}</div><div style="font-size:20px">${f.cn}</div></div>`).join("")}
+    </div>
+    <p><button class="green" onclick="checkFood()">Проверить рюкзак</button></p>
+    <div class="feedback" id="fb"></div>
+  </div>`,14);
+}
+function toggleFood(el,cn){
+  el.classList.toggle("selected");
+  if(selectedMulti.includes(cn)) selectedMulti=selectedMulti.filter(x=>x!==cn);
+  else selectedMulti.push(cn);
+}
+function checkFood(){
+  const got=selectedMulti.sort().join("|");
+  if(got===current.correct) success("Монстр накормлен. Теперь он добрый 🧇",14);
+  else fail("В рюкзак попало что-то не то. Монстр не ест стул!");
+}
+
+function cringeDetector(){
+  selectedMulti=[];
+  const sets = [
+    {
+      title:"Найди ВСЕ кринжовые фразы",
+      normal:["我坐地铁去学校","我骑自行车去商店","我走路去饭馆"],
+      cringe:["我吃地铁","我坐面条去学校","我骑椅子去商店"]
+    },
+    {
+      title:"Монстр написал домашку. Где кринж?",
+      normal:["我吃面条","我喝水","我坐飞机去中国"],
+      cringe:["我喝鞋","我吃床","我坐饺子去学校"]
+    },
+    {
+      title:"Разлом путает слова. Отметь кринж.",
+      normal:["我回家","我去商店","我喜欢饺子"],
+      cringe:["我吃学校","我穿地铁","我坐水去中国"]
+    },
+    {
+      title:"Кринж или норм? Выбери плохие предложения.",
+      normal:["我坐公共汽车去学校","我走路去商店","我喜欢红色的衣服"],
+      cringe:["我骑飞机去饭馆","我吃自行车","我坐椅子去中国"]
+    }
+  ];
+  const s=pick(sets);
+  const cards=shuffle([...s.normal.map(x=>({txt:x,bad:false})),...s.cringe.map(x=>({txt:x,bad:true}))]).slice(0,5);
+  if(!cards.some(c=>c.bad)) cards[0]={txt:pick(s.cringe),bad:true};
+  current={correct:cards.filter(c=>c.bad).map(c=>c.txt).sort().join("|")};
+  setGame("🚨 КРИНЖ-ДЕТЕКТОР",
+  `<div class="task">
+    <p><b>${s.title}</b></p>
+    <p class="small">Можно выбрать несколько. Нажми на все предложения, где монстр совсем сломал китайский.</p>
+    <div class="options">
+      ${cards.map(c=>`<div class="cringeCard" onclick="toggleCringe(this,'${safe(c.txt)}')">${c.txt}<div class="cringeLabel">нажми, если это кринж</div></div>`).join("")}
+    </div>
+    <p><button class="green" onclick="checkCringe()">Проверить кринж</button></p>
+    <div class="feedback" id="fb"></div>
+  </div>`,18);
+}
+function toggleCringe(el,txt){
+  el.classList.toggle("marked");
+  if(selectedMulti.includes(txt)) selectedMulti=selectedMulti.filter(x=>x!==txt);
+  else selectedMulti.push(txt);
+}
+function checkCringe(){
+  const got=selectedMulti.sort().join("|");
+  if(got===current.correct) success("Кринж обезврежен! Монстру стыдно 😎",18);
+  else fail("Не весь кринж пойман. Где-то ещё «едят метро» 😈");
+}
+
+function cringeTranslator(){
+  const data = pick([
+    {
+      q:"我吃地铁",
+      correct:"Я ем метро 😂",
+      opts:["Я ем метро 😂","Я еду на метро","Я иду в школу","Я ем лапшу"]
+    },
+    {
+      q:"我坐面条去学校",
+      correct:"Я еду на лапше в школу 😂",
+      opts:["Я еду на лапше в школу 😂","Я ем лапшу в школе","Я еду на метро в школу","Я иду пешком домой"]
+    },
+    {
+      q:"我喝鞋",
+      correct:"Я пью обувь 😂",
+      opts:["Я пью обувь 😂","Я надеваю обувь","Я пью воду","Я покупаю обувь"]
+    },
+    {
+      q:"我骑飞机去饭馆",
+      correct:"Я еду верхом на самолёте в ресторан 😂",
+      opts:["Я еду верхом на самолёте в ресторан 😂","Я лечу на самолёте в Китай","Я еду на велосипеде в ресторан","Я иду в ресторан"]
+    },
+    {
+      q:"我坐饺子去中国",
+      correct:"Я еду на пельменях в Китай 😂",
+      opts:["Я еду на пельменях в Китай 😂","Я ем пельмени в Китае","Я лечу в Китай","Я иду в магазин"]
+    },
+    {
+      q:"我吃学校",
+      correct:"Я ем школу 😂",
+      opts:["Я ем школу 😂","Я иду в школу","Я ем в школе","Я люблю школу"]
+    }
+  ]);
+  setGame("😂 Переведи кринж монстра",
+  `<div class="task">
+    <p>Монстр сказал: <b style="font-size:32px">${data.q}</b></p>
+    <p>Что это буквально значит?</p>
+    ${optionHTML(data.opts,data.correct)}
+  </div>`,10);
+}
+
+function findFake(){
+  const normals=[
+    "我坐地铁去学校",
+    "我骑自行车去商店",
+    "我走路去饭馆",
+    "我坐飞机去中国",
+    "我吃面条",
+    "我喝水",
+    "我回家"
+  ];
+  const fakes=[
+    "我吃地铁",
+    "我坐面条去学校",
+    "我骑飞机去商店",
+    "我吃椅子",
+    "我喝鞋",
+    "我坐饺子去中国",
+    "我吃学校",
+    "我穿饭馆"
+  ];
+  const fake=pick(fakes);
+  const good=shuffle(normals).slice(0,3);
+  setGame("🚨 Самозванец из Изнанки: найди кринж",
+  `<div class="task">
+    <p>Три фразы нормальные. Одна — полный кринж. Поймай её 😅</p>
+    ${optionHTML([...good,fake],fake)}
+  </div>`,10);
+}
+function sentenceBuilder(){
+  picked=[];
+  const data=pick([
+    {ru:"Я еду на метро в школу.", words:["我","坐","地铁","去","学校"], ans:"我 坐 地铁 去 学校"},
+    {ru:"Я еду на велосипеде в магазин.", words:["我","骑","自行车","去","商店"], ans:"我 骑 自行车 去 商店"},
+    {ru:"Я иду пешком в ресторан.", words:["我","走路","去","饭馆"], ans:"我 走路 去 饭馆"},
+    {ru:"Я лечу на самолёте в Китай.", words:["我","坐","飞机","去","中国"], ans:"我 坐 飞机 去 中国"}
+  ]);
+  current=data;
+  setGame("🧩 Мини-игра: собери фразу до сирены",
+  `<div class="task">
+    <p>${data.ru}</p>
+    <div class="drop" id="drop">нажимай слова по порядку...</div>
+    <div>${shuffle(data.words).map(w=>`<span class="word" onclick="pickWord(this,'${w}')">${w}</span>`).join("")}</div>
+    <p><button class="green" onclick="checkBuild()">Проверить</button></p>
+    <div class="feedback" id="fb"></div>
+  </div>`,16);
+}
+function pickWord(el,w){
+  el.classList.add("used"); picked.push(w); $("drop").textContent=picked.join(" ");
+}
+function checkBuild(){
+  if(picked.join(" ")===current.ans) success("Фраза собрана, сирена выключена 🚨",15);
+  else fail("Порядок слов сломался. Кто + как + куда.");
+}
+function transportLogic(){
+  const data=pick([
+    {q:"Нужно попасть в 中国. Что логичнее?", correct:"坐飞机", opts:["坐飞机","走路","骑自行车","坐地铁"]},
+    {q:"До школы рядом. Что может быть логично?", correct:"走路", opts:["走路","坐飞机","吃面条","穿鞋"]},
+    {q:"В магазин недалеко и быстро. Что подходит?", correct:"骑自行车", opts:["骑自行车","坐飞机","吃水","坐床"]},
+    {q:"В городе можно ехать под землёй. Что это?", correct:"坐地铁", opts:["坐地铁","坐飞机","吃饺子","回家"]}
+  ]);
+  setGame("🧠 Мини-игра: логика транспорта",
+  `<div class="task"><p>${data.q}</p>${optionHTML(data.opts,data.correct)}</div>`,9);
+}
+function speedSixSeven(){
+  const correct="SIX SEVEN!!!";
+  const opts=["SIX SEVEN!!!","sixteen seven","sixty six","seven six"];
+  setGame("⚡ Мем-атака",
+  `<div class="task">
+    <p>Экран глючит. Нужно нажать настоящий мем.</p>
+    <p class="timerRing">SIX...?</p>
+    ${optionHTML(opts,correct)}
+  </div>`,5);
+}
+function memoryMeaning(){
+  const data=pick([
+    {q:"商店", correct:"магазин", opts:["магазин","ресторан","школа","дом"]},
+    {q:"饭馆", correct:"ресторан / кафе", opts:["ресторан / кафе","магазин","Китай","метро"]},
+    {q:"骑自行车", correct:"ехать на велосипеде", opts:["ехать на велосипеде","ехать на метро","лететь","идти пешком"]},
+    {q:"走路", correct:"идти пешком", opts:["идти пешком","ехать на автобусе","есть лапшу","пить воду"]}
+  ]);
+  setGame("🧠 Мини-игра: память Изнанки",
+  `<div class="task"><p>Что значит <b style="font-size:30px">${data.q}</b>?</p>${optionHTML(data.opts,data.correct)}</div>`,8);
+}
+function rapidRun(){
+  const data=pick([
+    {q:"我坐公共汽车去学校。", correct:"На автобусе в школу", opts:["На автобусе в школу","Пешком домой","На самолёте в Китай","В ресторан есть лапшу"]},
+    {q:"我走路回家。", correct:"Пешком домой", opts:["Пешком домой","На метро в школу","На велосипеде в магазин","На самолёте в Китай"]},
+    {q:"我去饭馆吃面条。", correct:"В ресторан есть лапшу", opts:["В ресторан есть лапшу","В школу на метро","В магазин за обувью","Домой пешком"]},
+    {q:"我坐地铁去学校。", correct:"На метро в школу", opts:["На метро в школу","На велосипеде в магазин","Пешком в ресторан","На самолёте в Китай"]}
+  ]);
+  current={phrase:data.q};
+  setGame("👾 Побег от монстра: быстрый слух",
+  `<div class="task">
+    <p>Монстр рядом. Слушай и отвечай быстро.</p>
+    <button class="blue" onclick="speak(current.phrase)">🔊 Слушать</button>
+    ${optionHTML(data.opts,data.correct)}
+  </div>`,7);
+}
+update();
+</script>
+</body>
+</html>
