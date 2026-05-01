@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Монстрики YCT1 — описываем и рисуем</title>
+<style>
+:root{
+  --ink:#26384d; --paper:#fffdf6; --line:#e8eff7; --accent:#ff8b6b; --blue:#77d8ff;
+  --green:#8ee37d; --yellow:#ffe070; --pink:#ffb8d2;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--ink);
+  font-family:"Arial Rounded MT Bold","Trebuchet MS",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 12% 8%, #ffe0ef 0 12%, transparent 30%),
+    radial-gradient(circle at 90% 12%, #d8f7ff 0 13%, transparent 32%),
+    linear-gradient(135deg,#fff5c7,#eaf8ff);
+}
+.wrap{max-width:1120px;margin:auto;padding:16px}
+header{
+  display:flex;gap:18px;align-items:center;padding:20px;border-radius:30px;background:rgba(255,255,255,.88);
+  border:3px solid #fff;box-shadow:0 14px 35px rgba(38,56,77,.12)
+}
+h1{font-size:clamp(25px,4vw,44px);margin:0;line-height:1.05}
+h2{font-size:30px;margin:0 0 10px}
+p{font-size:18px;line-height:1.45}
+.big{font-size:78px;filter:drop-shadow(0 8px 0 rgba(0,0,0,.08));animation:bob 2.6s infinite ease-in-out}
+@keyframes bob{50%{transform:translateY(-7px) rotate(3deg)}}
+.card{
+  margin:16px 0;padding:22px;background:rgba(255,255,255,.92);border:3px solid #fff;border-radius:30px;
+  box-shadow:0 14px 35px rgba(38,56,77,.10)
+}
+.progress{display:flex;gap:7px;margin:14px 0;flex-wrap:wrap}
+.dot{height:14px;min-width:35px;flex:1;border-radius:99px;background:white;border:2px solid rgba(38,56,77,.12)}
+.dot.done{background:linear-gradient(90deg,#8ee37d,#77d8ff)}
+.btn{
+  border:0;border-radius:18px;padding:13px 17px;margin:6px;font-size:18px;font-weight:800;cursor:pointer;color:var(--ink);
+  background:linear-gradient(#fff,#ffe9b6);box-shadow:0 5px 0 #e4bf62;transition:.1s
+}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 #e4bf62}
+.btn.primary{background:linear-gradient(#ffb28d,#ff7a5b);color:white;box-shadow:0 5px 0 #d85b3f}
+.btn.listen{background:linear-gradient(#dcf8ff,#90e7ff);box-shadow:0 5px 0 #58b9d2}
+.btn.danger{background:linear-gradient(#ffd5d5,#ff9a9a);box-shadow:0 5px 0 #e16d6d}
+.btn.small{font-size:15px;padding:9px 12px;border-radius:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
+.tile{
+  background:#fff;border:3px solid var(--line);border-radius:24px;min-height:124px;padding:14px;text-align:center;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;cursor:pointer
+}
+.tile:hover{border-color:#ffd177;transform:translateY(-2px)}
+.hanzi{font-size:31px;font-weight:900}
+.pinyin{font-size:16px;color:#5c7188}
+.ru{font-size:15px;color:#657184}
+.emoji{font-size:44px}
+.row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap}
+.feedback{min-height:34px;margin-top:10px;font-size:22px;font-weight:900}
+.good{color:#36ad59}.bad{color:#f05462}
+.monsterBox{
+  display:flex;justify-content:center;align-items:center;min-height:230px;padding:10px;background:#f7fcff;border:3px dashed #cfe0ed;border-radius:24px
+}
+.monster{
+  width:175px;height:175px;border-radius:46% 54% 51% 49%;background:#8ee37d;position:relative;
+  box-shadow:inset -14px -16px rgba(0,0,0,.07),0 8px 0 rgba(0,0,0,.08)
+}
+.monster.red{background:#ff6b6b}.monster.blue{background:#74c7ff}.monster.green{background:#8ee37d}.monster.yellow{background:#ffe16b}.monster.pink{background:#ff9fcd}
+.monster:before,.monster:after{content:"";position:absolute;top:-16px;width:28px;height:45px;border-radius:50%;background:inherit}
+.monster:before{left:34px;transform:rotate(-25deg)}.monster:after{right:34px;transform:rotate(25deg)}
+.eye{position:absolute;top:43px;width:33px;height:33px;background:white;border-radius:50%;box-shadow:0 0 0 3px #26384d}
+.eye:after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:#26384d;left:10px;top:10px}
+.eye.e1{left:45px}.eye.e2{right:45px}.eye.e3{left:71px;top:26px}
+.nose{position:absolute;left:76px;top:83px;font-size:28px}
+.mouth{position:absolute;left:58px;top:112px;width:58px;height:22px;border-bottom:7px solid #26384d;border-radius:50%}
+.ears{position:absolute;left:-43px;right:-43px;top:60px;display:flex;justify-content:space-between;font-size:34px}
+.caption{font-size:20px;text-align:center;margin-top:10px}
+.dropzone{min-height:72px;border:3px dashed #bfd3e3;border-radius:20px;padding:12px;background:#f8fcff;font-size:22px}
+.bank{margin-top:10px}
+.table{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sentenceCard{background:#fff;border:3px solid #edf3f7;border-radius:22px;padding:14px;font-size:22px;text-align:center}
+.drawWrap{display:grid;grid-template-columns:1fr 330px;gap:16px;align-items:start}
+canvas{width:100%;height:430px;background:white;border:4px solid #cfe0ed;border-radius:24px;touch-action:none;box-shadow:inset 0 0 0 2px #fff}
+.palette{background:#f8fcff;border:3px solid #e1edf5;border-radius:24px;padding:14px}
+.colorBtn{width:42px;height:42px;border-radius:50%;border:4px solid white;box-shadow:0 3px 8px rgba(0,0,0,.18);margin:6px;cursor:pointer}
+@media(max-width:800px){.drawWrap{grid-template-columns:1fr} canvas{height:360px}}
+@media(max-width:700px){header{align-items:flex-start}.table{grid-template-columns:1fr}.card{padding:16px}.big{font-size:62px}.hanzi{font-size:27px}.btn{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="big">👾</div>
+  <div>
+    <h1>Лаборатория монстриков YCT 1</h1>
+    <p>Учимся описывать монстрика и человека: цвет, цифры, части тела и простые фразы.</p>
+    <button class="btn listen small" onclick="speak('你好！我们来描述小怪物吧！')">🔊 Приветствие</button>
+  </div>
+</header>
+<div class="progress" id="progress"></div>
+<section class="card" id="screen"></section>
+</div>
+
+<script>
+let lesson=0, q=0, score=0, picked=[], currentOptions=[], phraseOptions=[];
+let drawColor="#26384d", drawSize=6, drawing=false, ctx=null, canvas=null;
+
+const screen=document.getElementById('screen'), progress=document.getElementById('progress');
+
+const vocab = [
+  ["👀","眼睛","yǎnjing","глаза"],["👂","耳朵","ěrduo","уши"],["👃","鼻子","bízi","нос"],["👄","嘴巴","zuǐba","рот"],
+  ["🔴","红色","hóngsè","красный"],["🔵","蓝色","lánsè","синий"],["🟢","绿色","lǜsè","зелёный"],["🟡","黄色","huángsè","жёлтый"],
+  ["1","一 / 一个","yī / yí ge","один"],["2","二 / 两个","èr / liǎng ge","два"],["👩","妈妈","māma","мама"],["👨","爸爸","bàba","папа"]
+];
+
+const tasks = [
+ {type:"learn", title:"1. Карточки-помощники", text:"Нажми на карточку, чтобы послушать. Это слова, из которых мы будем собирать описание."},
+ {type:"pattern", title:"2. Шаблон описания", text:"Запомни 3 простые фразы. Они помогут описать любого монстрика."},
+ {type:"audio", title:"3. Слуховая миссия: часть тела", text:"Подсказок нет: слушай слово и выбирай картинку.", data:[
+   {say:"眼睛", a:"👀", options:["👀","👂","👃","👄"]},
+   {say:"耳朵", a:"👂", options:["👄","👂","👃","👀"]},
+   {say:"鼻子", a:"👃", options:["👃","👀","👄","👂"]},
+   {say:"嘴巴", a:"👄", options:["👂","👃","👄","👀"]}
+ ]},
+ {type:"readImage", title:"4. Читаем и добавляем", text:"Прочитай иероглиф. Что нужно добавить монстрику?", data:[
+   {q:"眼睛", a:"👀", options:["👀","👂","👃","👄"]},
+   {q:"耳朵", a:"👂", options:["👄","👂","👀","👃"]},
+   {q:"鼻子", a:"👃", options:["👃","👂","👄","👀"]},
+   {q:"嘴巴", a:"👄", options:["👀","👃","👄","👂"]}
+ ]},
+ {type:"monsterChoose", title:"5. Найди монстрика по описанию", text:"Прочитай фразу и выбери подходящего монстра.", data:[
+   {q:"我有三个眼睛。", a:"threeEyes"},
+   {q:"我是蓝色的。", a:"blue"},
+   {q:"我有两个耳朵。", a:"ears"},
+   {q:"我是绿色的。", a:"green"}
+ ]},
+ {type:"count", title:"6. Сколько? 一个 / 两个", text:"Посмотри на монстрика и выбери правильное описание.", data:[
+   {monster:"oneEye", a:"我有一个眼睛。", options:["我有一个眼睛。","我有两个眼睛。","我有三个眼睛。"]},
+   {monster:"twoEyes", a:"我有两个眼睛。", options:["我有一个眼睛。","我有两个眼睛。","我有一个鼻子。"]},
+   {monster:"oneNose", a:"我有一个鼻子。", options:["我有两个鼻子。","我有一个鼻子。","我有两个耳朵。"]},
+   {monster:"ears", a:"我有两个耳朵。", options:["我有一个嘴巴。","我有两个耳朵。","我有三个眼睛。"]}
+ ]},
+ {type:"sentence", title:"7. Собери фразу", text:"Собери: «У меня есть два глаза»", words:["我","有","两个","眼睛"], answer:"我 有 两个 眼睛"},
+ {type:"sentence", title:"8. Собери фразу про цвет", text:"Собери: «Я зелёный»", words:["我","是","绿色","的"], answer:"我 是 绿色 的"},
+ {type:"buildDescription", title:"9. Паспорт монстрика", text:"Посмотри на монстрика и выбери 3 фразы, которые подходят.", data:{
+   monster:"greenTwoEyes",
+   right:["我是绿色的。","我有两个眼睛。","我有一个嘴巴。"],
+   wrong:["我是红色的。","我有三个眼睛。","我有两个鼻子。"]
+ }},
+ {type:"draw", title:"10. Нарисуй по описанию", text:"Слушай / читай описание и рисуй монстрика на доске.", prompt:"我是蓝色的。我有三个眼睛。我有一个鼻子。我有一个嘴巴。"},
+ {type:"final", title:"11. Финал: я сам описываю!", text:"Выбери фразы и прочитай вслух описание монстрика."}
+];
+
+const monsterMap = {
+  green:"<div class='monster green'><div class='eye e1'></div><div class='eye e2'></div><div class='nose'>👃</div><div class='mouth'></div></div>",
+  blue:"<div class='monster blue'><div class='eye e1'></div><div class='eye e2'></div><div class='nose'>👃</div><div class='mouth'></div></div>",
+  threeEyes:"<div class='monster pink'><div class='eye e1'></div><div class='eye e2'></div><div class='eye e3'></div><div class='nose'>👃</div><div class='mouth'></div></div>",
+  ears:"<div class='monster yellow'><div class='ears'><span>👂</span><span>👂</span></div><div class='eye e1'></div><div class='eye e2'></div><div class='nose'>👃</div><div class='mouth'></div></div>",
+  oneEye:"<div class='monster red'><div class='eye e3'></div><div class='nose'>👃</div><div class='mouth'></div></div>",
+  twoEyes:"<div class='monster blue'><div class='eye e1'></div><div class='eye e2'></div><div class='mouth'></div></div>",
+  oneNose:"<div class='monster pink'><div class='eye e1'></div><div class='eye e2'></div><div class='nose'>👃</div><div class='mouth'></div></div>",
+  greenTwoEyes:"<div class='monster green'><div class='eye e1'></div><div class='eye e2'></div><div class='nose'>👃</div><div class='mouth'></div></div>"
+};
+
+function speak(t){try{speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang='zh-CN';u.rate=.72;u.pitch=1.1;speechSynthesis.speak(u)}catch(e){}}
+function beep(ok=true){try{let c=new (AudioContext||webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=ok?720:190;g.gain.value=.07;o.start();setTimeout(()=>{o.stop();c.close()},ok?130:250)}catch(e){}}
+function setProgress(){progress.innerHTML='';tasks.forEach((_,i)=>{let d=document.createElement('div');d.className='dot '+(i<lesson?'done':'');progress.appendChild(d)})}
+function base(title, html){setProgress();screen.innerHTML=`<h2>${title}</h2>${html}`}
+function next(){lesson++;q=0;picked=[];currentOptions=[];phraseOptions=[]; if(lesson>=tasks.length) finish(); else render();}
+function fb(ok, msg){let el=document.getElementById('feedback'); if(!el)return; el.className='feedback '+(ok?'good':'bad'); el.textContent=msg; beep(ok);}
+function shuffle(a){let b=[...a]; for(let i=b.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]} return b;}
+
+function render(){
+ const t=tasks[lesson];
+ if(t.type==="learn") return renderLearn(t);
+ if(t.type==="pattern") return renderPattern(t);
+ if(t.type==="audio") return renderAudio(t);
+ if(t.type==="readImage") return renderReadImage(t);
+ if(t.type==="monsterChoose") return renderMonsterChoose(t);
+ if(t.type==="count") return renderCount(t);
+ if(t.type==="sentence") return renderSentence(t);
+ if(t.type==="buildDescription") return renderBuild(t);
+ if(t.type==="draw") return renderDraw(t);
+ if(t.type==="final") return renderFinal(t);
+}
+function renderLearn(t){
+ base(t.title, `<p>${t.text}</p><div class="grid">${vocab.map(v=>`<div class="tile" onclick="speak('${v[1].split(' / ')[0]}')"><div class="emoji">${v[0]}</div><div class="hanzi">${v[1]}</div><div class="pinyin">${v[2]}</div><div class="ru">${v[3]}</div></div>`).join('')}</div><p><button class="btn primary" onclick="next()">В лабораторию! 🚀</button></p>`);
+}
+function renderPattern(t){
+ base(t.title, `<p>${t.text}</p>
+ <div class="table">
+  <div class="sentenceCard"><b>我有……</b><br><span class="pinyin">wǒ yǒu...</span><br><span class="ru">У меня есть...</span><br><button class="btn listen small" onclick="speak('我有两个眼睛')">🔊 我有两个眼睛</button></div>
+  <div class="sentenceCard"><b>我是……的</b><br><span class="pinyin">wǒ shì ... de</span><br><span class="ru">Я ... цвета</span><br><button class="btn listen small" onclick="speak('我是绿色的')">🔊 我是绿色的</button></div>
+  <div class="sentenceCard"><b>这是我的……</b><br><span class="pinyin">zhè shì wǒ de...</span><br><span class="ru">Это мой / моя...</span><br><button class="btn listen small" onclick="speak('这是我的鼻子')">🔊 这是我的鼻子</button></div>
+  <div class="sentenceCard"><b>两 个</b><br><span class="pinyin">liǎng ge</span><br><span class="ru">два предмета: два глаза, два уха</span><br><button class="btn listen small" onclick="speak('两个眼睛')">🔊 两个眼睛</button></div>
+ </div>
+ <p><button class="btn primary" onclick="next()">Понятно, дальше</button></p>`);
+}
+function optionButtons(options, cb){
+ const opts=shuffle(options);
+ return `<div class="grid">${opts.map(o=>`<button class="btn" onclick="${cb}('${o.replaceAll("'","\\'")}')">${o}</button>`).join('')}</div><div id="feedback" class="feedback"></div>`;
+}
+function renderAudio(t){
+ const it=t.data[q];
+ base(t.title, `<p>${t.text}</p><div class="row"><button class="btn listen" onclick="speak('${it.say}')">🔊 Слушать слово</button></div>${optionButtons(it.options,'checkBasic')}`);
+}
+function renderReadImage(t){
+ const it=t.data[q];
+ base(t.title, `<p>${t.text}</p><div class="hanzi" style="text-align:center;font-size:56px">${it.q}</div>${optionButtons(it.options,'checkBasic')}`);
+}
+function checkBasic(choice){
+ const t=tasks[lesson], it=t.data[q];
+ if(choice===it.a){score++;fb(true,"Верно! 太好了！");setTimeout(()=>{q++; q>=t.data.length?next():render()},750)}
+ else fb(false,"Почти! Посмотри/послушай ещё раз.");
+}
+function renderMonsterChoose(t){
+ const it=t.data[q];
+ let choices=shuffle(["green","blue","threeEyes","ears"]);
+ base(t.title, `<p>${t.text}</p><div class="sentenceCard"><b>${it.q}</b><br><button class="btn listen small" onclick="speak('${it.q}')">🔊</button></div>
+ <div class="grid">${choices.map(k=>`<div class="tile" onclick="checkMonster('${k}')"><div class="monsterBox">${monsterMap[k]}</div></div>`).join('')}</div><div id="feedback" class="feedback"></div>`);
+}
+function checkMonster(k){
+ const it=tasks[lesson].data[q];
+ if(k===it.a){score++;fb(true,"Да! Описание подходит.");setTimeout(()=>{q++; q>=tasks[lesson].data.length?next():render()},850)}
+ else fb(false,"Этот монстрик не подходит к фразе.");
+}
+function renderCount(t){
+ const it=t.data[q];
+ base(t.title, `<p>${t.text}</p><div class="monsterBox">${monsterMap[it.monster]}</div>${optionButtons(it.options,'checkBasic')}`);
+}
+function renderSentence(t){
+ const words=shuffle(t.words);
+ base(t.title, `<p>${t.text}</p><div class="dropzone" id="zone">${picked.join(' ') || 'Нажимай слова снизу 👇'}</div>
+ <div class="bank">${words.map(w=>`<button class="btn" onclick="pick('${w}')">${w}</button>`).join('')}</div>
+ <button class="btn listen small" onclick="speak('${t.answer.replaceAll(' ','')}')">🔊 Послушать правильную фразу</button>
+ <button class="btn small" onclick="picked=[];renderSentence(tasks[lesson])">Сброс</button>
+ <button class="btn primary" onclick="checkSentence()">Проверить</button><div id="feedback" class="feedback"></div>`);
+}
+function pick(w){picked.push(w);document.getElementById('zone').textContent=picked.join(' ')}
+function checkSentence(){
+ const t=tasks[lesson];
+ if(picked.join(' ')===t.answer){score++;fb(true,"Супер! Фраза собрана.");setTimeout(next,850)}
+ else fb(false,"Порядок слов пока не тот. Попробуй ещё.");
+}
+function renderBuild(t){
+ const all=shuffle([...t.data.right,...t.data.wrong]);
+ base(t.title, `<p>${t.text}</p><div class="monsterBox">${monsterMap[t.data.monster]}</div>
+ <p class="ru">Нужно выбрать ровно 3 правильные фразы.</p>
+ <div class="grid">${all.map(s=>`<button class="btn" onclick="togglePhrase(this,'${s}')">${s}</button>`).join('')}</div>
+ <button class="btn primary" onclick="checkBuild()">Проверить паспорт</button><div id="feedback" class="feedback"></div>`);
+}
+function togglePhrase(btn,s){
+ if(picked.includes(s)){picked=picked.filter(x=>x!==s);btn.style.outline='none'}
+ else {picked.push(s);btn.style.outline='4px solid #77d8ff'}
+}
+function checkBuild(){
+ const right=tasks[lesson].data.right;
+ const ok=picked.length===3 && picked.every(x=>right.includes(x));
+ if(ok){score+=3;fb(true,"Паспорт готов! Все фразы подходят.");setTimeout(next,1000)}
+ else fb(false,"Есть лишняя фраза или чего-то не хватает.");
+}
+function renderDraw(t){
+ base(t.title, `<p>${t.text}</p>
+ <div class="drawWrap">
+  <canvas id="drawCanvas"></canvas>
+  <div class="palette">
+    <div class="sentenceCard" style="font-size:20px"><b>Описание:</b><br>${t.prompt}<br>
+      <button class="btn listen small" onclick="speak('${t.prompt}')">🔊 Послушать</button>
+    </div>
+    <p class="ru">Можно рисовать мышкой, стилусом или пальцем на планшете.</p>
+    <div>
+      <button class="colorBtn" style="background:#26384d" onclick="setColor('#26384d')"></button>
+      <button class="colorBtn" style="background:#74c7ff" onclick="setColor('#74c7ff')"></button>
+      <button class="colorBtn" style="background:#8ee37d" onclick="setColor('#8ee37d')"></button>
+      <button class="colorBtn" style="background:#ff6b6b" onclick="setColor('#ff6b6b')"></button>
+      <button class="colorBtn" style="background:#ffe16b" onclick="setColor('#ffe16b')"></button>
+      <button class="colorBtn" style="background:#ff9fcd" onclick="setColor('#ff9fcd')"></button>
+    </div>
+    <button class="btn small" onclick="setSize(4)">тонко</button>
+    <button class="btn small" onclick="setSize(9)">толсто</button>
+    <button class="btn danger small" onclick="clearCanvas()">Очистить</button>
+    <button class="btn primary" onclick="next()">Я нарисовал(а)! ➜</button>
+  </div>
+ </div>`);
+ setTimeout(initCanvas, 50);
+}
+function initCanvas(){
+ canvas=document.getElementById('drawCanvas'); if(!canvas)return;
+ const rect=canvas.getBoundingClientRect();
+ canvas.width=Math.floor(rect.width*2); canvas.height=Math.floor(rect.height*2);
+ ctx=canvas.getContext('2d'); ctx.scale(2,2); ctx.lineCap='round'; ctx.lineJoin='round'; ctx.fillStyle='white'; ctx.fillRect(0,0,rect.width,rect.height);
+ canvas.addEventListener('pointerdown',startDraw); canvas.addEventListener('pointermove',moveDraw);
+ canvas.addEventListener('pointerup',endDraw); canvas.addEventListener('pointerleave',endDraw);
+}
+function pos(e){const r=canvas.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}}
+function startDraw(e){drawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault()}
+function moveDraw(e){if(!drawing)return; const p=pos(e); ctx.strokeStyle=drawColor; ctx.lineWidth=drawSize; ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault()}
+function endDraw(){drawing=false}
+function setColor(c){drawColor=c}
+function setSize(s){drawSize=s}
+function clearCanvas(){if(!ctx||!canvas)return; const r=canvas.getBoundingClientRect(); ctx.fillStyle='white'; ctx.fillRect(0,0,r.width,r.height)}
+function renderFinal(t){
+ const finalPhrases=shuffle([
+   "我是粉色的。","我有三个眼睛。","我有一个鼻子。","我有一个嘴巴。"
+ ]);
+ base(t.title, `<p>${t.text}</p><div class="monsterBox">${monsterMap.threeEyes}</div>
+ <div class="grid">${finalPhrases.map(s=>`<button class="btn" onclick="speak('${s}')">🔊 ${s}</button>`).join('')}</div>
+ <p class="caption"><b>Задание для ребёнка:</b> нажми, послушай и попробуй сам сказать 2–3 фразы про монстрика.</p>
+ <button class="btn primary" onclick="next()">Завершить миссию 🏆</button>`);
+}
+function finish(){
+ setProgress();
+ screen.innerHTML=`<h2>🏆 Лаборатория закрыта!</h2><div class="row"><div class="big">👾✨</div></div>
+ <p style="text-align:center;font-size:24px">Ты научился описывать и рисовать монстрика по-китайски! Звёздочки: <b>${score}</b></p>
+ <p style="text-align:center"><button class="btn listen" onclick="speak('你真棒！你会描述小怪物！')">🔊 Похвала</button>
+ <button class="btn primary" onclick="lesson=0;q=0;score=0;picked=[];render()">Играть ещё раз</button></p>
+ <p class="ru" style="text-align:center">by Galina Netsvetaeva</p>`;
+}
+render();
+</script>
+</body>
+</html>
