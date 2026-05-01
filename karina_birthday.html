@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>我可以成为谁？卡琳娜的生日游戏</title>
+<style>
+:root{
+  --pink:#ff7ab6; --purple:#8d6cff; --blue:#6ecbff; --yellow:#ffe27a;
+  --green:#73d99f; --dark:#39224f; --light:#fff8ff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family: "Arial", "Microsoft YaHei", sans-serif;
+  background: radial-gradient(circle at top left,#fff3b0,transparent 28%),
+              radial-gradient(circle at bottom right,#c7f3ff,transparent 28%),
+              linear-gradient(135deg,#ffe3f1,#eee5ff 45%,#e2f8ff);
+  color:var(--dark);
+  min-height:100vh;
+}
+.app{max-width:1000px;margin:0 auto;padding:18px}
+.cover,.page{
+  background:rgba(255,255,255,.88);
+  border:4px solid rgba(255,255,255,.7);
+  border-radius:32px;
+  box-shadow:0 15px 40px rgba(82,39,116,.18);
+  padding:24px;
+  min-height:78vh;
+  display:none;
+}
+.active{display:block}
+h1{font-size:42px;margin:10px 0;color:#7a39ff;text-shadow:2px 2px 0 #fff}
+h2{font-size:32px;margin:8px 0 18px;color:#d63384}
+.zh{font-size:34px;font-weight:800;line-height:1.35}
+.py{font-size:18px;color:#755d83;margin-top:6px}
+.ru{font-size:18px;color:#6b5278;margin-top:10px}
+.btn{
+  border:0;border-radius:18px;padding:14px 20px;margin:8px;
+  font-size:19px;font-weight:700;cursor:pointer;
+  background:linear-gradient(135deg,var(--purple),var(--pink));color:white;
+  box-shadow:0 8px 18px rgba(141,108,255,.25);
+}
+.btn.secondary{background:linear-gradient(135deg,#72c7ff,#73d99f)}
+.btn.yellow{background:linear-gradient(135deg,#ffbd59,#ff7ab6)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:12px;flex-wrap:wrap}
+.progress{font-weight:800;color:#7a39ff}
+.scene{
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center;
+}
+.illus{
+  min-height:330px;border-radius:28px;
+  background:linear-gradient(145deg,#fff,#ffeaf6);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  border:3px dashed #ffc2dd; position:relative; overflow:hidden;
+}
+.illus:before{
+ content:""; position:absolute; inset:-40px;
+ background:radial-gradient(circle,#fff 0 8px,transparent 9px);
+ background-size:42px 42px; opacity:.45;
+}
+.bigEmoji{font-size:100px;z-index:1}
+.girl{font-size:86px;z-index:1}
+.caption{z-index:1;font-size:22px;font-weight:800;background:white;padding:8px 16px;border-radius:999px;margin-top:12px}
+.game{
+  background:#fff;border-radius:24px;padding:18px;margin-top:18px;border:2px solid #f4d7ff;
+}
+.options{display:flex;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.option{
+  background:#f7f1ff;border:2px solid #d9c6ff;border-radius:16px;
+  padding:12px 16px;margin:6px;font-size:22px;cursor:pointer;min-width:120px;
+}
+.option:hover{transform:scale(1.03)}
+.good{background:#c9f7dc!important;border-color:#58c987!important}
+.bad{background:#ffd1d1!important;border-color:#ff7777!important}
+.feedback{font-size:22px;font-weight:800;min-height:34px;margin-top:10px}
+.board{
+  background:#2f785d;color:white;border-radius:20px;padding:20px;
+  box-shadow:inset 0 0 0 6px rgba(255,255,255,.15);
+}
+.board .option{background:#fff;color:#2f2850}
+.patient{font-size:70px}
+.dropzone{
+  border:3px dashed #8d6cff;border-radius:18px;padding:16px;margin-top:12px;
+  font-size:23px;background:#fbf8ff;
+}
+input{
+  font-size:22px;padding:12px;border-radius:14px;border:2px solid #d9c6ff;width:90%;max-width:420px;text-align:center;
+}
+.badge{
+  display:inline-block;background:#fff3b0;padding:8px 14px;border-radius:999px;font-weight:800;margin:5px;
+}
+.final{
+  text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center;
+}
+.stars{font-size:42px}
+@media(max-width:760px){
+  .scene{grid-template-columns:1fr}
+  h1{font-size:32px}.zh{font-size:28px}
+  .cover,.page{padding:16px;border-radius:24px}
+  .illus{min-height:240px}.bigEmoji{font-size:78px}.girl{font-size:70px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<section class="cover active">
+  <div class="scene">
+    <div>
+      <div class="stars">✨🎂✨</div>
+      <h1>我可以成为谁？</h1>
+      <div class="zh">卡琳娜的生日魔法书</div>
+      <div class="py">Kǎlínà de shēngrì mófǎ shū</div>
+      <p class="ru">Интерактивная сказка-игра по китайскому языку</p>
+      <button class="btn yellow" onclick="nextPage()">打开书 📖</button>
+    </div>
+    <div class="illus">
+      <div class="girl">👧🏻</div>
+      <div class="bigEmoji">🪞</div>
+      <div class="caption">生日快乐，卡琳娜！</div>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>1. 魔法镜子</h2>
+      <div class="zh">她看着镜子。<br>她问：<br>“我可以成为谁？”</div>
+      <div class="py">Tā kànzhe jìngzi. Tā wèn: “Wǒ kěyǐ chéngwéi shéi?”</div>
+      <div class="game">
+        <b>Выбери правильный перевод:</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,true)">Кем я могу стать?</button>
+          <button class="option" onclick="pick(this,false)">Где мой подарок?</button>
+          <button class="option" onclick="pick(this,false)">Я люблю яблоки</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="girl">👧🏻</div><div class="bigEmoji">🪞✨</div><div class="caption">魔法镜子</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>2. 老师</h2>
+      <div class="zh">我可以成为老师。<br>我教中文。</div>
+      <div class="py">Wǒ kěyǐ chéngwéi lǎoshī. Wǒ jiāo Zhōngwén.</div>
+      <div class="game board">
+        <b>На доске появились иероглифы. Найди “учитель”:</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,false)">医生</button>
+          <button class="option" onclick="pick(this,true)">老师</button>
+          <button class="option" onclick="pick(this,false)">学生</button>
+          <button class="option" onclick="pick(this,false)">妈妈</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">👩‍🏫</div><div class="caption">老师</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>3. 医生</h2>
+      <div class="zh">我可以成为医生。<br>我帮助人。</div>
+      <div class="py">Wǒ kěyǐ chéngwéi yīshēng. Wǒ bāngzhù rén.</div>
+      <div class="game">
+        <div class="patient">🤒</div>
+        <b>Пациент хочет горячий чай. Что выбрать?</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,false)">冰水</button>
+          <button class="option" onclick="pick(this,true)">热茶</button>
+          <button class="option" onclick="pick(this,false)">蛋糕</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">👩‍⚕️🩺</div><div class="caption">医生</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>4. 画家</h2>
+      <div class="zh">我可以成为画家。<br>我喜欢画画。</div>
+      <div class="py">Wǒ kěyǐ chéngwéi huàjiā. Wǒ xǐhuan huàhuà.</div>
+      <div class="game">
+        <b>Художнику нужны цвета. Выбери “красный”:</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,false)">蓝色</button>
+          <button class="option" onclick="pick(this,true)">红色</button>
+          <button class="option" onclick="pick(this,false)">绿色</button>
+          <button class="option" onclick="pick(this,false)">白色</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">👩‍🎨🎨</div><div class="caption">画家</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>5. 飞行员</h2>
+      <div class="zh">我可以成为飞行员。<br>我开飞机。</div>
+      <div class="py">Wǒ kěyǐ chéngwéi fēixíngyuán. Wǒ kāi fēijī.</div>
+      <div class="game">
+        <b>Пилот смотрит на погоду. Какая погода подходит картинке? ☀️</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,true)">晴天</button>
+          <button class="option" onclick="pick(this,false)">下雨</button>
+          <button class="option" onclick="pick(this,false)">下雪</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">👩‍✈️✈️</div><div class="caption">飞行员</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>6. 运动员</h2>
+      <div class="zh">我可以成为运动员。<br>我很厉害！</div>
+      <div class="py">Wǒ kěyǐ chéngwéi yùndòngyuán. Wǒ hěn lìhai!</div>
+      <div class="game">
+        <b>Сосчитай медали: 🏅🏅🏅</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,false)">一</button>
+          <button class="option" onclick="pick(this,false)">二</button>
+          <button class="option" onclick="pick(this,true)">三</button>
+          <button class="option" onclick="pick(this,false)">四</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">🏃‍♀️🏆</div><div class="caption">运动员</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>7. 科学家</h2>
+      <div class="zh">我可以成为科学家。<br>我做实验。</div>
+      <div class="py">Wǒ kěyǐ chéngwéi kēxuéjiā. Wǒ zuò shíyàn.</div>
+      <div class="game">
+        <b>Эксперимент с животными: кто это? 🐱</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,true)">猫</button>
+          <button class="option" onclick="pick(this,false)">狗</button>
+          <button class="option" onclick="pick(this,false)">马</button>
+          <button class="option" onclick="pick(this,false)">鸟</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">👩‍🔬🧪</div><div class="caption">科学家</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>8. 中国</h2>
+      <div class="zh">我可以去中国。<br>我很开心！</div>
+      <div class="py">Wǒ kěyǐ qù Zhōngguó. Wǒ hěn kāixīn!</div>
+      <div class="game">
+        <b>Карина едет в Китай. Кто едет с ней? Выбери “семья”:</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,false)">朋友</button>
+          <button class="option" onclick="pick(this,true)">家人</button>
+          <button class="option" onclick="pick(this,false)">老师</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">🏮🇨🇳</div><div class="caption">去中国</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page">
+  <div class="scene">
+    <div>
+      <h2>9. 生日任务</h2>
+      <div class="zh">今天是卡琳娜的生日。<br>生日快乐！</div>
+      <div class="py">Jīntiān shì Kǎlínà de shēngrì. Shēngrì kuàilè!</div>
+      <div class="game">
+        <b>Собери поздравление:</b>
+        <div class="options">
+          <button class="option" onclick="pick(this,false)">你好快乐</button>
+          <button class="option" onclick="pick(this,true)">生日快乐</button>
+          <button class="option" onclick="pick(this,false)">谢谢生日</button>
+        </div>
+        <div class="feedback"></div>
+      </div>
+    </div>
+    <div class="illus"><div class="bigEmoji">🎂🎁</div><div class="caption">生日快乐</div></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="nextPage()">дальше ➡</button></div>
+</section>
+
+<section class="page final">
+  <div class="stars">✨✨✨</div>
+  <h1>最后一页</h1>
+  <div class="zh">她笑了。<br>她说：</div>
+  <div class="zh" style="color:#d63384;margin-top:18px;">我可以成为任何人。</div>
+  <div class="zh" style="color:#7a39ff;margin-top:18px;">不管我是谁，<br>我要做一个幸福的人！</div>
+  <div class="game" style="max-width:700px;">
+    <b>Рефлексия для Карины:</b>
+    <p>你可以成为谁？</p>
+    <input id="dream" placeholder="我可以成为……">
+    <br>
+    <button class="btn yellow" onclick="dreamAnswer()">完成 ✨</button>
+    <div id="dreamResult" class="feedback"></div>
+  </div>
+  <div class="nav"><button class="btn secondary" onclick="prevPage()">⬅ назад</button><span class="progress"></span><button class="btn" onclick="restart()">ещё раз 🔁</button></div>
+</section>
+
+</div>
+
+<script>
+let page = 0;
+const pages = document.querySelectorAll('.cover,.page');
+const total = pages.length;
+
+function showPage(n){
+  pages.forEach(p=>p.classList.remove('active'));
+  pages[n].classList.add('active');
+  document.querySelectorAll('.progress').forEach(el=>el.textContent = (page+1) + " / " + total);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function nextPage(){ if(page < total-1){ page++; showPage(page); } }
+function prevPage(){ if(page > 0){ page--; showPage(page); } }
+function restart(){ page=0; showPage(page); }
+
+function pick(btn, ok){
+  const game = btn.closest('.game');
+  const buttons = game.querySelectorAll('.option');
+  buttons.forEach(b=>b.disabled=true);
+  if(ok){
+    btn.classList.add('good');
+    game.querySelector('.feedback').innerHTML = "✅ 对！太棒了！";
+  } else {
+    btn.classList.add('bad');
+    game.querySelector('.feedback').innerHTML = "❌ 再想一想～";
+    buttons.forEach(b=>{ if(b.getAttribute('onclick')?.includes('true')) b.classList.add('good'); });
+  }
+}
+function dreamAnswer(){
+  const val = document.getElementById('dream').value.trim();
+  document.getElementById('dreamResult').innerHTML =
+    val ? "💛 很好，卡琳娜！" + val + "。最重要的是：做一个幸福的人！" :
+    "💛 Можно сказать: 我可以成为老师 / 医生 / 画家。";
+}
+showPage(page);
+</script>
+</body>
+</html>
