@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Китайское путешествие: повторение</title>
+<style>
+  :root{
+    --red:#ff5b62; --yellow:#ffd166; --green:#53d184; --blue:#5bbcff; --purple:#a78bfa; --ink:#263238; --cream:#fff7df;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;background:linear-gradient(180deg,#fff1bf,#bdefff 58%,#d8f7d0);color:var(--ink);min-height:100vh;overflow-x:hidden}
+  .cloud{position:fixed;background:#fff;border-radius:999px;opacity:.75;filter:drop-shadow(0 6px 12px #0001);animation:float 18s linear infinite;z-index:0}
+  .cloud:before,.cloud:after{content:"";position:absolute;background:#fff;border-radius:50%}
+  .cloud:before{width:55%;height:130%;left:16%;top:-48%}.cloud:after{width:45%;height:100%;right:12%;top:-34%}
+  .c1{width:130px;height:38px;top:42px;left:-140px}.c2{width:190px;height:54px;top:120px;left:-240px;animation-duration:25s}.c3{width:105px;height:32px;top:210px;left:-120px;animation-duration:21s}
+  @keyframes float{to{transform:translateX(calc(100vw + 300px))}}
+  .wrap{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:18px}
+  header{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+  .title{background:#ffffffcc;border:4px solid #fff;border-radius:28px;padding:14px 18px;box-shadow:0 10px 30px #0001;flex:1;min-width:270px}
+  h1{font-size:clamp(26px,4vw,48px);line-height:1.02;margin:0;color:#e43d47;text-shadow:2px 2px 0 #fff}
+  .subtitle{font-size:clamp(15px,2vw,20px);margin-top:6px}
+  .stats{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .pill{background:#fff;border:3px solid #fff0;border-radius:999px;padding:10px 14px;font-weight:800;box-shadow:0 6px 16px #0001;white-space:nowrap}
+  .btn{border:0;border-radius:20px;padding:13px 18px;font-weight:900;font-size:16px;cursor:pointer;box-shadow:0 7px 0 #0002,0 12px 20px #0001;transition:.12s transform,.12s filter;background:var(--yellow);color:#263238}
+  .btn:hover{filter:brightness(1.04);transform:translateY(-1px)}.btn:active{transform:translateY(4px);box-shadow:0 3px 0 #0002}
+  .btn.red{background:var(--red);color:white}.btn.blue{background:var(--blue)}.btn.green{background:var(--green)}.btn.purple{background:var(--purple);color:white}.btn.small{font-size:14px;padding:9px 12px;border-radius:15px}
+  .card{background:#ffffffd9;border:4px solid #fff;border-radius:30px;box-shadow:0 12px 35px #0002;padding:18px;margin:12px 0;backdrop-filter:blur(4px)}
+  .screen{display:none}.screen.active{display:block;animation:pop .25s ease both}@keyframes pop{from{opacity:0;transform:scale(.98)}to{opacity:1;transform:scale(1)}}
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;align-items:center}
+  .heroArt{min-height:330px;border-radius:34px;background:linear-gradient(180deg,#ffe785 0,#ffd7a8 40%,#b7ebff 41%,#89d988 76%,#73c46f 100%);position:relative;overflow:hidden;border:5px solid #fff;box-shadow:inset 0 0 0 4px #00000008}
+  .sun{position:absolute;width:90px;height:90px;border-radius:50%;background:#fff176;right:36px;top:26px;box-shadow:0 0 0 15px #fff17644}
+  .mount{position:absolute;bottom:90px;width:360px;height:180px;background:#8dd9ef;clip-path:polygon(0 100%,45% 0,100% 100%);left:8px}.mount.two{left:200px;background:#75cae4;transform:scale(.85)}
+  .pagoda{position:absolute;left:50%;bottom:60px;transform:translateX(-50%);width:170px;height:180px}.roof{height:30px;background:#e63946;border-radius:50% 50% 6px 6px;clip-path:polygon(50% 0,100% 70%,88% 100%,12% 100%,0 70%);margin-bottom:-4px}.floor{height:44px;background:#fff7df;border:4px solid #ab3e35;border-radius:10px;margin:0 16px;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:900;color:#ab3e35}.dragon{position:absolute;bottom:28px;left:20px;font-size:70px;animation:bounce 1.4s ease-in-out infinite}.kid{position:absolute;bottom:34px;right:42px;font-size:62px;animation:bounce 1.7s ease-in-out infinite}.lanterns{position:absolute;top:18px;left:18px;font-size:40px;letter-spacing:8px}@keyframes bounce{50%{transform:translateY(-8px)}}
+  .map{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:14px}.step{background:#fff;border:3px solid #ffe082;border-radius:22px;padding:12px;text-align:center;font-weight:900;min-height:86px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.step.done{background:#dbffe8;border-color:#53d184}.step.now{background:#fff0b8;border-color:#ff9f1c;transform:scale(1.03)}.step.lock{filter:grayscale(.6);opacity:.58}
+  .emoji{font-size:36px}.bigEmoji{font-size:76px;line-height:1}.questionBox{display:grid;grid-template-columns:140px 1fr;gap:18px;align-items:center}.prompt{font-size:clamp(22px,4vw,44px);font-weight:900}.cn{font-family:"Noto Sans SC","Microsoft YaHei",sans-serif}.pinyin{font-size:18px;color:#607d8b;font-weight:800}.ru{font-size:17px;color:#455a64}.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}.opt{background:#fff;border:4px solid #e6f6ff;border-radius:24px;padding:16px;min-height:82px;font-size:clamp(20px,3vw,34px);font-weight:900;cursor:pointer;box-shadow:0 6px 0 #0001;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}.opt:hover{border-color:#5bbcff}.opt.correct{background:#d8ffe5;border-color:#38b66c}.opt.wrong{background:#ffe0e3;border-color:#ff5b62;animation:shake .3s}@keyframes shake{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+  .feedback{font-size:22px;font-weight:900;min-height:34px;margin-top:12px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.progress{height:22px;background:#fff;border-radius:999px;overflow:hidden;border:3px solid #fff;box-shadow:inset 0 2px 5px #0002}.bar{height:100%;width:0;background:linear-gradient(90deg,#53d184,#ffd166,#ff5b62);transition:.3s}.badgeLine{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.badge{font-size:30px;background:#fff;border-radius:18px;padding:8px 10px;box-shadow:0 4px 12px #0001}.speechGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.speechCard{background:#fff;border:4px dashed #ffbf69;border-radius:26px;padding:14px}.speechLine{font-size:clamp(24px,4vw,40px);font-weight:900}.kidTabs{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}.kidTab{border:0;border-radius:20px;padding:12px 18px;font-weight:1000;font-size:18px;cursor:pointer;background:#fff;box-shadow:0 5px 14px #0001}.kidTab.active{background:#ffd166;outline:5px solid #fff}.storyPreview{background:#fff;border:5px solid #bdefff;border-radius:28px;padding:16px;margin-top:14px}.storyEmoji{font-size:clamp(48px,8vw,90px);line-height:1.1}.choiceBtn{background:#fff;border:3px solid #e6f6ff;border-radius:18px;padding:10px 12px;font-weight:900;font-size:18px;cursor:pointer;margin:4px}.choiceBtn.active{outline:5px solid #ffd166;background:#fff7d6}.finalCard{background:linear-gradient(135deg,#fff 0,#fff5c8 55%,#e0fff1 100%);border:7px solid #fff;border-radius:40px;padding:22px;text-align:center;position:relative;overflow:hidden}.finalText{font-size:clamp(27px,5vw,54px);font-weight:1000;color:#d62839}.finalCn{font-size:clamp(36px,7vw,76px);font-weight:1000;color:#0b6e4f;margin:14px 0}.confetti{position:absolute;font-size:30px;animation:fall 2.8s linear infinite;top:-40px}@keyframes fall{to{transform:translateY(520px) rotate(360deg)}}
+  .charGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.charTile{background:#fff;border-radius:22px;padding:12px;text-align:center;border:3px solid #eee}.charTile .cn{font-size:38px;font-weight:900}.teacherNote{font-size:14px;color:#546e7a;background:#f3fbff;border-radius:18px;padding:10px;margin-top:10px}
+  @media(max-width:760px){.hero{grid-template-columns:1fr}.questionBox{grid-template-columns:1fr;text-align:center}.options{grid-template-columns:1fr}.map{grid-template-columns:repeat(2,1fr)}.speechGrid{grid-template-columns:1fr}.charGrid{grid-template-columns:repeat(2,1fr)}.heroArt{min-height:260px}.pagoda{transform:translateX(-50%) scale(.8)}.dragon,.kid{font-size:50px}}
+</style>
+</head>
+<body>
+<div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+<div class="wrap">
+<header>
+  <div class="title">
+    <h1>🐉 Китайское путешествие</h1>
+    <div class="subtitle">Повторяем цвета, семью, цифры, пиктограммы, местоимения и 12 животных</div>
+  </div>
+  <div class="stats">
+    <div class="pill">⭐ <span id="score">0</span></div>
+    <div class="pill">🎒 <span id="badgesCount">0</span>/10</div>
+    <button class="btn small blue" onclick="speakRu('Нажми старт. Слушай, читай, выбирай и говори по-китайски!')">🔊 объяснить</button>
+  </div>
+</header>
+
+<section id="start" class="screen active card">
+  <div class="hero">
+    <div>
+      <h2 style="font-size:36px;margin:0 0 10px">Миссия: собрать 10 волшебных печатей!</h2>
+      <p style="font-size:21px;line-height:1.45">Дети идут по станциям. На каждой станции они слушают китайское слово, узнают иероглифы, читают простые фразы и в конце говорят мини-рассказ о себе.</p>
+      <div class="row">
+        <button class="btn red" onclick="startGame()">🚀 Начать игру</button>
+        <button class="btn green" onclick="showHelp()">👩‍🏫 Как провести урок</button>
+      </div>
+      <div id="help" class="teacherNote" style="display:none"><b>Для группы 5–10 лет:</b> младшие могут выбирать картинки/слушать, старший читает и помогает произносить. После каждого ответа просите хором повторить китайскую фразу. В финале каждый ребёнок говорит 3–5 предложений по шаблону.</div>
+    </div>
+    <div class="heroArt">
+      <div class="sun"></div><div class="lanterns">🏮🏮🏮</div><div class="mount"></div><div class="mount two"></div>
+      <div class="pagoda"><div class="roof"></div><div class="floor">中</div><div class="roof"></div><div class="floor">国</div><div class="roof"></div><div class="floor">好</div></div>
+      <div class="dragon">🐲</div><div class="kid">🧒</div>
+    </div>
+  </div>
+  <div class="map" id="map"></div>
+</section>
+
+<section id="game" class="screen card">
+  <div class="row" style="justify-content:space-between">
+    <div><b>Станция <span id="levelNum">1</span>/10:</b> <span id="levelTitle"></span></div>
+    <button class="btn small" onclick="repeatAudio()">🔊 повторить звук</button>
+  </div>
+  <div class="progress"><div class="bar" id="bar"></div></div>
+  <div class="questionBox" style="margin-top:18px">
+    <div style="text-align:center"><div class="bigEmoji" id="qEmoji">🐼</div><div class="pinyin" id="qType">слушаем</div></div>
+    <div>
+      <div class="prompt" id="prompt"></div>
+      <div class="ru" id="hint"></div>
+    </div>
+  </div>
+  <div class="options" id="options"></div>
+  <div class="feedback" id="feedback"></div>
+  <div class="badgeLine" id="badgeLine"></div>
+</section>
+
+<section id="speech" class="screen card">
+  <h2 style="font-size:36px;margin:0 0 8px">🎤 Финал: три рассказа о себе</h2>
+  <p style="font-size:20px">Выберите ребёнка, ответьте на вопросы — и у каждого соберётся отдельный маленький рассказ по-китайски с картинками.</p>
+  <div class="kidTabs" id="kidTabs"></div>
+  <div class="speechGrid" id="speechChoices"></div>
+  <div class="storyPreview" id="storyPreview"></div>
+  <div class="row" style="margin-top:16px">
+    <button class="btn blue" onclick="speakCurrentStory()">🔊 Озвучить рассказ</button>
+    <button class="btn green" onclick="finishGame()">✨ Показать все 3 рассказа</button>
+  </div>
+</section>
+
+<section id="final" class="screen card">
+  <div class="finalCard" id="finalCard">
+    <span class="confetti" style="left:8%;animation-delay:.1s">🎉</span><span class="confetti" style="left:30%;animation-delay:.6s">🏮</span><span class="confetti" style="left:58%;animation-delay:.2s">⭐</span><span class="confetti" style="left:82%;animation-delay:.9s">🌈</span>
+    <div class="finalText">恭喜！Поздравляем!</div>
+    <div id="finalStories"></div>
+    <div class="badgeLine" id="finalBadges" style="justify-content:center;margin-top:20px"></div>
+  </div>
+  <div class="row" style="justify-content:center;margin-top:16px">
+    <button class="btn blue" onclick="speakAllStories()">🔊 Озвучить все рассказы</button>
+    <button class="btn red" onclick="location.reload()">🔁 Играть ещё раз</button>
+  </div>
+</section>
+
+<section id="reference" class="card">
+  <h3 style="margin:0 0 10px;font-size:26px">Мини-шпаргалка для чтения перед игрой</h3>
+  <div class="charGrid">
+    <div class="charTile"><div class="cn">火</div><b>huǒ</b><br>огонь</div><div class="charTile"><div class="cn">水</div><b>shuǐ</b><br>вода</div><div class="charTile"><div class="cn">日</div><b>rì</b><br>солнце/день</div><div class="charTile"><div class="cn">人</div><b>rén</b><br>человек</div>
+    <div class="charTile"><div class="cn">大</div><b>dà</b><br>большой</div><div class="charTile"><div class="cn">小</div><b>xiǎo</b><br>маленький</div><div class="charTile"><div class="cn">山</div><b>shān</b><br>гора</div><div class="charTile"><div class="cn">口</div><b>kǒu</b><br>рот</div>
+  </div>
+</section>
+</div>
+
+<script>
+let levels = [];
+let current=0, score=0, badges=[], lastSay='', activeKid='igor';
+
+const levelBank = [
+ [
+  {title:'Аудирование: цвета', emoji:'🌈', type:'слушаем', mode:'listen', say:'红色', prompt:'Послушай и выбери цвет', hint:'Подсказка только ушками!', opts:[['🔴 红色','红色'],['🔵 蓝色','蓝色'],['🟡 黄色','黄色'],['🟢 绿色','绿色']], ans:'红色', badge:'🌈'},
+  {title:'Аудирование: цвета', emoji:'🌈', type:'слушаем', mode:'listen', say:'蓝色', prompt:'Послушай и выбери цвет', hint:'Подсказка только ушками!', opts:[['🔴 红色','红色'],['🔵 蓝色','蓝色'],['🟡 黄色','黄色'],['🟢 绿色','绿色']], ans:'蓝色', badge:'🌈'},
+  {title:'Аудирование: цвета', emoji:'🌈', type:'слушаем', mode:'listen', say:'黄色', prompt:'Послушай и выбери цвет', hint:'Подсказка только ушками!', opts:[['🔴 红色','红色'],['🔵 蓝色','蓝色'],['🟡 黄色','黄色'],['🟢 绿色','绿色']], ans:'黄色', badge:'🌈'}
+ ],
+ [
+  {title:'Аудирование: семья', emoji:'👨‍👩‍👧', type:'слушаем', mode:'listen', say:'爸爸', prompt:'Послушай слово и выбери человека', hint:'Ответ не написан в вопросе — слушаем внимательно.', opts:[['👨 爸爸','爸爸'],['👩 妈妈','妈妈'],['👴 爷爷','爷爷'],['👵 奶奶','奶奶']], ans:'爸爸', badge:'👨'},
+  {title:'Аудирование: семья', emoji:'👨‍👩‍👧', type:'слушаем', mode:'listen', say:'妈妈', prompt:'Послушай слово и выбери человека', hint:'Ответ не написан в вопросе — слушаем внимательно.', opts:[['👨 爸爸','爸爸'],['👩 妈妈','妈妈'],['👴 爷爷','爷爷'],['👵 奶奶','奶奶']], ans:'妈妈', badge:'👩'},
+  {title:'Аудирование: семья', emoji:'👨‍👩‍👧', type:'слушаем', mode:'listen', say:'爷爷', prompt:'Послушай слово и выбери человека', hint:'Ответ не написан в вопросе — слушаем внимательно.', opts:[['👨 爸爸','爸爸'],['👩 妈妈','妈妈'],['👴 爷爷','爷爷'],['👵 奶奶','奶奶']], ans:'爷爷', badge:'👴'}
+ ],
+ [
+  {title:'Цифры на слух', emoji:'🔢', type:'слушаем', mode:'listen', say:'五', prompt:'Какое число ты слышишь?', hint:'Слушаем китайский и выбираем цифру.', opts:[['4 四','四'],['5 五','五'],['6 六','六'],['8 八','八']], ans:'五', badge:'5️⃣'},
+  {title:'Цифры на слух', emoji:'🔢', type:'слушаем', mode:'listen', say:'八', prompt:'Какое число ты слышишь?', hint:'Слушаем китайский и выбираем цифру.', opts:[['3 三','三'],['7 七','七'],['8 八','八'],['10 十','十']], ans:'八', badge:'8️⃣'},
+  {title:'Цифры на слух', emoji:'🔢', type:'слушаем', mode:'listen', say:'十', prompt:'Какое число ты слышишь?', hint:'Слушаем китайский и выбираем цифру.', opts:[['1 一','一'],['6 六','六'],['9 九','九'],['10 十','十']], ans:'十', badge:'🔟'}
+ ],
+ [
+  {title:'Пиктограммы', emoji:'🔥', type:'узнаём иероглиф', mode:'char', say:'火', prompt:'Какой иероглиф похож на огонь?', hint:'Смотри на форму иероглифа.', opts:[['火','火'],['水','水'],['日','日'],['人','人']], ans:'火', badge:'🔥'},
+  {title:'Пиктограммы', emoji:'💧', type:'узнаём иероглиф', mode:'char', say:'水', prompt:'Какой иероглиф похож на воду?', hint:'Смотри на форму иероглифа.', opts:[['火','火'],['水','水'],['日','日'],['山','山']], ans:'水', badge:'💧'},
+  {title:'Пиктограммы', emoji:'☀️', type:'узнаём иероглиф', mode:'char', say:'日', prompt:'Какой иероглиф похож на солнце?', hint:'Смотри на форму иероглифа.', opts:[['口','口'],['水','水'],['日','日'],['人','人']], ans:'日', badge:'☀️'}
+ ],
+ [
+  {title:'Местоимения', emoji:'🙋', type:'читаем', mode:'read', say:'我', prompt:'Выбери иероглиф для “я”', hint:'Вспоминаем местоимения: 我 / 你 / 他 / 她.', opts:[['我','我'],['你','你'],['他','他'],['她','她']], ans:'我', badge:'🙋'},
+  {title:'Местоимения', emoji:'👉', type:'читаем', mode:'read', say:'你', prompt:'Выбери иероглиф для “ты”', hint:'Вспоминаем местоимения: 我 / 你 / 他 / 她.', opts:[['我','我'],['你','你'],['他','他'],['她','她']], ans:'你', badge:'👉'},
+  {title:'Местоимения', emoji:'👧', type:'читаем', mode:'read', say:'她', prompt:'Выбери иероглиф для “она”', hint:'Вспоминаем местоимения: 我 / 你 / 他 / 她.', opts:[['我','我'],['你','你'],['他','他'],['她','她']], ans:'她', badge:'👧'}
+ ],
+ [
+  {title:'Зодиак: аудирование', emoji:'🐭', type:'слушаем животное', mode:'listen', say:'兔', prompt:'Какое животное ты слышишь?', hint:'Выбери животное по звучанию.', opts:[['🐭 鼠','鼠'],['🐰 兔','兔'],['🐯 虎','虎'],['🐲 龙','龙']], ans:'兔', badge:'🐰'},
+  {title:'Зодиак: аудирование', emoji:'🐲', type:'слушаем животное', mode:'listen', say:'龙', prompt:'Какое животное ты слышишь?', hint:'Выбери животное по звучанию.', opts:[['🐭 鼠','鼠'],['🐰 兔','兔'],['🐯 虎','虎'],['🐲 龙','龙']], ans:'龙', badge:'🐲'},
+  {title:'Зодиак: аудирование', emoji:'🐯', type:'слушаем животное', mode:'listen', say:'虎', prompt:'Какое животное ты слышишь?', hint:'Выбери животное по звучанию.', opts:[['🐭 鼠','鼠'],['🐰 兔','兔'],['🐯 虎','虎'],['🐲 龙','龙']], ans:'虎', badge:'🐯'}
+ ],
+ [
+  {title:'Цвета: чтение', emoji:'🎨', type:'читаем цвет', mode:'read', say:'蓝色', prompt:'Какой это цвет? <span class="cn">蓝色</span>', hint:'Читаем только знакомые цвета.', opts:[['🔵 синий','蓝色'],['🔴 красный','红色'],['🟡 жёлтый','黄色'],['🟢 зелёный','绿色']], ans:'蓝色', badge:'🎨'},
+  {title:'Цвета: чтение', emoji:'🎨', type:'читаем цвет', mode:'read', say:'红色', prompt:'Какой это цвет? <span class="cn">红色</span>', hint:'Читаем только знакомые цвета.', opts:[['🔵 синий','蓝色'],['🔴 красный','红色'],['🟡 жёлтый','黄色'],['🟢 зелёный','绿色']], ans:'红色', badge:'🎨'},
+  {title:'Цвета: чтение', emoji:'🎨', type:'читаем цвет', mode:'read', say:'绿色', prompt:'Какой это цвет? <span class="cn">绿色</span>', hint:'Читаем только знакомые цвета.', opts:[['🔵 синий','蓝色'],['🔴 красный','红色'],['🟡 жёлтый','黄色'],['🟢 зелёный','绿色']], ans:'绿色', badge:'🎨'}
+ ],
+ [
+  {title:'Семья + число', emoji:'🏠', type:'слушаем фразу', mode:'listen', say:'我家有三口人', prompt:'Послушай фразу и выбери карточку', hint:'Без перевода-подсказки: ловим число на слух и глазами!', opts:[['🏠 两口人','两口人'],['🏠 三口人','三口人'],['🏠 四口人','四口人'],['🏠 五口人','五口人']], ans:'三口人', badge:'🏠'},
+  {title:'Семья + число', emoji:'🏠', type:'слушаем фразу', mode:'listen', say:'我家有四口人', prompt:'Послушай фразу и выбери карточку', hint:'Без перевода-подсказки: ловим число на слух и глазами!', opts:[['🏠 两口人','两口人'],['🏠 三口人','三口人'],['🏠 四口人','四口人'],['🏠 五口人','五口人']], ans:'四口人', badge:'🏠'}
+ ],
+ [
+  {title:'Иероглифы-пары', emoji:'👀', type:'узнаём', mode:'char', say:'大', prompt:'Найди противоположность <span class="cn">小</span>', hint:'Какой знак показывает “большой”?', opts:[['大','大'],['人','人'],['口','口'],['日','日']], ans:'大', badge:'大'},
+  {title:'Иероглифы-пары', emoji:'👀', type:'узнаём', mode:'char', say:'小', prompt:'Найди противоположность <span class="cn">大</span>', hint:'Какой знак показывает “маленький”?', opts:[['小','小'],['人','人'],['口','口'],['日','日']], ans:'小', badge:'小'}
+ ],
+ [
+  {title:'Мини-диалог', emoji:'💬', type:'читаем и говорим', mode:'read', say:'你属什么？我属龙。', prompt:'Ответь на вопрос: <span class="cn">你属什么？</span>', hint:'Выбери настоящий ответ на вопрос.', opts:[['我属龙。','我属龙。'],['我是水。','我是水。'],['我叫红色。','我叫红色。'],['我家有火。','我家有火。']], ans:'我属龙。', badge:'🐲'},
+  {title:'Мини-диалог', emoji:'💬', type:'читаем и говорим', mode:'read', say:'你叫什么名字？我叫鲁佳。', prompt:'Ответь на вопрос: <span class="cn">你叫什么名字？</span>', hint:'Выбери ответ про имя.', opts:[['我叫鲁佳。','我叫鲁佳。'],['我属兔。','我属兔。'],['我喜欢红色。','我喜欢红色。'],['我家有三口人。','我家有三口人。']], ans:'我叫鲁佳。', badge:'💬'}
+ ]
+];
+
+const kids={
+  igor:{ru:'Игорь',emoji:'👦',cnName:'易歌',age:'我六岁',family:'我家有三口人',relatives:['爸爸','妈妈'],siblings:['我有一个弟弟'],zodiac:'我属龙',colors:['蓝色'],pets:['我有一只狗'],icons:{age:'6️⃣',family:'🏠',relatives:['👨','👩'],siblings:['👦'],zodiac:'🐲',colors:['🔵'],pets:['🐶']}},
+  luka:{ru:'Лука',emoji:'👦',cnName:'鲁佳',age:'我五岁',family:'我家有四口人',relatives:['爸爸','妈妈'],siblings:['我有一个哥哥'],zodiac:'我属蛇',colors:['绿色'],pets:['我有一只猫'],icons:{age:'5️⃣',family:'🏠',relatives:['👨','👩'],siblings:['👦'],zodiac:'🐍',colors:['🟢'],pets:['🐱']}},
+  iren:{ru:'Ирэн',emoji:'👧',cnName:'依仁',age:'我十岁',family:'我家有四口人',relatives:['爸爸','妈妈'],siblings:['我有一个弟弟'],zodiac:'我属猴',colors:['红色'],pets:['我有一只狗'],icons:{age:'🔟',family:'🏠',relatives:['👨','👩'],siblings:['👦'],zodiac:'🐵',colors:['🔴'],pets:['🐶']}}
+};
+const zodiacChoices=[['🐭','鼠'],['🐮','牛'],['🐯','虎'],['🐰','兔'],['🐲','龙'],['🐍','蛇'],['🐴','马'],['🐐','羊'],['🐵','猴'],['🐔','鸡'],['🐶','狗'],['🐷','猪']];
+const colorChoices=[['🔴','红色'],['🔵','蓝色'],['🟡','黄色'],['🟢','绿色'],['⚪','白色'],['⚫','黑色'],['🟣','紫色'],['🟠','橙色']];
+const relativeChoices=[['👨','爸爸'],['👩','妈妈'],['👵','姥姥'],['👴','爷爷'],['👴','姥爷'],['👵','奶奶']];
+const petChoices=[['🐶','我有一只狗','狗'],['🐱','我有一只猫','猫'],['🐰','我有一只兔子','兔子'],['🐹','我有一只仓鼠','仓鼠'],['🚫','我没有动物','нет животного']];
+function numCn(n){return ['零','一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五'][n]}
+function ageIcon(n){return n===10?'🔟':String(n)}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function makeRandomLevels(){levels = levelBank.map(group=>shuffle(group)[0]);}
+function speak(text,lang='zh-CN'){speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang=lang;u.rate=.78;speechSynthesis.speak(u)}
+function speakRu(t){speak(t,'ru-RU')} function speakZh(t){speak(t,'zh-CN')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function showHelp(){const h=document.getElementById('help');h.style.display=h.style.display==='none'?'block':'none'}
+function buildMap(){const map=document.getElementById('map');map.innerHTML='';levels.forEach((l,i)=>{const d=document.createElement('div');d.className='step '+(i<current?'done':i===current?'now':'lock');d.innerHTML=`<div class="emoji">${l.badge}</div><div>${i+1}. ${l.title.split(':')[0]}</div>`;map.appendChild(d)})}
+function updateStats(){document.getElementById('score').textContent=score;document.getElementById('badgesCount').textContent=badges.length;document.getElementById('bar').style.width=(levels.length?current/levels.length*100:0)+'%'}
+function startGame(){makeRandomLevels();current=0;score=0;badges=[];updateStats();show('game');loadLevel();speakRu('Начинаем китайское путешествие! Слушай внимательно и выбирай ответ.')}
+function loadLevel(){buildMap();updateStats();const l=levels[current];lastSay=l.say;document.getElementById('levelNum').textContent=current+1;document.getElementById('levelTitle').textContent=l.title;document.getElementById('qEmoji').textContent=l.emoji;document.getElementById('qType').textContent=l.type;document.getElementById('prompt').innerHTML=l.prompt;document.getElementById('hint').innerHTML=l.hint;document.getElementById('feedback').textContent='';document.getElementById('badgeLine').innerHTML=badges.map(b=>`<span class="badge">${b}</span>`).join('');const box=document.getElementById('options');box.innerHTML='';shuffle(l.opts).forEach(o=>{const btn=document.createElement('button');btn.className='opt';btn.innerHTML=`<span class="cn">${o[0]}</span>`;btn.onclick=()=>answer(btn,o[1]);box.appendChild(btn)});setTimeout(()=>{if(l.mode==='listen')speakZh(l.say)},500)}
+function repeatAudio(){speakZh(lastSay)}
+function answer(btn,val){const l=levels[current];document.querySelectorAll('.opt').forEach(b=>b.disabled=true);if(val===l.ans){btn.classList.add('correct');score+=10;badges.push(l.badge);document.getElementById('feedback').textContent='太好了！Верно! Повторяем вслух: '+l.say;speakZh(l.say);setTimeout(()=>{current++; if(current>=levels.length){showSpeech()}else loadLevel()},1100)}else{btn.classList.add('wrong');document.getElementById('feedback').textContent='Почти! Давай ещё раз послушаем.';speakRu('Почти! Слушаем ещё раз.');setTimeout(()=>{document.querySelectorAll('.opt').forEach(b=>{b.disabled=false;b.classList.remove('wrong')});repeatAudio()},900)}updateStats()}
+function showSpeech(){document.getElementById('bar').style.width='100%';show('speech');buildSpeech()}
+function setKid(key){activeKid=key;buildSpeech()}
+function relativesText(k){const x=kids[k];if(!x.relatives||x.relatives.length===0)return '';return `我家有${x.relatives.join('，')}。`}
+function siblingText(k){const x=kids[k];if(!x.siblings||x.siblings.length===0)return '';if(x.siblings.includes('我没有兄弟姐妹'))return '我没有兄弟姐妹。';const parts=x.siblings.map(v=>v.replace(/^我有/,''));return `我有${parts.join('，')}。`}
+function colorText(k){const x=kids[k];if(!x.colors||x.colors.length===0)return '';return `我喜欢${x.colors.join('，')}。`}
+function petText(k){const x=kids[k];if(!x.pets||x.pets.length===0)return '';if(x.pets.includes('我没有动物'))return '我没有动物。';const parts=x.pets.map(v=>v.replace(/^我有/,''));return `我有${parts.join('，')}。`}
+function kidSentence(k){const x=kids[k];return `你好！我叫${x.cnName}。${x.age}。${x.family}。${relativesText(k)}${siblingText(k)}${x.zodiac}。${colorText(k)}${petText(k)}谢谢！`}
+function kidEmojiLine(k){const x=kids[k];return `${x.emoji} ${x.icons.age} ${x.icons.family} ${(x.icons.relatives||[]).join(' ')} ${(x.icons.siblings||[]).join(' ')} ${x.icons.zodiac} ${(x.icons.colors||[]).join(' ')} ${(x.icons.pets||[]).join(' ')}`}
+function setField(field,value,icon){kids[activeKid][field]=value;kids[activeKid].icons[field]=icon;buildSpeech()}
+function toggleMulti(field,value,icon){const k=kids[activeKid];k[field]=k[field]||[];k.icons[field]=k.icons[field]||[];let idx=k[field].indexOf(value);if(idx>=0){k[field].splice(idx,1);k.icons[field].splice(idx,1)}else{k[field].push(value);k.icons[field].push(icon)}buildSpeech()}
+function toggleSibling(value,icon){const k=kids[activeKid];if(value==='我没有兄弟姐妹'){k.siblings=['我没有兄弟姐妹'];k.icons.siblings=['🚫']}else{let idx=k.siblings.indexOf(value);if(idx>=0){k.siblings.splice(idx,1);k.icons.siblings.splice(idx,1)}else{k.siblings=k.siblings.filter(v=>v!=='我没有兄弟姐妹');k.icons.siblings=(k.icons.siblings||[]).filter(v=>v!=='🚫');k.siblings.push(value);k.icons.siblings.push(icon)}if(k.siblings.length===0){k.siblings=['我没有兄弟姐妹'];k.icons.siblings=['🚫']}}buildSpeech()}
+function toggleColor(value,icon){toggleMulti('colors',value,icon)}
+function togglePet(value,icon){const k=kids[activeKid];k.pets=k.pets||[];k.icons.pets=k.icons.pets||[];if(value==='我没有动物'){k.pets=['我没有动物'];k.icons.pets=['🚫']}else{let idx=k.pets.indexOf(value);if(idx>=0){k.pets.splice(idx,1);k.icons.pets.splice(idx,1)}else{k.pets=k.pets.filter(v=>v!=='我没有动物');k.icons.pets=(k.icons.pets||[]).filter(v=>v!=='🚫');k.pets.push(value);k.icons.pets.push(icon)}if(k.pets.length===0){k.pets=['我没有动物'];k.icons.pets=['🚫']}}buildSpeech()}
+function buildSpeech(){const tabs=document.getElementById('kidTabs');tabs.innerHTML='';Object.entries(kids).forEach(([key,k])=>{const b=document.createElement('button');b.className='kidTab '+(key===activeKid?'active':'');b.innerHTML=`${k.emoji} ${k.ru}`;b.onclick=()=>setKid(key);tabs.appendChild(b)});const k=kids[activeKid];const root=document.getElementById('speechChoices');root.innerHTML='';const ageBtns=Array.from({length:15},(_,i)=>{const n=i+1, cn=n===2?'两':numCn(n), val=`我${cn}岁`, icon=ageIcon(n);return `<button class="choiceBtn ${k.age===val?'active':''}" onclick="setField('age','${val}','${icon}')">${n} 岁</button>`}).join('');const famBtns=[2,3,4,5,6,7,8,9,10].map(n=>{const cn=n===2?'两':numCn(n), val=`我家有${cn}口人`;return `<button class="choiceBtn ${k.family===val?'active':''}" onclick="setField('family','${val}','🏠')">${n} 口人</button>`}).join('');const relBtns=relativeChoices.map(a=>`<button class="choiceBtn ${(k.relatives||[]).includes(a[1])?'active':''}" onclick="toggleMulti('relatives','${a[1]}','${a[0]}')">${a[0]} ${a[1]}</button>`).join('');const siblingChoices=[['👦','我有一个哥哥','一个哥哥'],['👦👦','我有两个哥哥','两个哥哥'],['👦👦👦','我有三个哥哥','三个哥哥'],['👦','我有一个弟弟','一个弟弟'],['👦👦','我有两个弟弟','两个弟弟'],['👦👦👦','我有三个弟弟','三个弟弟'],['👧','我有一个姐姐','一个姐姐'],['👧👧','我有两个姐姐','两个姐姐'],['👧👧👧','我有三个姐姐','三个姐姐'],['👧','我有一个妹妹','一个妹妹'],['👧👧','我有两个妹妹','两个妹妹'],['👧👧👧','我有三个妹妹','三个妹妹'],['🚫','我没有兄弟姐妹','нет братьев/сестёр']];const sibBtns=siblingChoices.map(a=>`<button class="choiceBtn ${(k.siblings||[]).includes(a[1])?'active':''}" onclick="toggleSibling('${a[1]}','${a[0]}')">${a[0]} ${a[2]}</button>`).join('');const zBtns=zodiacChoices.map(a=>{const val=`我属${a[1]}`;return `<button class="choiceBtn ${k.zodiac===val?'active':''}" onclick="setField('zodiac','${val}','${a[0]}')">${a[0]} 属${a[1]}</button>`}).join('');const cBtns=colorChoices.map(a=>`<button class="choiceBtn ${(k.colors||[]).includes(a[1])?'active':''}" onclick="toggleColor('${a[1]}','${a[0]}')">${a[0]} ${a[1]}</button>`).join('');const petBtns=petChoices.map(a=>`<button class="choiceBtn ${(k.pets||[]).includes(a[1])?'active':''}" onclick="togglePet('${a[1]}','${a[0]}')">${a[0]} ${a[2]}</button>`).join('');const groups=[['1. 你叫什么名字？ <span class="ru">(Как тебя зовут?)</span>',`<div class="speechLine cn">我叫${k.cnName}</div><div class="ru">Имя уже настроено: ${k.ru}</div><button class="choiceBtn" onclick="speakZh('我叫${k.cnName}')">🔊 послушать</button>`],['2. 你几岁？ <span class="ru">(Сколько тебе лет?)</span>',ageBtns],['3. 你家有几口人？ <span class="ru">(Сколько человек в семье?)</span>',famBtns],['4. 你家有谁？ <span class="ru">(Кто есть в семье? Можно выбрать несколько)</span>',relBtns],['5. 你有兄弟姐妹吗？ <span class="ru">(Есть братья/сёстры? Можно выбрать несколько)</span>',sibBtns],['6. 你属什么？ <span class="ru">(Год кого?)</span>',zBtns],['7. 你喜欢什么颜色？ <span class="ru">(Какие цвета ты любишь? Можно выбрать несколько)</span>',cBtns],['8. 你有什么动物？ <span class="ru">(Какое животное у тебя есть?)</span>',petBtns]];groups.forEach(g=>{const div=document.createElement('div');div.className='speechCard';div.innerHTML=`<h3>${g[0]}</h3>${g[1]}`;root.appendChild(div)});document.getElementById('storyPreview').innerHTML=`<div class="storyEmoji">${kidEmojiLine(activeKid)}</div><div class="finalCn" style="font-size:clamp(28px,5vw,54px)">${kidSentence(activeKid)}</div><div class="ru"><b>${k.ru}</b>: рассказ готовится здесь. Нажмите 🔊, чтобы ребёнок повторил вслух.</div>`}
+function speakCurrentStory(){speakZh(kidSentence(activeKid))}
+function speakAllStories(){speakZh(Object.keys(kids).map(kidSentence).join(' '))}
+function finishGame(){show('final');const root=document.getElementById('finalStories');root.innerHTML=Object.entries(kids).map(([key,k])=>`<div class="storyPreview" style="margin:14px 0"><div class="storyEmoji">${kidEmojiLine(key)}</div><div class="finalCn" style="font-size:clamp(26px,5vw,52px)">${kidSentence(key)}</div><div style="font-size:22px;font-weight:900">${k.emoji} ${k.ru} может рассказать о себе по-китайски!</div></div>`).join('');document.getElementById('finalBadges').innerHTML=badges.map(b=>`<span class="badge">${b}</span>`).join('')}
+makeRandomLevels();buildMap();
+</script>
+</body>
+</html>
