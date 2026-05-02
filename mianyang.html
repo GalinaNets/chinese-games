@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>绿绵羊在哪里？Домашнее задание</title>
+<style>
+  :root{--green:#44b36b;--mint:#e9fff1;--dark:#21422c;--yellow:#fff2b8;--pink:#ffe6ef;--blue:#e8f2ff;--red:#ffe8e8;--card:#ffffff;--shadow:0 12px 30px rgba(33,66,44,.14)}
+  *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Arial,"Noto Sans SC",sans-serif;background:linear-gradient(160deg,#f7fff8,#e8f6ff 55%,#fff7d7);color:var(--dark)}
+  header{padding:28px 18px 18px;text-align:center;background:radial-gradient(circle at top,#d8ffe2,transparent 55%)}
+  h1{margin:0;font-size:clamp(28px,6vw,52px)} h2{font-size:clamp(22px,4vw,34px);margin:0 0 10px}.sub{font-size:18px;opacity:.85;margin-top:8px}.wrap{max-width:1050px;margin:0 auto;padding:14px}.card{background:rgba(255,255,255,.92);border-radius:28px;padding:22px;margin:16px 0;box-shadow:var(--shadow);border:1px solid rgba(68,179,107,.16)}
+  .hero{display:grid;grid-template-columns:1fr;gap:14px;align-items:center}.sheep-big{font-size:92px;filter:drop-shadow(0 12px 12px rgba(0,0,0,.12));animation:float 3s ease-in-out infinite}.scene{font-size:52px;line-height:1.1;text-align:center;padding:15px;border-radius:24px;background:var(--mint)}@keyframes float{50%{transform:translateY(-8px)}}
+  button{border:0;border-radius:18px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--green);color:white;box-shadow:0 8px 18px rgba(68,179,107,.25);font-size:16px}button.secondary{background:#fff;color:var(--dark);border:2px solid #a8e6bd}button.small{padding:8px 11px;font-size:14px;border-radius:14px}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}.option{background:#fff;border:3px solid #d9f5e2;border-radius:24px;padding:15px;min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;cursor:pointer;transition:.2s}.option:hover{transform:translateY(-2px);border-color:#65c985}.option.correct{background:#e8fff0;border-color:#39ae60}.option.wrong{background:#fff0f0;border-color:#e26b6b}.hanzi{font-size:28px;font-weight:900}.pinyin{font-size:15px;opacity:.75}.emoji{font-size:42px}.feedback{font-weight:800;margin-top:10px;min-height:26px}.pill{display:inline-block;background:#eefbf2;border:1px solid #bdebc9;border-radius:99px;padding:7px 12px;margin:4px;font-weight:700}.progress{height:14px;background:#dff5e6;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,#42b56a,#9bd75a);transition:.3s}.sentence-bank span{user-select:none}.dropzone{min-height:64px;border:3px dashed #a8e6bd;border-radius:20px;padding:10px;background:#fbfffc}.word{display:inline-block;padding:9px 12px;margin:5px;border-radius:14px;background:#fff2b8;border:2px solid #f0d875;font-weight:900;cursor:pointer}.word.used{opacity:.35}.mini{font-size:13px;opacity:.72}.cloud{background:#fff;border-radius:24px;padding:16px;border:2px dashed #bdebc9}.speakbox{width:100%;min-height:120px;border:2px solid #bdebc9;border-radius:18px;padding:12px;font-size:17px} .footer{text-align:center;font-size:13px;opacity:.75;padding:18px}.hidden{display:none}.stars{font-size:22px}.dir-board{display:grid;grid-template-columns:repeat(5,52px);grid-template-rows:repeat(5,52px);gap:6px;justify-content:center;margin:12px auto}.cell{background:#fff;border:2px solid #ccefd7;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px}.cell.active{background:#fff2b8;border-color:#e4c93d}.cell.end{background:#dfffe9;border-color:#44b36b;font-size:30px}.badge{font-size:46px}.dragline{font-size:18px;line-height:1.8}
+  @media (min-width:800px){.hero{grid-template-columns:1fr 1.2fr}.scene{font-size:70px}.card{padding:28px}.sheep-big{font-size:130px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="sheep-big">🐑💚</div>
+  <h1>绿绵羊在哪里？</h1>
+  <div class="sub">Домашнее задание после чтения книги</div>
+</header>
+<main class="wrap">
+  <section class="card hero">
+    <div class="scene">📖 🐑 🌈 🌙 ⭐</div>
+    <div>
+      <h2>Привет! 找一找绿色的绵羊！</h2>
+      <p>Нажимай на 🔊, слушай китайские фразы, выбирай ответы и в конце запиши / расскажи мини-историю.</p>
+      <div class="progress"><div id="bar" class="bar"></div></div>
+      <p><b>Очки:</b> <span id="score">0</span> / <span id="total">0</span> <span class="stars" id="stars"></span></p>
+      <button onclick="speak('绿色的绵羊在哪里？')">🔊 听一听</button>
+    </div>
+  </section>
+
+  <section class="card" id="task1">
+    <h2>1. 这是什么颜色的绵羊？</h2>
+    <p>Послушай и выбери нужную овечку.</p>
+    <div class="row"><button onclick="playColorQ()">🔊 Новая фраза</button><span class="pill" id="colorPrompt">Нажми «Новая фраза»</span></div>
+    <div class="grid" id="colorOptions"></div><div class="feedback" id="fb1"></div>
+  </section>
+
+  <section class="card">
+    <h2>2. 正在做什么？</h2>
+    <p><b>正在</b> = делает прямо сейчас. Соедини овечку и действие.</p>
+    <div class="grid" id="actionGrid"></div><div class="feedback" id="fb2"></div>
+  </section>
+
+  <section class="card">
+    <h2>3. Собери предложение</h2>
+    <p>Нажимай на слова в правильном порядке.</p>
+    <div class="dropzone" id="sentenceZone"></div>
+    <div class="sentence-bank" id="bank"></div>
+    <div class="row"><button onclick="checkSentence()">Проверить</button><button class="secondary" onclick="resetSentence()">Сбросить</button><button class="secondary" onclick="speak('这是一只胖乎乎的绵羊。')">🔊</button></div>
+    <div class="feedback" id="fb3"></div>
+  </section>
+
+  <section class="card">
+    <h2>4. 轻还是重？</h2>
+    <p>Выбери правильную фразу.</p>
+    <div class="grid">
+      <div class="option" onclick="choose(this,true,'fb4')"><div class="emoji">🐑</div><div class="hanzi">瘦瘦的绵羊很轻。</div><div class="pinyin">shòu shòu de mián yáng hěn qīng</div></div>
+      <div class="option" onclick="choose(this,false,'fb4')"><div class="emoji">🐑</div><div class="hanzi">瘦瘦的绵羊很重。</div><div class="pinyin">shòu shòu de mián yáng hěn zhòng</div></div>
+      <div class="option" onclick="choose(this,true,'fb4')"><div class="emoji">🐑🐑</div><div class="hanzi">胖乎乎的绵羊很重。</div><div class="pinyin">pàng hū hū de mián yáng hěn zhòng</div></div>
+    </div><div class="feedback" id="fb4"></div>
+  </section>
+
+  <section class="card">
+    <h2>5. 在哪里？近还是远？</h2>
+    <p>Нажми на правильный ответ.</p>
+    <div class="row"><button onclick="speak('有一只绵羊离我们很近很近。')">🔊 近</button><button onclick="speak('有一只绵羊离我们很远很远。')">🔊 远</button></div>
+    <div class="grid">
+      <div class="option" onclick="choose(this,true,'fb5')"><div class="emoji">🐑 👧</div><div class="hanzi">绵羊离我很近。</div></div>
+      <div class="option" onclick="choose(this,false,'fb5')"><div class="emoji">🐑　　　　　　　👧</div><div class="hanzi">绵羊离我很近。</div></div>
+      <div class="option" onclick="choose(this,true,'fb5')"><div class="emoji">🐑　　　　　　　🐻</div><div class="hanzi">绵羊离熊很远。</div></div>
+    </div><div class="feedback" id="fb5"></div>
+  </section>
+
+  <section class="card">
+    <h2>6. 对还是不对？</h2>
+    <p>Прочитай фразу и выбери ✔️ или ❌.</p>
+    <div id="tfBox" class="cloud"></div>
+    <div class="row"><button onclick="answerTF(true)">✔️ 对</button><button onclick="answerTF(false)">❌ 不对</button><button class="secondary" onclick="nextTF()">Следующая</button></div>
+    <div class="feedback" id="fb6"></div>
+  </section>
+
+  <section class="card">
+    <h2>7. 上下左右：проведи овечку</h2>
+    <p>Маршрут: <b>下 → 左 → 上 → 上 → 右</b>. Нажимай кнопку «шаг», а потом скажи: 小羊在做什么？</p>
+    <div class="dir-board" id="board"></div>
+    <div class="row"><button onclick="stepDir()">Шаг</button><button class="secondary" onclick="resetDir()">Сначала</button></div>
+    <div class="feedback" id="fb7"></div>
+  </section>
+
+  <section class="card">
+    <h2>8. Где же зелёная овечка?</h2>
+    <p>Выбери финал книги.</p>
+    <div class="grid">
+      <div class="option" onclick="choose(this,false,'fb8')"><div class="emoji">🐑🎪</div><div class="hanzi">她在马戏表演。</div></div>
+      <div class="option" onclick="choose(this,false,'fb8')"><div class="emoji">🐑🌊</div><div class="hanzi">她正在冲浪。</div></div>
+      <div class="option" onclick="choose(this,true,'fb8')"><div class="emoji">🐑💚💤</div><div class="hanzi">她睡得正香呢。</div></div>
+    </div><div class="feedback" id="fb8"></div>
+  </section>
+
+  <section class="card">
+    <h2>9. Финальное говорение 🎤</h2>
+    <p>Скажи вслух 4–5 фраз про овечек. Можно использовать подсказки:</p>
+    <div class="dragline">
+      <span class="pill">这是一只……的绵羊。</span>
+      <span class="pill">她正在……</span>
+      <span class="pill">绵羊在……下面 / 上面 / 旁边。</span>
+      <span class="pill">绿色的绵羊睡得正香呢。</span>
+    </div>
+    <textarea class="speakbox" placeholder="Можно написать сюда свой рассказ китайскими фразами перед тем, как озвучивать..."></textarea>
+    <div class="row"><button onclick="finish()">Я рассказал(а)! 完成 ✅</button></div><div class="feedback" id="fb9"></div>
+  </section>
+</main>
+<div class="footer">Домашка по книге «绿绵羊在哪里？» · by Galina Netsvetaeva</div>
+<script>
+let score=0,total=8,done={};document.getElementById('total').textContent=total;
+function update(){document.getElementById('score').textContent=score;document.getElementById('bar').style.width=Math.min(100,score/total*100)+'%';document.getElementById('stars').textContent='⭐'.repeat(Math.min(score,8));}
+function add(id){if(!done[id]){done[id]=true;score++;update();}}
+function speak(text){const u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.82;speechSynthesis.cancel();speechSynthesis.speak(u)}
+function choose(el,ok,fb){ if(el.classList.contains('correct')||el.classList.contains('wrong'))return; el.classList.add(ok?'correct':'wrong'); document.getElementById(fb).textContent=ok?'太棒了！回答正确！':'再想一想～'; if(ok)add(fb); const hz=el.querySelector('.hanzi'); if(hz) speak(hz.textContent.replace(/[。！?？]/g,''));}
+const colors=[['蓝色','lán sè','💙','blue'],['红色','hóng sè','❤️','red'],['绿色','lǜ sè','💚','green'],['黄色','huáng sè','💛','yellow']];let currentColor=null;
+function playColorQ(){currentColor=colors[Math.floor(Math.random()*colors.length)];let phrase='这是一只'+currentColor[0]+'的绵羊';document.getElementById('colorPrompt').textContent='🔊 '+phrase;speak(phrase);let arr=[...colors].sort(()=>Math.random()-.5);document.getElementById('colorOptions').innerHTML=arr.map(c=>`<div class="option" onclick="colorPick('${c[3]}',this)"><div class="emoji">🐑${c[2]}</div><div class="hanzi">${c[0]}的绵羊</div><div class="pinyin">${c[1]} de mián yáng</div></div>`).join('');document.getElementById('fb1').textContent='';}
+function colorPick(key,el){let ok=key===currentColor[3];el.classList.add(ok?'correct':'wrong');document.getElementById('fb1').textContent=ok?'对！这是'+currentColor[0]+'的绵羊。':'不对，再听一次。'; if(ok)add('c1')}
+const actions=[['洗澡','正在洗澡','🛁'],['睡觉','正在睡觉','💤'],['看书','正在看书','📚'],['冲浪','正在冲浪','🌊'],['放风筝','正在放风筝','🪁'],['荡秋千','爱荡秋千','🎡']];
+document.getElementById('actionGrid').innerHTML=actions.map((a,i)=>`<div class="option" onclick="actionPick(this,'${a[1]}')"><div class="emoji">🐑${a[2]}</div><div class="hanzi">${a[1]}</div><button class="small" onclick="event.stopPropagation();speak('这是一只${a[1]}的绵羊')">🔊</button></div>`).join('');let actionCount=0;function actionPick(el,t){if(el.classList.contains('correct'))return;el.classList.add('correct');speak('这是一只'+t+'的绵羊');actionCount++;document.getElementById('fb2').textContent='已找到 '+actionCount+' / 6'; if(actionCount>=3)add('act')}
+const target=['这','是','一只','胖乎乎','的','绵羊'];let chosen=[];function resetSentence(){chosen=[];document.getElementById('sentenceZone').innerHTML='';renderBank();document.getElementById('fb3').textContent=''}function renderBank(){let words=[...target].sort(()=>Math.random()-.5);document.getElementById('bank').innerHTML=words.map(w=>`<span class="word" onclick="pickWord(this,'${w}')">${w}</span>`).join('')}function pickWord(el,w){if(el.classList.contains('used'))return;chosen.push(w);el.classList.add('used');document.getElementById('sentenceZone').innerHTML=chosen.map(x=>`<span class="word">${x}</span>`).join(' ')}function checkSentence(){let ok=chosen.join('')===target.join('');document.getElementById('fb3').textContent=ok?'正确！这是一只胖乎乎的绵羊。':'Почти! Правильный порядок: 这 是 一只 胖乎乎 的 绵羊';if(ok){speak('这是一只胖乎乎的绵羊');add('sent')}}renderBank();
+const tf=[['海边有一只放风筝的绵羊。',true],['海里有一只放风筝的绵羊。',false],['海是蓝色的。',true],['波浪是红色的。',false],['雨伞下面也有一只绵羊。',true],['绿色的绵羊正在冲浪。',false]];let tfI=0;function showTF(){document.getElementById('tfBox').innerHTML=`<div class="hanzi">${tf[tfI][0]}</div><button class="small" onclick="speak('${tf[tfI][0]}')">🔊 听</button>`;document.getElementById('fb6').textContent=''}function nextTF(){tfI=(tfI+1)%tf.length;showTF()}function answerTF(ans){let ok=ans===tf[tfI][1];document.getElementById('fb6').textContent=ok?'对！':'不对～ попробуй ещё';if(ok)add('tf'+tfI)}showTF();
+let pos=[2,2],step=0,dirs=[[1,0],[0,-1],[-1,0],[-1,0],[0,1]],labels=['下','左','上','上','右'];function drawBoard(){let html='';for(let r=0;r<5;r++)for(let c=0;c<5;c++){let cls='cell';let txt='';if(r===pos[0]&&c===pos[1]){cls+=' active';txt='🐑'}html+=`<div class="${cls}">${txt}</div>`}document.getElementById('board').innerHTML=html}function stepDir(){if(step>=dirs.length){document.getElementById('fb7').textContent='到啦！小羊在睡觉吗？';add('dir');return}pos=[pos[0]+dirs[step][0],pos[1]+dirs[step][1]];speak(labels[step]);step++;drawBoard();if(step>=dirs.length){document.getElementById('fb7').textContent='路线完成！说一句：小羊在……';add('dir')}}function resetDir(){pos=[2,2];step=0;document.getElementById('fb7').textContent='';drawBoard()}drawBoard();
+function finish(){document.getElementById('fb9').textContent='太棒了！Домашка завершена. Можно отправить учителю скрин с очками и рассказом.';add('fin');confetti()}function confetti(){for(let i=0;i<25;i++){let s=document.createElement('span');s.textContent=['⭐','💚','🐑','🌈'][i%4];s.style.position='fixed';s.style.left=Math.random()*100+'vw';s.style.top='-20px';s.style.fontSize='24px';s.style.transition='2.5s';document.body.appendChild(s);setTimeout(()=>{s.style.top='105vh';s.style.transform='rotate(540deg)'},20);setTimeout(()=>s.remove(),2700)}}
+update();
+</script>
+</body>
+</html>
