@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>万能自我介绍表｜Универсальная анкета о себе</title>
+<style>
+:root{
+  --bg1:#f7fbff;
+  --bg2:#fff7ed;
+  --ink:#243044;
+  --muted:#667085;
+  --brand:#2f7d68;
+  --brand2:#f4a261;
+  --card:#ffffff;
+  --line:#dbe7e2;
+  --soft:#eef7f3;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at top left,#dff7ee 0,transparent 32%),
+    radial-gradient(circle at top right,#ffe8c8 0,transparent 28%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+}
+header{padding:28px 18px 12px;text-align:center}
+h1{margin:0;font-size:clamp(26px,4vw,42px);letter-spacing:.5px}
+.subtitle{margin:8px auto 0;max-width:920px;color:var(--muted);font-size:16px;line-height:1.45}
+.wrap{
+  width:min(1180px,96vw);
+  margin:0 auto 48px;
+  display:grid;
+  grid-template-columns:340px 1fr;
+  gap:18px;
+}
+.panel,.main-card,.result-card{
+  background:rgba(255,255,255,.88);
+  backdrop-filter:blur(8px);
+  border:1px solid rgba(219,231,226,.9);
+  border-radius:26px;
+  box-shadow:0 16px 38px rgba(52,80,70,.12);
+}
+.panel{padding:18px;height:fit-content;position:sticky;top:14px}
+.panel h2,.main-card h2,.result-card h2{margin:0 0 12px;font-size:21px}
+.teacher-note{
+  background:var(--soft);
+  border:1px dashed #b9d8cc;
+  border-radius:18px;
+  padding:12px;
+  font-size:14px;
+  color:#315548;
+  margin-bottom:12px;
+}
+.control-grid{display:grid;gap:9px}
+.toggle-row{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:9px 10px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:14px;
+  font-size:14px;
+}
+.toggle-row label{display:flex;gap:8px;align-items:center;cursor:pointer}
+.toggle-row input{transform:scale(1.1)}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+button{
+  border:0;border-radius:14px;padding:10px 13px;
+  background:var(--brand);color:#fff;font-weight:800;
+  cursor:pointer;box-shadow:0 8px 18px rgba(47,125,104,.18);
+}
+button.secondary{background:#fff;color:var(--brand);border:1px solid #afd0c4;box-shadow:none}
+button.orange{background:var(--brand2)}
+button.gray{background:#617083}
+button:hover{filter:brightness(.98);transform:translateY(-1px)}
+.main-card,.result-card{padding:20px}
+.form-grid{display:grid;gap:16px}
+.section{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:22px;
+  padding:16px;
+}
+.section-title{display:flex;align-items:center;gap:10px;font-size:20px;margin-bottom:12px;font-weight:900}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field.full{grid-column:1/-1}
+label.q{display:block;font-weight:900;margin-bottom:5px;line-height:1.35}
+.hint{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-top:2px}
+.pinyinHint,.optionPin{color:#7b5a20}
+.emojiHint{font-size:20px;margin-right:6px}
+input,select{
+  width:100%;
+  border:1px solid #cfe0d9;
+  background:#fbfffd;
+  border-radius:14px;
+  padding:10px 11px;
+  font-size:15px;
+  color:var(--ink);
+}
+select.noPin option .optionPin{display:none}
+.checks{
+  display:flex;flex-wrap:wrap;gap:8px;
+  background:#fbfffd;border:1px solid #cfe0d9;border-radius:14px;padding:8px;
+}
+.checks label{
+  display:flex;align-items:center;gap:5px;
+  background:#fff;border:1px solid #dbe7e2;
+  border-radius:999px;padding:7px 10px;
+  font-size:14px;cursor:pointer;
+}
+.checks input{width:auto}
+.result-card{margin-top:18px}
+.line{
+  padding:10px 12px;margin:8px 0;border-radius:15px;
+  background:linear-gradient(90deg,#f4faf7,#fff);
+  border:1px solid #e4eee9;
+}
+.zh{font-size:20px;font-weight:900;line-height:1.55}
+.pin,.trans{margin-top:4px;color:var(--muted);font-size:14px}
+.pin{color:#7b5a20}
+.emojiOnlyBox{
+  display:none;
+  padding:16px;border-radius:18px;background:#fffaf0;border:1px solid #f5d7a7;
+  font-size:30px;line-height:1.55;margin-top:12px;
+}
+.empty{color:var(--muted);font-style:italic}
+.hidden{display:none!important}
+.printOnly{display:none}
+.small{font-size:12px;color:var(--muted);line-height:1.35}
+body.hideRuHints .ruHint{display:none!important}
+body.hidePinHints .pinyinHint{display:none!important}
+body.hideEmojiHints .emojiHint{display:none!important}
+body.hideOptionPin .optionPin{display:none!important}
+body.hideOptionRu .optionRu{display:none!important}
+body.hideResultEmoji .resultEmoji{display:none!important}
+body.onlyResultEmoji #essay .zhText, body.onlyResultEmoji #essay .pin, body.onlyResultEmoji #essay .trans{display:none!important}
+body.onlyResultEmoji #essay .line{display:inline-block;background:#fffaf0;margin:5px;padding:10px 12px}
+body.onlyResultEmoji #essay .resultEmoji{font-size:30px}
+@media(max-width:900px){
+  .wrap{grid-template-columns:1fr}
+  .panel{position:static}
+  .fields{grid-template-columns:1fr}
+}
+@media print{
+  @page{size:A4;margin:8mm}
+  body{background:#fff}
+  header,.wrap{display:none!important}
+  .printOnly{display:block!important}
+  .printPage{
+    display:block;
+    font-family:"Segoe UI",Arial,sans-serif;
+    color:#111;
+    page-break-after:always;
+  }
+  .printPage:last-child{page-break-after:auto}
+  .printPage h1{text-align:center;font-size:21px;margin:0 0 4mm}
+  .printPage h2{font-size:15px;margin:4mm 0 2mm}
+  .printEssayLine{
+    border-bottom:1px solid #ddd;
+    padding:2mm 0;
+    display:grid;
+    grid-template-columns:12mm 1fr;
+    gap:2mm;
+    align-items:start;
+    break-inside:avoid;
+  }
+  .printEmoji{font-size:18px;text-align:center}
+  .printZh{font-size:13.5px;font-weight:800;line-height:1.25}
+  .printPin,.printRu{font-size:9.5px;color:#555;margin-top:.5mm;line-height:1.15}
+  .exercise{
+    margin:5mm 0;
+    padding:4mm;
+    border:1px solid #ddd;
+    border-radius:8px;
+    break-inside:avoid;
+  }
+  .blank{
+    display:inline-block;
+    min-width:38mm;
+    height:5mm;
+    border-bottom:1px solid #333;
+    vertical-align:baseline;
+  }
+  .longBlank{
+    display:block;
+    width:100%;
+    height:9mm;
+    border-bottom:1px solid #333;
+    margin:2mm 0;
+  }
+  .emojiPlan{font-size:27px;line-height:1.6}
+  .drawBox{height:62mm;border:1px dashed #999;border-radius:10px;margin-top:4mm}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌿 万能自我介绍表</h1>
+  <p class="subtitle">Анкета-конструктор: учитель включает нужные темы, ученик выбирает ответы, а сочинение автоматически меняется. Варианты ответов можно показывать с pinyin / без pinyin, с переводом / без перевода.</p>
+</header>
+
+<div class="wrap">
+  <aside class="panel">
+    <h2>👩‍🏫 Настройки учителя</h2>
+    <div class="teacher-note">Все изменения сразу обновляют сочинение. Отдельная кнопка «Собрать сочинение» больше не нужна.</div>
+
+    <div class="toolbar">
+      <button class="secondary" onclick="toggleBodyClass('hideRuHints')">🇷🇺 Перевод вопросов</button>
+      <button class="secondary" onclick="toggleBodyClass('hidePinHints')">拼音 вопросов</button>
+      <button class="secondary" onclick="toggleBodyClass('hideEmojiHints')">🙂 Эмодзи вопросов</button>
+      <button class="secondary" onclick="toggleBodyClass('hideOptionPin')">拼音 ответов</button>
+      <button class="secondary" onclick="toggleBodyClass('hideOptionRu')">🇷🇺 Перевод ответов</button>
+    </div>
+
+    <h2 style="margin-top:18px">📦 Блоки анкеты</h2>
+    <div id="blockToggles" class="control-grid"></div>
+
+    <div class="toolbar">
+      <button class="orange" onclick="printNow()">🖨️ PDF / печать</button>
+      <button class="gray" onclick="clearForm()">Очистить</button>
+    </div>
+    <p class="small">В PDF будет 2 страницы: 1) сочинение с эмодзи; 2) упражнения с настоящими пропусками для заполнения.</p>
+  </aside>
+
+  <main>
+    <section class="main-card">
+      <h2>📝 Анкета ученика</h2>
+      <div id="form" class="form-grid"></div>
+    </section>
+
+    <section class="result-card">
+      <h2>📖 Моё сочинение</h2>
+      <div class="toolbar">
+        <button class="secondary" onclick="toggleOutput('pin')">Показать/скрыть 拼音</button>
+        <button class="secondary" onclick="toggleOutput('trans')">Показать/скрыть перевод</button>
+        <button class="secondary" onclick="toggleConnectors()">🔗 Связки</button>
+        <button class="secondary" onclick="toggleResultEmoji()">🙂 Эмодзи в тексте</button>
+        <button class="secondary" onclick="toggleOnlyEmojiEssay()">🙈 Убрать текст, оставить эмодзи</button>
+        <button class="secondary" onclick="toggleEmojiOnly()">🙂 Отдельный эмодзи-план</button>
+        <button onclick="speakEssay()">🔊 Озвучить китайский</button>
+      </div>
+      <div id="essay"><p class="empty">Заполните анкету — сочинение появится автоматически.</p></div>
+      <div id="emojiOnly" class="emojiOnlyBox"></div>
+    </section>
+  </main>
+</div>
+
+<div id="printArea" class="printOnly"></div>
+
+<script>
+const blocks = [
+  {id:'basic', title:'👧 基本信息 — базовая информация', fixed:true},
+  {id:'birthday', title:'🎂 生日 — дата рождения'},
+  {id:'zodiac', title:'🐲 生肖 — китайский зодиак'},
+  {id:'nationality', title:'🌍 国籍 — национальность'},
+  {id:'class', title:'🏫 年级 — класс'},
+  {id:'family', title:'👨‍👩‍👧 家庭 — семья'},
+  {id:'pet', title:'🐾 宠物 — питомец'},
+  {id:'colors', title:'🎨 颜色 — любимые цвета'},
+  {id:'fruit', title:'🍎 水果 — фрукты'},
+  {id:'vegetables', title:'🥒 蔬菜 — овощи'},
+  {id:'fastfood', title:'🍕 快餐 — фастфуд'},
+  {id:'appearance', title:'👀 外貌 — внешность / тело'},
+  {id:'character', title:'😊 性格 — характер'},
+  {id:'routine', title:'⏰ 作息 — режим дня'},
+  {id:'transport', title:'🚌 交通 — транспорт до школы / работы'},
+  {id:'job', title:'💼 理想职业 — кем хочешь стать'},
+  {id:'hobby', title:'🎵 爱好 — хобби'}
+];
+
+const options = {
+  colors:[['红色','hóngsè','красный','🔴'],['蓝色','lánsè','синий','🔵'],['绿色','lǜsè','зелёный','🟢'],['黄色','huángsè','жёлтый','🟡'],['粉色','fěnsè','розовый','🌸'],['紫色','zǐsè','фиолетовый','🟣'],['黑色','hēisè','чёрный','⚫'],['白色','báisè','белый','⚪']],
+  zodiac:[['鼠','shǔ','крысы','🐭'],['牛','niú','быка','🐮'],['虎','hǔ','тигра','🐯'],['兔','tù','кролика','🐰'],['龙','lóng','дракона','🐲'],['蛇','shé','змеи','🐍'],['马','mǎ','лошади','🐴'],['羊','yáng','козы/овцы','🐐'],['猴','hóu','обезьяны','🐵'],['鸡','jī','петуха','🐔'],['狗','gǒu','собаки','🐶'],['猪','zhū','свиньи','🐷']],
+  fruit:[['所有水果','suǒyǒu shuǐguǒ','все фрукты','🍎🍌'],['苹果','píngguǒ','яблоко','🍎'],['香蕉','xiāngjiāo','банан','🍌'],['橙子','chéngzi','апельсин','🍊'],['西瓜','xīguā','арбуз','🍉'],['葡萄','pútao','виноград','🍇'],['草莓','cǎoméi','клубника','🍓'],['芒果','mángguǒ','манго','🥭'],['梨','lí','груша','🍐'],['桃子','táozi','персик','🍑'],['菠萝','bōluó','ананас','🍍'],['樱桃','yīngtáo','вишня/черешня','🍒'],['柠檬','níngméng','лимон','🍋'],['椰子','yēzi','кокос','🥥'],['猕猴桃','míhóutáo','киви','🥝'],['石榴','shíliu','гранат','❤️']],
+  vegetables:[['所有蔬菜','suǒyǒu shūcài','все овощи','🥦🥕'],['土豆','tǔdòu','картофель','🥔'],['西红柿','xīhóngshì','помидор','🍅'],['黄瓜','huángguā','огурец','🥒'],['胡萝卜','húluóbo','морковь','🥕'],['白菜','báicài','капуста','🥬'],['玉米','yùmǐ','кукуруза','🌽'],['洋葱','yángcōng','лук','🧅'],['大蒜','dàsuàn','чеснок','🧄'],['蘑菇','mógu','грибы','🍄'],['茄子','qiézi','баклажан','🍆'],['辣椒','làjiāo','перец чили','🌶️'],['南瓜','nánguā','тыква','🎃'],['西兰花','xīlánhuā','брокколи','🥦'],['豌豆','wāndòu','горошек','🟢']],
+  fastfood:[['汉堡包','hànbǎobāo','бургер','🍔'],['比萨','bǐsà','пицца','🍕'],['薯条','shǔtiáo','картошка фри','🍟'],['热狗','règǒu','хот-дог','🌭'],['冰淇淋','bīngqílín','мороженое','🍦'],['可乐','kělè','кола','🥤'],['炸鸡','zhájī','жареная курица','🍗'],['三明治','sānmíngzhì','сэндвич','🥪'],['寿司','shòusī','суши','🍣'],['炸鸡块','zhájīkuài','наггетсы','🍗'],['甜甜圈','tiántiánquān','пончик','🍩'],['奶茶','nǎichá','молочный чай','🧋']],
+  hobbies:[['画画','huàhuà','рисовать','🎨'],['唱歌','chànggē','петь','🎤'],['跳舞','tiàowǔ','танцевать','💃'],['看书','kànshū','читать','📚'],['看电视','kàn diànshì','смотреть телевизор','📺'],['看电影','kàn diànyǐng','смотреть фильмы','🎬'],['打游戏','dǎ yóuxì','играть в игры','🎮'],['踢足球','tī zúqiú','играть в футбол','⚽'],['游泳','yóuyǒng','плавать','🏊'],['弹钢琴','tán gāngqín','играть на пианино','🎹'],['弹吉他','tán jítā','играть на гитаре','🎸'],['拍视频','pāi shìpín','снимать видео','🎬'],['做手工','zuò shǒugōng','мастерить руками','🧶'],['写故事','xiě gùshi','писать истории','✍️'],['学语言','xué yǔyán','учить языки','🗣️'],['旅行','lǚxíng','путешествовать','✈️'],['摄影','shèyǐng','фотография','📷'],['编程','biānchéng','программирование','💻'],['下棋','xià qí','играть в шахматы/настольные игры','♟️'],['滑冰','huábīng','кататься на коньках','⛸️'],['滑板','huábǎn','скейтборд','🛹'],['做饭','zuò fàn','готовить','🍳'],['研究恐龙','yánjiū kǒnglóng','изучать динозавров','🦖'],['观察星星','guānchá xīngxing','наблюдать за звёздами','🔭']],
+  jobs:[['医生','yīshēng','врачом','👩‍⚕️'],['老师','lǎoshī','учителем','👩‍🏫'],['画家','huàjiā','художником','🎨'],['歌手','gēshǒu','певцом/певицей','🎤'],['演员','yǎnyuán','актёром/актрисой','🎭'],['科学家','kēxuéjiā','учёным','🔬'],['厨师','chúshī','поваром','👩‍🍳'],['博客作者','bókè zuòzhě','блогером','📱'],['翻译','fānyì','переводчиком','🌍'],['程序员','chéngxùyuán','программистом','💻'],['设计师','shèjìshī','дизайнером','🖌️'],['工程师','gōngchéngshī','инженером','⚙️'],['建筑师','jiànzhùshī','архитектором','🏛️'],['记者','jìzhě','журналистом','📰'],['作家','zuòjiā','писателем','✍️'],['摄影师','shèyǐngshī','фотографом','📷'],['导演','dǎoyǎn','режиссёром','🎬'],['飞行员','fēixíngyuán','пилотом','✈️'],['宇航员','yǔhángyuán','космонавтом','🚀'],['兽医','shòuyī','ветеринаром','🐾'],['心理医生','xīnlǐ yīshēng','психологом','🧠'],['律师','lǜshī','юристом','⚖️'],['企业家','qǐyèjiā','предпринимателем','💼'],['舞蹈家','wǔdǎojiā','танцором/танцовщицей','💃'],['运动员','yùndòngyuán','спортсменом','🏅'],['游戏设计师','yóuxì shèjìshī','геймдизайнером','🎮'],['考古学家','kǎogǔxuéjiā','археологом','🏺'],['海洋生物学家','hǎiyáng shēngwùxuéjiā','морским биологом','🐬']],
+  character:[['开朗','kāilǎng','открытый, жизнерадостный','😊'],['害羞','hàixiū','застенчивый','🙈'],['聪明','cōngming','умный','🧠'],['努力','nǔlì','старательный','💪'],['认真','rènzhēn','серьёзный, ответственный','📝'],['活泼','huópo','активный, живой','⚡'],['安静','ānjìng','спокойный, тихий','🌿'],['幽默','yōumò','с чувством юмора','😄'],['善良','shànliáng','добрый','💛'],['勇敢','yǒnggǎn','смелый','🦁'],['有耐心','yǒu nàixīn','терпеливый','🧘'],['有创意','yǒu chuàngyì','творческий','✨'],['独立','dúlì','самостоятельный','🧍'],['乐观','lèguān','оптимистичный','🌞']],
+  transport:[['走路','zǒulù','пешком','🚶'],['坐车','zuò chē','на машине/транспорте','🚗'],['开车','kāi chē','сам/сама за рулём','🚘'],['坐公共汽车','zuò gōnggòng qìchē','на автобусе','🚌'],['坐地铁','zuò dìtiě','на метро','🚇'],['骑自行车','qí zìxíngchē','на велосипеде','🚲'],['骑电动车','qí diàndòngchē','на электровелосипеде/скутере','🛵'],['坐电车','zuò diànchē','на трамвае','🚋'],['坐火车','zuò huǒchē','на поезде','🚆'],['坐出租车','zuò chūzūchē','на такси','🚕'],['坐校车','zuò xiàochē','на школьном автобусе','🚌'],['骑滑板车','qí huábǎnchē','на самокате','🛴']]
+};
+
+let showPin = false, showTrans = false, emojiOnlyVisible = false, currentLines=[];
+let useConnectors = true;
+
+function findOpt(list, zh){ return list.find(x=>x[0]===zh) || [zh,'',zh,'']; }
+function enabled(id){ const el=document.getElementById('toggle_'+id); return !el || el.checked; }
+function val(id){ const el=document.getElementById(id); return el ? el.value.trim() : ''; }
+function addLine(arr, zh,pin,ru,emoji){ if(zh && !zh.includes('undefined')) arr.push({zh,pin,ru,emoji}); }
+function toggleBodyClass(c){
+  document.body.classList.toggle(c);
+  const values = {};
+  document.querySelectorAll('#form input, #form select').forEach(el=>{
+    if(el.type === 'checkbox') values[el.name + '|' + el.value] = el.checked;
+    else values[el.id] = el.value;
+  });
+  renderBlocks();
+  restoreFormState(values);
+  generateEssay();
+}
+function toggleConnectors(){
+  useConnectors = !useConnectors;
+  generateEssay();
+}
+function q(emoji, zh, pin, ru){
+  return `<label class="q"><span class="emojiHint">${emoji}</span>${zh}<span class="hint pinyinHint">${pin}</span><span class="hint ruHint">${ru}</span></label>`;
+}
+function field(html, full=false){ return `<div class="field ${full?'full':''}">${html}</div>`; }
+function section(id,title,inner){ return `<section class="section block" data-block="${id}"><div class="section-title">${title}</div><div class="fields">${inner}</div></section>`; }
+
+function numberSelect(id, from, to){
+  let out = `<select id="${id}" onchange="generateEssay()">`;
+  for(let i=from;i<=to;i++) out += `<option value="${i}">${i}</option>`;
+  return out + `</select>`;
+}
+function yearSelect(id, from, to){
+  let out = `<select id="${id}" onchange="generateEssay()">`;
+  for(let i=to;i>=from;i--) out += `<option value="${i}">${i}年</option>`;
+  return out + `</select>`;
+}
+function periodSelect(id){
+  const opts = [
+    ['早上','zǎoshang','утром','🌅'],
+    ['上午','shàngwǔ','до полудня','☀️'],
+    ['中午','zhōngwǔ','в полдень','🌞'],
+    ['下午','xiàwǔ','после обеда','🌇'],
+    ['晚上','wǎnshang','вечером','🌙']
+  ];
+  return makeSelect(id, opts);
+}
+function minuteSelect(id){
+  return `<select id="${id}" onchange="generateEssay()">
+    <option value="00">00分</option>
+    <option value="15">15分</option>
+    <option value="30">30分</option>
+    <option value="45">45分</option>
+  </select>`;
+}
+function timePicker(prefix){
+  return `<div style="display:grid;grid-template-columns:1.25fr 1fr auto 1fr;gap:8px;align-items:center">
+    ${periodSelect(prefix+'Period')}
+    ${numberSelect(prefix+'Hour',1,12)}<b>点</b>${minuteSelect(prefix+'Minute')}
+  </div>`;
+}
+function makeInput(id,type='text',placeholder=''){
+  return `<input id="${id}" type="${type}" placeholder="${placeholder}" oninput="generateEssay()">`;
+}
+function makeSelect(id, opts, selected=''){
+  const hidePin = document.body.classList.contains('hideOptionPin');
+  const hideRu = document.body.classList.contains('hideOptionRu');
+  return `<select id="${id}" onchange="generateEssay()">` + opts.map(o=>{
+    let text = `${o[3]||''} ${o[0]}`;
+    if(!hidePin && o[1]) text += ` (${o[1]})`;
+    if(!hideRu && o[2]) text += ` — ${o[2]}`;
+    return `<option value="${o[0]}" ${o[0]===selected?'selected':''}>${text}</option>`;
+  }).join('') + `</select>`;
+}
+function makeChecks(name, list){
+  return `<div class="checks">` + list.map(o=>`<label><input type="checkbox" name="${name}" value="${o[0]}" onchange="generateEssay()"> ${o[3]} ${o[0]} <span class="optionPin">${o[1]}</span><span class="optionRu"> — ${o[2]}</span></label>`).join('') + `</div>`;
+}
+function selectedMulti(name, list){
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(cb=>findOpt(list, cb.value));
+}
+function joinZh(items){
+  if(items.length===0) return '';
+  const arr=items.map(x=>x[0]);
+  if(arr.length===1) return arr[0];
+  return arr.slice(0,-1).join('、') + '和' + arr[arr.length-1];
+}
+function joinPin(items){
+  const arr=items.map(x=>x[1]||x[0]);
+  if(arr.length===1) return arr[0];
+  return arr.slice(0,-1).join('、') + ' hé ' + arr[arr.length-1];
+}
+function joinRu(items){
+  const arr=items.map(x=>x[2]||x[0]);
+  if(arr.length===1) return arr[0];
+  return arr.slice(0,-1).join(', ') + ' и ' + arr[arr.length-1];
+}
+function joinEmoji(items){ return items.map(x=>x[3]||'').join(' '); }
+
+function initToggles(){
+  const box=document.getElementById('blockToggles');
+  box.innerHTML = blocks.map(b=>`
+    <div class="toggle-row">
+      <label><input type="checkbox" id="toggle_${b.id}" ${b.fixed?'checked disabled':'checked'} onchange="safeRenderBlocks()"> ${b.title}</label>
+    </div>`).join('');
+}
+
+function saveFormState(){
+  const values = {};
+  document.querySelectorAll('#form input, #form select').forEach(el=>{
+    if(el.type === 'checkbox') values[el.name + '|' + el.value] = el.checked;
+    else values[el.id] = el.value;
+  });
+  return values;
+}
+function restoreFormState(values){
+  document.querySelectorAll('#form input, #form select').forEach(el=>{
+    if(el.type === 'checkbox') {
+      if(values[el.name + '|' + el.value] !== undefined) el.checked = values[el.name + '|' + el.value];
+    } else if(values[el.id] !== undefined) {
+      el.value = values[el.id];
+    }
+  });
+}
+function safeRenderBlocks(){
+  const values = saveFormState();
+  renderBlocks();
+  restoreFormState(values);
+  generateEssay();
+}
+function renderBlocks(){
+  const f=document.getElementById('form');
+  let html='';
+  if(enabled('basic')){
+    html += section('basic','👧 基本信息', 
+      field(q('👧','你叫什么名字？','Nǐ jiào shénme míngzi?','Как тебя зовут?')+makeInput('name','text','安娜'))+
+      field(q('🎂','你多大？','Nǐ duō dà?','Сколько тебе лет?')+makeInput('age','number','10'))
+    );
+  }
+  if(enabled('birthday')){
+    html += section('birthday','🎂 生日',
+      field(q('📅','你的生日是几月几号？','Nǐ de shēngrì shì jǐ yuè jǐ hào?','Когда день рождения?')+
+        `<div style="display:grid;grid-template-columns:1fr auto 1fr auto;gap:8px;align-items:center">
+          ${numberSelect('birthMonth',1,12)}<b>月</b>${numberSelect('birthDay',1,31)}<b>号</b>
+        </div>`)
+    );
+  }
+  if(enabled('zodiac')){
+    html += section('zodiac','🐲 生肖',
+      field(q('🐲','你属什么？','Nǐ shǔ shénme?','В год кого ты родилась?')+makeSelect('zodiac', options.zodiac))
+    );
+  }
+  if(enabled('nationality')){
+    html += section('nationality','🌍 国籍',
+      field(q('🌍','你是哪国人？','Nǐ shì nǎ guó rén?','Какая у тебя национальность?')+makeSelect('nationality', [
+        ['俄罗斯人','Éluósī rén','русская/русский','🇷🇺'],['中国人','Zhōngguó rén','китаец/китаянка','🇨🇳'],['哈萨克斯坦人','Hāsàkèsītǎn rén','казахстанка/казахстанец','🇰🇿'],['法国人','Fǎguó rén','француженка/француз','🇫🇷'],['突尼斯人','Tūnísī rén','тунисец/туниска','🇹🇳'],['英国人','Yīngguó rén','британец/британка','🇬🇧'],['美国人','Měiguó rén','американец/американка','🇺🇸'],['德国人','Déguó rén','немец/немка','🇩🇪'],['西班牙人','Xībānyá rén','испанец/испанка','🇪🇸'],['意大利人','Yìdàlì rén','итальянец/итальянка','🇮🇹'],['荷兰人','Hélán rén','нидерландец/нидерландка','🇳🇱'],['乌克兰人','Wūkèlán rén','украинец/украинка','🇺🇦'],['白俄罗斯人','Bái Éluósī rén','белорус/белоруска','🇧🇾'],['格鲁吉亚人','Gélǔjíyà rén','грузин/грузинка','🇬🇪'],['亚美尼亚人','Yàměiníyà rén','армянин/армянка','🇦🇲'],['乌兹别克斯坦人','Wūzībiékèsītǎn rén','узбек/узбечка','🇺🇿'],['吉尔吉斯斯坦人','Jíěrjísīsītǎn rén','киргиз/киргизка','🇰🇬'],['韩国人','Hánguó rén','кореец/кореянка','🇰🇷'],['日本人','Rìběn rén','японец/японка','🇯🇵'],['印度人','Yìndù rén','индиец/индийка','🇮🇳'],['土耳其人','Tǔěrqí rén','турок/турчанка','🇹🇷'],['阿拉伯人','Ālābó rén','араб/арабка','🌍']
+      ]))+
+      field(q('✍️','也可以自己写。','Yě kěyǐ zìjǐ xiě.','Можно вписать свой вариант.')+makeInput('nationalityCustom','text','例如：希腊人 / Xīlà rén'), true)
+    );
+  }
+  if(enabled('class')){
+    html += section('class','🏫 年级',
+      field(q('🏫','你上几年级？','Nǐ shàng jǐ niánjí?','В каком ты классе?')+makeSelect('grade', [['一年级','yì niánjí','1 класс','1️⃣'],['二年级','èr niánjí','2 класс','2️⃣'],['三年级','sān niánjí','3 класс','3️⃣'],['四年级','sì niánjí','4 класс','4️⃣'],['五年级','wǔ niánjí','5 класс','5️⃣'],['六年级','liù niánjí','6 класс','6️⃣'],['七年级','qī niánjí','7 класс','7️⃣'],['八年级','bā niánjí','8 класс','8️⃣'],['九年级','jiǔ niánjí','9 класс','9️⃣'],['十年级','shí niánjí','10 класс','🔟'],['十一年级','shíyī niánjí','11 класс','1️⃣1️⃣']]))
+    );
+  }
+  if(enabled('family')){
+    html += section('family','👨‍👩‍👧 家庭',
+      field(q('👨‍👩‍👧','你家有几口人？','Nǐ jiā yǒu jǐ kǒu rén?','Сколько человек в семье?')+makeInput('familyCount','number','4'))+
+      field(q('💍','你有丈夫 / 妻子吗？','Nǐ yǒu zhàngfu / qīzi ma?','Есть муж / жена?')+makeSelect('spouse', [['没有','méiyǒu','нет','0️⃣'],['有丈夫','yǒu zhàngfu','есть муж','👨'],['有妻子','yǒu qīzi','есть жена','👩']]))+
+      field(q('👶','你有几个孩子？','Nǐ yǒu jǐ ge háizi?','Сколько детей?')+makeSelect('childrenCount', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','один ребёнок','1️⃣'],['两个','liǎng ge','двое детей','2️⃣'],['三个','sān ge','трое детей','3️⃣'],['四个','sì ge','четверо детей','4️⃣']]))+
+      field(q('👦','你有几个儿子？','Nǐ yǒu jǐ ge érzi?','Сколько сыновей?')+makeSelect('sonsCount', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','один','1️⃣'],['两个','liǎng ge','два','2️⃣'],['三个','sān ge','три','3️⃣']]))+
+      field(q('👧','你有几个女儿？','Nǐ yǒu jǐ ge nǚ’ér?','Сколько дочерей?')+makeSelect('daughtersCount', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','одна','1️⃣'],['两个','liǎng ge','две','2️⃣'],['三个','sān ge','три','3️⃣']]))+
+      field(q('👦','你有几个哥哥？','Nǐ yǒu jǐ ge gēge?','Сколько старших братьев?')+makeSelect('olderBro', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','один','1️⃣'],['两个','liǎng ge','два','2️⃣'],['三个','sān ge','три','3️⃣']]))+
+      field(q('👧','你有几个姐姐？','Nǐ yǒu jǐ ge jiějie?','Сколько старших сестёр?')+makeSelect('olderSis', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','одна','1️⃣'],['两个','liǎng ge','две','2️⃣'],['三个','sān ge','три','3️⃣']]))+
+      field(q('👦','你有几个弟弟？','Nǐ yǒu jǐ ge dìdi?','Сколько младших братьев?')+makeSelect('youngerBro', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','один','1️⃣'],['两个','liǎng ge','два','2️⃣'],['三个','sān ge','три','3️⃣']]))+
+      field(q('👧','你有几个妹妹？','Nǐ yǒu jǐ ge mèimei?','Сколько младших сестёр?')+makeSelect('youngerSis', [['没有','méiyǒu','нет','0️⃣'],['一个','yí ge','одна','1️⃣'],['两个','liǎng ge','две','2️⃣'],['三个','sān ge','три','3️⃣']]))
+    );
+  }
+  if(enabled('pet')){
+    html += section('pet','🐾 宠物',
+      field(q('🐾','你有宠物吗？','Nǐ yǒu chǒngwù ma?','У тебя есть питомец?')+makeSelect('pet', [['没有宠物','méiyǒu chǒngwù','нет питомца','❌'],['有一只猫','yǒu yì zhī māo','есть кот/кошка','🐱'],['有一只狗','yǒu yì zhī gǒu','есть собака','🐶'],['有一条鱼','yǒu yì tiáo yú','есть рыбка','🐟'],['有一只兔子','yǒu yì zhī tùzi','есть кролик','🐰'],['有一只仓鼠','yǒu yì zhī cāngshǔ','есть хомяк','🐹'],['有一只鹦鹉','yǒu yì zhī yīngwǔ','есть попугай','🦜'],['有一只乌龟','yǒu yì zhī wūguī','есть черепаха','🐢']]))+
+      field(q('🏷️','宠物叫什么名字？','Chǒngwù jiào shénme míngzi?','Как зовут питомца?')+makeInput('petName','text','雪球'), true)
+    );
+  }
+  if(enabled('colors')) html += section('colors','🎨 颜色', field(q('🎨','你喜欢什么颜色？','Nǐ xǐhuan shénme yánsè?','Какие цвета ты любишь?')+makeChecks('colors',options.colors),true));
+  if(enabled('fruit')) html += section('fruit','🍎 水果', field(q('🍎','你喜欢什么水果？','Nǐ xǐhuan shénme shuǐguǒ?','Какие фрукты ты любишь?')+makeChecks('fruit',options.fruit),true));
+  if(enabled('vegetables')) html += section('vegetables','🥒 蔬菜', field(q('🥒','你喜欢什么蔬菜？','Nǐ xǐhuan shénme shūcài?','Какие овощи ты любишь?')+makeChecks('vegetables',options.vegetables),true));
+  if(enabled('fastfood')) html += section('fastfood','🍕 快餐', field(q('🍕','你喜欢什么快餐？','Nǐ xǐhuan shénme kuàicān?','Какой фастфуд ты любишь?')+makeChecks('fastfood',options.fastfood),true));
+  if(enabled('appearance')){
+    html += section('appearance','👀 外貌',
+      field(q('👀','你的眼睛大不大？','Nǐ de yǎnjing dà bu dà?','Какие глаза по размеру?')+makeSelect('eyeSize', [['大','dà','большие','👀'],['小','xiǎo','маленькие','👁️'],['不大不小','bù dà bù xiǎo','не большие и не маленькие','🙂']]))+
+      field(q('🎨','你的眼睛是什么颜色的？','Nǐ de yǎnjing shì shénme yánsè de?','Какого цвета глаза?')+makeSelect('eyeColor', [['蓝色','lánsè','голубые/синие','🔵'],['绿色','lǜsè','зелёные','🟢'],['棕色','zōngsè','карие','🟤'],['黑色','hēisè','чёрные','⚫']]))+
+      field(q('👃','你的鼻子怎么样？','Nǐ de bízi zěnmeyàng?','Какой нос?')+makeSelect('noseSize', [['大','dà','большой','👃'],['小','xiǎo','маленький','👃'],['不大','bù dà','небольшой','👃']]))+
+      field(q('💇','你的头发长不长？','Nǐ de tóufa cháng bu cháng?','Какие волосы по длине?')+makeSelect('hairLength', [['长','cháng','длинные','💇‍♀️'],['短','duǎn','короткие','💇'],['不长不短','bù cháng bù duǎn','не длинные и не короткие','🙂']]))+
+      field(q('🎨','你的头发是什么颜色的？','Nǐ de tóufa shì shénme yánsè de?','Какого цвета волосы?')+makeSelect('hairColor', [['黑色','hēisè','чёрные','⚫'],['棕色','zōngsè','коричневые/каштановые','🟤'],['金色','jīnsè','светлые/золотистые','🟡'],['红色','hóngsè','рыжие/красные','🔴']]))+
+      field(q('📏','你高不高？','Nǐ gāo bu gāo?','Ты высокая/низкая?')+makeSelect('height', [['很高','hěn gāo','высокая/высокий','📏'],['不高','bù gāo','невысокая/невысокий','🙂'],['很矮','hěn ǎi','низкая/низкий','↘️'],['不矮','bù ǎi','не низкая/не низкий','↗️']]))
+    );
+  }
+  if(enabled('character')) html += section('character','😊 性格', field(q('😊','你的性格怎么样？','Nǐ de xìnggé zěnmeyàng?','Какой у тебя характер?')+makeChecks('character',options.character),true));
+  if(enabled('routine')){
+    html += section('routine','⏰ 作息',
+      field(q('🌅','你几点起床？','Nǐ jǐ diǎn qǐchuáng?','Когда встаёшь?')+timePicker('wake'))+
+      field(q('🚶','你去哪儿？','Nǐ qù nǎr?','Куда человек идёт?')+makeSelect('goPlace', [['去学校','qù xuéxiào','в школу','🏫'],['去上班','qù shàngbān','на работу','💼']]))+
+      field(q('🏫💼','你几点去学校 / 去上班？','Nǐ jǐ diǎn qù xuéxiào / qù shàngbān?','Во сколько идёшь в школу / на работу?')+timePicker('go'))+
+      field(q('🌙','你几点睡觉？','Nǐ jǐ diǎn shuìjiào?','Когда ложишься спать?')+timePicker('sleep'))
+    );
+  }
+  if(enabled('transport')) html += section('transport','🚌 交通', field(q('🚌','你怎么去学校 / 去上班？','Nǐ zěnme qù xuéxiào / qù shàngbān?','Как добираешься в школу / на работу?')+makeSelect('transport',options.transport)));
+  if(enabled('job')) html += section('job','💼 理想职业', field(q('💼','你想当什么？','Nǐ xiǎng dāng shénme?','Кем хочешь стать?')+makeSelect('job',options.jobs)));
+  if(enabled('hobby')) html += section('hobby','🎵 爱好', field(q('🎵','你的爱好是什么？','Nǐ de àihào shì shénme?','Какие у тебя хобби?')+makeChecks('hobbies',options.hobbies),true));
+  f.innerHTML=html;
+  generateEssay();
+}
+
+function getTime(prefix){
+  const p=val(prefix+'Period'), h=val(prefix+'Hour'), m=val(prefix+'Minute');
+  if(!p || h==='' || m==='') return null;
+  const periodPinMap = {'早上':'zǎoshang','上午':'shàngwǔ','中午':'zhōngwǔ','下午':'xiàwǔ','晚上':'wǎnshang'};
+  const periodRuMap = {'早上':'утром','上午':'до полудня','中午':'в полдень','下午':'после обеда','晚上':'вечером'};
+  const minZh = Number(m)===0 ? '' : `${Number(m)}分`;
+  const minPin = Number(m)===0 ? '' : `${Number(m)} fēn`;
+  return {
+    zh:`${p}${Number(h)}点${minZh}`,
+    pin:`${periodPinMap[p]} ${Number(h)} diǎn${minPin ? ' '+minPin : ''}`,
+    ru:`${periodRuMap[p]} в ${Number(h)}:${m}`
+  };
+}
+function birthdayZh(){ const m=val('birthMonth'); const d=val('birthDay'); return (m&&d)?`${m}月${d}号`:''; }
+function birthdayRu(){ const m=val('birthMonth'); const d=val('birthDay'); return (m&&d)?`${d}.${m}`:''; }
+
+function connectorLine(type){
+  const map = {
+    basic:['下面我想介绍一下自己。','Xiàmiàn wǒ xiǎng jièshào yíxià zìjǐ.','Сейчас я хочу немного рассказать о себе.','✨'],
+    family:['先说说我的家。','Xiān shuōshuo wǒ de jiā.','Сначала расскажу о моей семье.','👨‍👩‍👧'],
+    like:['下面说说我喜欢的东西。','Xiàmiàn shuōshuo wǒ xǐhuan de dōngxi.','Теперь расскажу о том, что мне нравится.','💛'],
+    appearance:['关于我的外貌。','Guānyú wǒ de wàimào.','Теперь о моей внешности.','👀'],
+    routine:['我的一天通常是这样的。','Wǒ de yì tiān tōngcháng shì zhèyàng de.','Мой день обычно такой.','⏰'],
+    future:['最后说说我的梦想。','Zuìhòu shuōshuo wǒ de mèngxiǎng.','В конце расскажу о моей мечте.','🌟']
+  };
+  return map[type];
+}
+function generateEssay(){
+  const lines=[];
+  const name=val('name');
+  const age=val('age');
+  if(name) addLine(lines,`大家好！我叫${name}。下面我想介绍一下自己。`,`Dàjiā hǎo! Wǒ jiào ${name}. Xiàmiàn wǒ xiǎng jièshào yíxià zìjǐ.`,`Всем привет! Меня зовут ${name}. Ниже я хочу немного представиться.`,'👋 👧 ✨');
+  if(age) addLine(lines,`我今年${age}岁。`,`Wǒ jīnnián ${age} suì.`,`Мне ${age} лет.`,'🎂');
+
+  if(enabled('birthday')){
+    const bd=birthdayZh();
+    if(bd) addLine(lines,`我的生日是${bd}。`,`Wǒ de shēngrì shì ${bd}.`,`Мой день рождения — ${birthdayRu()}.`,'📅');
+  }
+  if(enabled('zodiac') && val('zodiac')){
+    const z=findOpt(options.zodiac,val('zodiac'));
+    addLine(lines,`我属${z[0]}。`,`Wǒ shǔ ${z[1]}.`,`Я родилась/родился в год ${z[2]}.`,z[3]);
+  }
+  if(enabled('nationality')){
+    const customNat = val('nationalityCustom');
+    const natList = [['俄罗斯人','Éluósī rén','русская/русский','🇷🇺'],['中国人','Zhōngguó rén','китаец/китаянка','🇨🇳'],['哈萨克斯坦人','Hāsàkèsītǎn rén','казахстанка/казахстанец','🇰🇿'],['法国人','Fǎguó rén','француженка/француз','🇫🇷'],['突尼斯人','Tūnísī rén','тунисец/туниска','🇹🇳'],['英国人','Yīngguó rén','британец/британка','🇬🇧'],['美国人','Měiguó rén','американец/американка','🇺🇸'],['德国人','Déguó rén','немец/немка','🇩🇪'],['西班牙人','Xībānyá rén','испанец/испанка','🇪🇸'],['意大利人','Yìdàlì rén','итальянец/итальянка','🇮🇹'],['荷兰人','Hélán rén','нидерландец/нидерландка','🇳🇱'],['乌克兰人','Wūkèlán rén','украинец/украинка','🇺🇦'],['白俄罗斯人','Bái Éluósī rén','белорус/белоруска','🇧🇾'],['格鲁吉亚人','Gélǔjíyà rén','грузин/грузинка','🇬🇪'],['亚美尼亚人','Yàměiníyà rén','армянин/армянка','🇦🇲'],['乌兹别克斯坦人','Wūzībiékèsītǎn rén','узбек/узбечка','🇺🇿'],['吉尔吉斯斯坦人','Jíěrjísīsītǎn rén','киргиз/киргизка','🇰🇬'],['韩国人','Hánguó rén','кореец/кореянка','🇰🇷'],['日本人','Rìběn rén','японец/японка','🇯🇵'],['印度人','Yìndù rén','индиец/индийка','🇮🇳'],['土耳其人','Tǔěrqí rén','турок/турчанка','🇹🇷'],['阿拉伯人','Ālābó rén','араб/арабка','🌍']];
+    const opt = customNat ? [customNat, customNat, customNat, '🌍'] : findOpt(natList,val('nationality'));
+    if(opt[0]) addLine(lines,`我是${opt[0]}。`,`Wǒ shì ${opt[1]}.`,`Я — ${opt[2]}.`,opt[3]);
+  }
+  if(enabled('class') && val('grade')){
+    addLine(lines,`我上${val('grade')}。`,`Wǒ shàng ${val('grade')}.`,`Я учусь: ${val('grade')}.`,'🏫');
+  }
+  if(enabled('family')){
+    if(useConnectors){ const c=connectorLine('family'); addLine(lines,c[0],c[1],c[2],c[3]); }
+    const count=val('familyCount');
+    let members=['爸爸','妈妈'];
+    let ruMembers=['папа','мама'];
+    const spouse=val('spouse');
+    if(spouse==='有丈夫'){ members.push('丈夫'); ruMembers.push('муж'); }
+    if(spouse==='有妻子'){ members.push('妻子'); ruMembers.push('жена'); }
+    [['哥哥',val('olderBro'),'старший брат'],['姐姐',val('olderSis'),'старшая сестра'],['弟弟',val('youngerBro'),'младший брат'],['妹妹',val('youngerSis'),'младшая сестра'],['孩子',val('childrenCount'),'дети'],['儿子',val('sonsCount'),'сын'],['女儿',val('daughtersCount'),'дочь']].forEach(([k,c,r])=>{
+      if(c && c !== '没有') { members.push(`${c}${k}`); ruMembers.push(`${c} ${r}`); }
+    });
+    if(count || members.length){
+      members.push('我');
+      ruMembers.push('я');
+      const familyText = `我家有${joinZh(members.map(x=>[x,'',x,'']))}。`;
+      addLine(lines,`${count?`我家有${count}口人。`:''}${familyText}`,`Wǒ jiā yǒu ${count||'__'} kǒu rén. Wǒ jiā yǒu ${members.join(', ')}.`,`В моей семье ${count||'__'} человек: ${ruMembers.join(', ')}.`,'👨‍👩‍👧');
+    }
+  }
+  if(enabled('pet') && val('pet')){
+    const petMap=[['没有宠物','méiyǒu chǒngwù','нет питомца','❌'],['有一只猫','yǒu yì zhī māo','есть кот/кошка','🐱'],['有一只狗','yǒu yì zhī gǒu','есть собака','🐶'],['有一条鱼','yǒu yì tiáo yú','есть рыбка','🐟'],['有一只兔子','yǒu yì zhī tùzi','есть кролик','🐰'],['有一只仓鼠','yǒu yì zhī cāngshǔ','есть хомяк','🐹'],['有一只鹦鹉','yǒu yì zhī yīngwǔ','есть попугай','🦜'],['有一只乌龟','yǒu yì zhī wūguī','есть черепаха','🐢']];
+    const p=findOpt(petMap,val('pet'));
+    const pn=val('petName');
+    if(p[0]==='没有宠物') addLine(lines,`我没有宠物。`,`Wǒ méiyǒu chǒngwù.`,`У меня нет питомца.`,p[3]);
+    else addLine(lines, pn ? `我${p[0]}，它叫${pn}。` : `我${p[0]}。`, pn ? `Wǒ ${p[1]}, tā jiào ${pn}.` : 'Wǒ '+p[1]+'.', pn ? `У меня ${p[2]}, его/её зовут ${pn}.` : 'У меня '+p[2]+'.', p[3]+' 🏷️');
+  }
+  const hasLikes = ['colors','fruit','vegetables','fastfood'].some(id => enabled(id) && document.querySelectorAll(`input[name="${id}"]:checked`).length);
+  if(useConnectors && hasLikes){ const c=connectorLine('like'); addLine(lines,c[0],c[1],c[2],c[3]); }
+  const likeLabels = {
+    colors:['我最喜欢的颜色是','Wǒ zuì xǐhuan de yánsè shì','Мой любимый цвет —'],
+    fruit:['我最喜欢的水果是','Wǒ zuì xǐhuan de shuǐguǒ shì','Мой любимый фрукт —'],
+    vegetables:['我最喜欢的蔬菜是','Wǒ zuì xǐhuan de shūcài shì','Мой любимый овощ —'],
+    fastfood:['我最喜欢的快餐是','Wǒ zuì xǐhuan de kuàicān shì','Мой любимый фастфуд —']
+  };
+  [['colors',options.colors],['fruit',options.fruit],['vegetables',options.vegetables],['fastfood',options.fastfood]].forEach(([id,list])=>{
+    if(enabled(id)){
+      const items=selectedMulti(id,list);
+      if(items.length) {
+        const lab=likeLabels[id];
+        addLine(lines,`${lab[0]}${joinZh(items)}。`,`${lab[1]} ${joinPin(items)}.`,`${lab[2]} ${joinRu(items)}.`,joinEmoji(items));
+      }
+    }
+  });
+  if(enabled('appearance')){
+    if(useConnectors){ const c=connectorLine('appearance'); addLine(lines,c[0],c[1],c[2],c[3]); }
+    const eyeSize=findOpt([['大','dà','большие','👀'],['小','xiǎo','маленькие','👁️'],['不大不小','bù dà bù xiǎo','не большие и не маленькие','🙂']],val('eyeSize'));
+    const eyeColor=findOpt([['蓝色','lánsè','голубые/синие','🔵'],['绿色','lǜsè','зелёные','🟢'],['棕色','zōngsè','карие','🟤'],['黑色','hēisè','чёрные','⚫']],val('eyeColor'));
+    const nose=findOpt([['大','dà','большой','👃'],['小','xiǎo','маленький','👃'],['不大','bù dà','небольшой','👃']],val('noseSize'));
+    const hairL=findOpt([['长','cháng','длинные','💇‍♀️'],['短','duǎn','короткие','💇'],['不长不短','bù cháng bù duǎn','не длинные и не короткие','🙂']],val('hairLength'));
+    const hairC=findOpt([['黑色','hēisè','чёрные','⚫'],['棕色','zōngsè','коричневые/каштановые','🟤'],['金色','jīnsè','светлые/золотистые','🟡'],['红色','hóngsè','рыжие/красные','🔴']],val('hairColor'));
+    const height=findOpt([['很高','hěn gāo','высокая/высокий','📏'],['不高','bù gāo','невысокая/невысокий','🙂'],['很矮','hěn ǎi','низкая/низкий','↘️'],['不矮','bù ǎi','не низкая/не низкий','↗️']],val('height'));
+    if(val('eyeSize') && val('eyeColor')) addLine(lines,`我有${eyeColor[0]}的${eyeSize[0]}眼睛。`,`Wǒ yǒu ${eyeColor[1]} de ${eyeSize[1]} yǎnjing.`,`У меня ${eyeSize[2]} ${eyeColor[2]} глаза.`,`${eyeColor[3]} ${eyeSize[3]}`);
+    if(val('noseSize')) addLine(lines,`我有${nose[0]}鼻子。`,`Wǒ yǒu ${nose[1]} bízi.`,`У меня ${nose[2]} нос.`,nose[3]);
+    if(val('hairLength') && val('hairColor')) addLine(lines,`我有${hairC[0]}的${hairL[0]}头发。`,`Wǒ yǒu ${hairC[1]} de ${hairL[1]} tóufa.`,`У меня ${hairL[2]} ${hairC[2]} волосы.`,`${hairC[3]} ${hairL[3]}`);
+    if(val('height')) addLine(lines,`我${height[0]}。`,`Wǒ ${height[1]}.`,`Я ${height[2]}.`,height[3]);
+  }
+  if(enabled('character')){
+    const chars=selectedMulti('character',options.character);
+    if(chars.length) addLine(lines,`我的性格${joinZh(chars)}。`,`Wǒ de xìnggé ${joinPin(chars)}.`,`По характеру я: ${joinRu(chars)}.`,joinEmoji(chars));
+  }
+  if(enabled('routine')){
+    const wt=getTime('wake'), gt=getTime('go'), slt=getTime('sleep');
+    const place = val('goPlace') || '去学校';
+    const placePin = place === '去上班' ? 'qù shàngbān' : 'qù xuéxiào';
+    const placeRu = place === '去上班' ? 'на работу' : 'в школу';
+    const placeEmoji = place === '去上班' ? '💼' : '🏫';
+    if(useConnectors && (wt || gt || slt)){ const c=connectorLine('routine'); addLine(lines,c[0],c[1],c[2],c[3]); }
+    if(wt) addLine(lines,`我${wt.zh}起床。`,`Wǒ ${wt.pin} qǐchuáng.`,`Я встаю ${wt.ru}.`,'🌅');
+    if(gt) addLine(lines,`我${gt.zh}${place}。`,`Wǒ ${gt.pin} ${placePin}.`,`Я иду ${placeRu} ${gt.ru}.`,placeEmoji);
+    if(enabled('transport') && val('transport')){
+      const t=findOpt(options.transport,val('transport'));
+      addLine(lines,`我${t[0]}${place}。`,`Wǒ ${t[1]} ${placePin}.`,`Я добираюсь ${placeRu}: ${t[2]}.`,t[3]);
+    }
+    if(slt) addLine(lines,`我${slt.zh}睡觉。`,`Wǒ ${slt.pin} shuìjiào.`,`Я ложусь спать ${slt.ru}.`,'🌙');
+  }
+  if(enabled('job') && val('job')){
+    if(useConnectors){ const c=connectorLine('future'); addLine(lines,c[0],c[1],c[2],c[3]); }
+    const j=findOpt(options.jobs,val('job')); addLine(lines,`我想当${j[0]}。`,`Wǒ xiǎng dāng ${j[1]}.`,`Я хочу стать ${j[2]}.`,j[3]);
+  }
+  if(enabled('hobby')){
+    const items=selectedMulti('hobbies',options.hobbies);
+    if(items.length) addLine(lines,`我的爱好是${joinZh(items)}。`,`Wǒ de àihào shì ${joinPin(items)}.`,`Мои хобби — ${joinRu(items)}.`,joinEmoji(items));
+  }
+
+  if(lines.length) addLine(lines,`这就是我，谢谢大家！`,`Zhè jiù shì wǒ, xièxie dàjiā!`,`Вот такая/такой я, спасибо всем!`,'😊 🙏');
+  currentLines=lines;
+  renderEssay();
+  renderPrint();
+}
+function renderEssay(){
+  const box=document.getElementById('essay');
+  if(!currentLines.length){box.innerHTML='<p class="empty">Выберите ответы — сочинение появится автоматически.</p>';document.getElementById('emojiOnly').innerHTML='';return;}
+  box.innerHTML=currentLines.map(l=>`<div class="line"><div class="zh"><span class="resultEmoji">${l.emoji} </span><span class="zhText">${l.zh}</span></div><div class="pin ${showPin?'':'hidden'}">${l.pin}</div><div class="trans ${showTrans?'':'hidden'}">${l.ru}</div></div>`).join('');
+  document.getElementById('emojiOnly').innerHTML=currentLines.map(l=>`<span title="${l.zh}">${l.emoji}</span>`).join(' ');
+}
+function toggleOutput(type){
+  if(type==='pin') showPin=!showPin;
+  if(type==='trans') showTrans=!showTrans;
+  renderEssay(); renderPrint();
+}
+function toggleEmojiOnly(){
+  emojiOnlyVisible=!emojiOnlyVisible;
+  document.getElementById('emojiOnly').style.display=emojiOnlyVisible?'block':'none';
+}
+function toggleResultEmoji(){
+  document.body.classList.toggle('hideResultEmoji');
+}
+function toggleOnlyEmojiEssay(){
+  document.body.classList.toggle('onlyResultEmoji');
+}
+function speakEssay(){
+  if(!currentLines.length) return;
+  const text=currentLines.map(l=>l.zh).join('');
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='zh-CN';
+  u.rate=.82;
+  speechSynthesis.speak(u);
+}
+function blankSentence(zh){
+  let s=zh;
+  s=s.replace(/我叫[^。]+/,'我叫<span class="blank"></span>');
+  s=s.replace(/我\d+岁/,'我<span class="blank"></span>岁');
+  s=s.replace(/我喜欢[^。]+/,'我喜欢<span class="blank"></span>');
+  s=s.replace(/我有[^。]+/,'我有<span class="blank"></span>');
+  s=s.replace(/我属[^。]+/,'我属<span class="blank"></span>');
+  s=s.replace(/我上[^。]+/,'我上<span class="blank"></span>');
+  s=s.replace(/我想当[^。]+/,'我想当<span class="blank"></span>');
+  return s;
+}
+function renderPrint(){
+  const p=document.getElementById('printArea');
+  const lines=currentLines;
+  p.innerHTML=`
+    <section class="printPage">
+      <h1>我的自我介绍</h1>
+      <h2>一、作文 + emoji 提示</h2>
+      ${lines.length?lines.map(l=>`<div class="printEssayLine"><div class="printEmoji">${l.emoji}</div><div><div class="printZh">${l.zh}</div>${showPin?`<div class="printPin">${l.pin}</div>`:''}${showTrans?`<div class="printRu">${l.ru}</div>`:''}</div></div>`).join(''):'<p>请先填写问卷。</p>'}
+    </section>
+    <section class="printPage">
+      <h1>练习</h1>
+      <div class="exercise"><b>1. 看 emoji，复述作文。</b><br><div class="emojiPlan">${lines.map(l=>l.emoji).join(' ')}</div></div>
+      <div class="exercise"><b>2. 填空。</b><br>${lines.slice(0,10).map(l=>`<div style="margin:2mm 0">${blankSentence(l.zh)}</div>`).join('')}</div>
+      <div class="exercise"><b>3. 回答问题。</b><br>
+        你叫什么名字？ <span class="longBlank"></span>
+        你多大？ <span class="longBlank"></span>
+        你喜欢什么？ <span class="longBlank"></span>
+        你家有几口人？ <span class="longBlank"></span>
+        你长什么样？ <span class="longBlank"></span>
+      </div>
+      <div class="exercise"><b>4. 画一画自己。</b><div class="drawBox"></div></div>
+    </section>
+  `;
+}
+function printNow(){ renderPrint(); window.print(); }
+function clearForm(){
+  document.querySelectorAll('#form input').forEach(i=>{ if(i.type==='checkbox') i.checked=false; else i.value='';});
+  document.querySelectorAll('#form select').forEach(s=>s.selectedIndex=0);
+  generateEssay();
+}
+initToggles();
+renderBlocks();
+</script>
+</body>
+</html>
