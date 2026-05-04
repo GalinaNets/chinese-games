@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>我的介绍 — интерактивная анкета</title>
+<style>
+  :root{--bg:#fff7ed;--card:#ffffff;--ink:#253047;--muted:#6b7280;--accent:#ef7d4f;--accent2:#7c3aed;--green:#16a34a;--blue:#2563eb;--line:#f0d9c8;--soft:#fff1df}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top left,#ffe4c7,var(--bg) 42%,#eef2ff);color:var(--ink)}
+  .wrap{max-width:1160px;margin:0 auto;padding:22px}
+  header{background:linear-gradient(135deg,#fff,#fff3e7);border:2px solid var(--line);border-radius:28px;padding:22px;box-shadow:0 16px 38px rgba(80,50,20,.09);position:relative;overflow:hidden}
+  header:after{content:"🐼 🧧 🌸";position:absolute;right:18px;top:16px;font-size:42px;opacity:.35}
+  h1{margin:0 0 8px;font-size:clamp(28px,4vw,44px);letter-spacing:.5px;color:#b45309}
+  .subtitle{font-size:17px;color:var(--muted);max-width:820px;line-height:1.45}
+  .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;margin-top:18px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}.wrap{padding:12px}header:after{display:none}}
+  .card{background:rgba(255,255,255,.94);border:2px solid var(--line);border-radius:24px;padding:18px;box-shadow:0 12px 28px rgba(80,50,20,.08)}
+  h2{margin:0 0 14px;font-size:24px;color:#7c2d12}.section-title{display:flex;align-items:center;gap:8px;margin-top:14px;margin-bottom:8px;font-weight:900;color:#4c1d95;font-size:19px}
+  label{display:block;font-weight:900;margin:10px 0 5px;color:#263244}.q{font-size:17px}.ruHint{font-size:13px;color:#777;margin-top:2px;font-weight:600}.emojiQ{font-size:22px;margin-right:6px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  @media(max-width:620px){.row,.row3{grid-template-columns:1fr}}
+  input,select{width:100%;padding:12px 13px;border:2px solid #ead7c4;border-radius:16px;background:#fff;font-size:16px;color:#111827;outline:none}input:focus,select:focus{border-color:#fb923c;box-shadow:0 0 0 3px rgba(251,146,60,.18)}
+  .topControls{display:flex;flex-wrap:wrap;gap:8px;background:#fffaf5;border:2px dashed #f0c29d;border-radius:20px;padding:10px;margin-bottom:12px}.switch{border:2px solid #ead7c4;background:#fff;border-radius:999px;padding:9px 12px;cursor:pointer;user-select:none;font-weight:800;display:inline-flex;align-items:center;gap:7px}.switch input{accent-color:#ef7d4f}.offText{opacity:.55}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.btn{border:0;border-radius:16px;padding:12px 15px;font-weight:800;font-size:15px;cursor:pointer;color:white;background:var(--accent);box-shadow:0 8px 16px rgba(239,125,79,.25)}.btn.secondary{background:var(--accent2)}.btn.green{background:var(--green)}.btn.blue{background:var(--blue)}.btn.gray{background:#64748b}.btn:hover{filter:brightness(.98);transform:translateY(-1px)}
+  .outputBox{border:2px dashed #f0b48a;background:#fffaf5;border-radius:22px;padding:16px;margin-top:12px;min-height:90px}.zh{font-size:24px;line-height:1.75;font-weight:800}.py{font-size:16px;color:#6b7280;line-height:1.6;margin-top:8px}.ru{font-size:17px;line-height:1.55;color:#374151}.emojiStory{font-size:34px;line-height:1.7;letter-spacing:4px}.hidden{display:none!important}.small{font-size:13px;color:#6b7280;margin-top:8px}.pill{display:inline-block;background:#ede9fe;color:#5b21b6;padding:4px 9px;border-radius:999px;font-size:13px;font-weight:800;margin-left:6px}
+  .sentence{margin-bottom:7px}.emojiHint{font-size:24px;margin-right:8px;vertical-align:middle}.footer{font-size:13px;color:#777;text-align:center;margin:14px 0 4px}.mini{background:#f8fafc;border:1px solid #e5e7eb;border-radius:18px;padding:10px;margin-top:10px}.mini b{color:#b45309}.zodiacBlock.disabled{opacity:.45;filter:grayscale(.3)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>我的介绍 <span class="pill">问卷 + 小作文</span></h1>
+  <div class="subtitle">选择答案，右边会自动生成一篇中文小作文。可以打开/关闭俄语翻译、选项提示、生肖、作文、拼音和表情提示。</div>
+</header>
+
+<div class="grid">
+  <section class="card">
+    <h2>📝 填一填</h2>
+    <div class="topControls">
+      <label class="switch"><input type="checkbox" id="showRuInForm" checked> 🇷🇺 俄语翻译</label>
+      <label class="switch"><input type="checkbox" id="showOptionHints" checked> 💬 选项提示</label>
+      <label class="switch"><input type="checkbox" id="useZodiac" checked> 🐲 生肖</label>
+    </div>
+
+    <div class="section-title">1. 基本信息 👧</div>
+    <div class="row">
+      <div>
+        <label><span class="emojiQ">🪪</span><span class="q">你叫什么名字？</span><div class="ruHint">Как тебя зовут?</div></label>
+        <input id="name" value="安娜" placeholder="例如：安娜" />
+      </div>
+      <div>
+        <label><span class="emojiQ">🎂</span><span class="q">你几岁？</span><div class="ruHint">Сколько тебе лет?</div></label>
+        <select id="age"></select>
+      </div>
+    </div>
+    <div class="row3">
+      <div>
+        <label><span class="emojiQ">📅</span><span class="q">你的生日是几月？</span><div class="ruHint">Месяц рождения</div></label>
+        <select id="month"></select>
+      </div>
+      <div>
+        <label><span class="emojiQ">📆</span><span class="q">几号？</span><div class="ruHint">День рождения</div></label>
+        <select id="day"></select>
+      </div>
+      <div id="zodiacBlock" class="zodiacBlock">
+        <label><span class="emojiQ">🐲</span><span class="q">你属什么？</span><div class="ruHint">Кто ты по китайскому зодиаку?</div></label>
+        <select id="zodiac"></select>
+      </div>
+    </div>
+
+    <div class="section-title">2. 家人 👨‍👩‍👧‍👦</div>
+    <div class="row">
+      <div><label><span class="emojiQ">👨</span><span class="q">你有爸爸吗？</span><div class="ruHint">Есть папа?</div></label><select id="father"></select></div>
+      <div><label><span class="emojiQ">👩</span><span class="q">你有妈妈吗？</span><div class="ruHint">Есть мама?</div></label><select id="mother"></select></div>
+    </div>
+    <div class="row3">
+      <div><label><span class="emojiQ">👦</span><span class="q">你有几个哥哥？</span><div class="ruHint">Сколько старших братьев?</div></label><select id="gege"></select></div>
+      <div><label><span class="emojiQ">👧</span><span class="q">你有几个姐姐？</span><div class="ruHint">Сколько старших сестёр?</div></label><select id="jiejie"></select></div>
+      <div><label><span class="emojiQ">🧒</span><span class="q">你有几个弟弟？</span><div class="ruHint">Сколько младших братьев?</div></label><select id="didi"></select></div>
+    </div>
+    <div class="row3">
+      <div><label><span class="emojiQ">👧</span><span class="q">你有几个妹妹？</span><div class="ruHint">Сколько младших сестёр?</div></label><select id="meimei"></select></div>
+      <div><label><span class="emojiQ">👵</span><span class="q">你想说爷爷奶奶吗？</span><div class="ruHint">Добавить дедушку/бабушку?</div></label><select id="grand"></select></div>
+      <div><label><span class="emojiQ">🎨</span><span class="q">你喜欢什么颜色？</span><div class="ruHint">Какой цвет ты любишь?</div></label><select id="color"></select></div>
+    </div>
+
+    <div class="section-title">3. 我的样子 👀</div>
+    <div class="row3">
+      <div><label><span class="emojiQ">👀</span><span class="q">你的眼睛大还是小？</span><div class="ruHint">Глаза большие или маленькие?</div></label><select id="eyesSize"></select></div>
+      <div><label><span class="emojiQ">🔵</span><span class="q">你的眼睛是什么颜色？</span><div class="ruHint">Какого цвета глаза?</div></label><select id="eyeColor"></select></div>
+      <div><label><span class="emojiQ">👃</span><span class="q">你的鼻子大还是小？</span><div class="ruHint">Нос большой или маленький?</div></label><select id="nose"></select></div>
+    </div>
+    <div class="row3">
+      <div><label><span class="emojiQ">💇‍♀️</span><span class="q">你的头发长还是短？</span><div class="ruHint">Волосы длинные или короткие?</div></label><select id="hairLen"></select></div>
+      <div><label><span class="emojiQ">🟤</span><span class="q">你的头发是什么颜色？</span><div class="ruHint">Какого цвета волосы?</div></label><select id="hairColor"></select></div>
+      <div><label><span class="emojiQ">📏</span><span class="q">你高不高？</span><div class="ruHint">Какой рост?</div></label><select id="height"></select></div>
+    </div>
+
+    <div class="mini"><b>小提示：</b>关闭“俄语翻译” — в анкете останутся только китайские вопросы. Закрыть “选项提示” — варианты станут короче: в основном китайский + эмодзи.</div>
+  </section>
+
+  <section class="card">
+    <h2>✨ 我的小作文</h2>
+    <div class="actions">
+      <button class="btn green" onclick="speakZh()">🔊 Послушать</button>
+      <button class="btn" onclick="toggle('essay')">👁️ Сочинение</button>
+      <button class="btn secondary" onclick="toggle('pinyin')">pīnyīn</button>
+      <button class="btn blue" onclick="toggle('translation')">🇷🇺 Перевод</button>
+      <button class="btn gray" onclick="toggleEmojiHints()">😀 Эмодзи-подсказки</button>
+      <button class="btn secondary" onclick="toggle('emojiOnly')">🎭 Только эмодзи</button>
+    </div>
+    <div id="essay" class="outputBox zh"></div>
+    <div id="pinyin" class="outputBox py hidden"></div>
+    <div id="translation" class="outputBox ru hidden"></div>
+    <div id="emojiOnly" class="outputBox emojiStory hidden"></div>
+    <div class="small">Озвучивается только китайский текст — без эмодзи и без перевода.</div>
+  </section>
+</div>
+<div class="footer">by Galina Netsvetaeva · Chinese class helper</div>
+</div>
+
+<script>
+const ages=Array.from({length:13},(_,i)=>i+5);
+const numsZh={0:'没有',1:'一个',2:'两个',3:'三个'}, numsRu={0:'нет',1:'один/одна',2:'два/две',3:'три'}, pinyinNums={0:'méiyǒu',1:'yí ge',2:'liǎng ge',3:'sān ge'};
+const zodiacs=[['鼠','shǔ','крысы','🐭'],['牛','niú','быка','🐮'],['虎','hǔ','тигра','🐯'],['兔','tù','кролика','🐰'],['龙','lóng','дракона','🐲'],['蛇','shé','змеи','🐍'],['马','mǎ','лошади','🐴'],['羊','yáng','козы/овцы','🐑'],['猴','hóu','обезьяны','🐵'],['鸡','jī','петуха','🐔'],['狗','gǒu','собаки','🐶'],['猪','zhū','свиньи','🐷']];
+const colors=[['红色','hóngsè','красный','🔴'],['黄色','huángsè','жёлтый','🟡'],['蓝色','lánsè','синий','🔵'],['绿色','lǜsè','зелёный','🟢'],['白色','báisè','белый','⚪'],['黑色','hēisè','чёрный','⚫'],['粉色','fěnsè','розовый','🌸'],['紫色','zǐsè','фиолетовый','🟣'],['橙色','chéngsè','оранжевый','🟠']];
+const hairColors=[['黑色','hēisè','чёрные','⚫'],['棕色','zōngsè','каштановые/коричневые','🟤'],['金色','jīnsè','светлые/золотистые','🟡'],['红色','hóngsè','рыжие/красные','🔴']];
+const eyeColors=[['黑色','hēisè','чёрные','⚫'],['棕色','zōngsè','карие/коричневые','🟤'],['蓝色','lánsè','голубые/синие','🔵'],['绿色','lǜsè','зелёные','🟢'],['灰色','huīsè','серые','⚪']];
+const boolOpts=[['有','yǒu','есть','✅'],['没有','méiyǒu','нет / не пишем','🚫']];
+const eyes=[['大','dà','большие','👀'],['小','xiǎo','маленькие','👁️']];
+const noseOpts=[['大','dà','большой','👃'],['小','xiǎo','маленький','👃']];
+const hairLen=[['长','cháng','длинные','💇‍♀️'],['短','duǎn','короткие','💇']];
+const heights=[['高','gāo','высокая','📏'],['矮','ǎi','невысокая','📏'],['不高也不矮','bù gāo yě bù ǎi','не высокая и не низкая','📏']];
+const grands=[['none','','не добавлять','🚫'],['爷爷','yéye','дедушка по папиной линии','👴'],['奶奶','nǎinai','бабушка по папиной линии','👵'],['姥姥','lǎolao','бабушка по маминой линии','👵'],['姥爷','lǎoye','дедушка по маминой линии','👴'],['both1','yéye hé nǎinai','爷爷和奶奶','👴👵'],['both2','lǎolao hé lǎoye','姥姥和姥爷','👵👴']];
+let showHints=true;
+function optionText(v,type='normal'){
+  const hints=document.getElementById('showOptionHints')?.checked ?? true;
+  if(type==='age') return `${v} 岁`;
+  if(type==='month') return hints ? `${v} 月 — ${v} месяц 📅` : `${v} 月 📅`;
+  if(type==='day') return hints ? `${v} 日 — ${v} число 📆` : `${v} 日 📆`;
+  if(type==='num') return hints ? `${numsZh[v]} — ${numsRu[v]}` : numsZh[v];
+  if(Array.isArray(v)) return hints ? `${v[0]} ${v[1]} — ${v[2]} ${v[3]}` : `${v[0]} ${v[3]}`;
+  return v;
+}
+function setOptions(id, arr, type='normal'){
+  const old=document.getElementById(id).value; const s=document.getElementById(id); s.innerHTML='';
+  arr.forEach(v=>{let o=document.createElement('option'); o.value=Array.isArray(v)?v.join('|'):v; o.textContent=optionText(v,type); s.appendChild(o);});
+  if([...s.options].some(o=>o.value===old)) s.value=old;
+}
+function fillAllOptions(){
+  setOptions('age',ages,'age'); setOptions('month',Array.from({length:12},(_,i)=>i+1),'month'); setOptions('day',Array.from({length:31},(_,i)=>i+1),'day'); setOptions('zodiac',zodiacs);
+  ['gege','jiejie','didi','meimei'].forEach(id=>setOptions(id,[0,1,2,3],'num'));
+  setOptions('father',boolOpts); setOptions('mother',boolOpts); setOptions('grand',grands); setOptions('color',colors); setOptions('eyesSize',eyes); setOptions('eyeColor',eyeColors); setOptions('nose',noseOpts); setOptions('hairLen',hairLen); setOptions('hairColor',hairColors); setOptions('height',heights);
+}
+function val(id){return document.getElementById(id).value} function parts(id){return val(id).split('|')} function emoji(e){return showHints?`<span class="emojiHint">${e}</span>`:''}
+function familySentence(){
+  const items=[],py=[],ru=[];
+  if(parts('father')[0]==='有'){items.push('爸爸');py.push('bàba');ru.push('папа')}
+  if(parts('mother')[0]==='有'){items.push('妈妈');py.push('māma');ru.push('мама')}
+  [['gege','哥哥','gēge','старший брат'],['jiejie','姐姐','jiějie','старшая сестра'],['didi','弟弟','dìdi','младший брат'],['meimei','妹妹','mèimei','младшая сестра']].forEach(([id,zh,p,rus])=>{const n=+val(id);if(n>0){items.push(numsZh[n]+zh);py.push(pinyinNums[n]+' '+p);ru.push(`${numsRu[n]} ${rus}${n>1?'(а/ы)':''}`)}});
+  const g=parts('grand')[0]; const map={爷爷:['爷爷','yéye','дедушка по папиной линии'],奶奶:['奶奶','nǎinai','бабушка по папиной линии'],姥姥:['姥姥','lǎolao','бабушка по маминой линии'],姥爷:['姥爷','lǎoye','дедушка по маминой линии'],both1:['爷爷和奶奶','yéye hé nǎinai','дедушка и бабушка по папиной линии'],both2:['姥姥和姥爷','lǎolao hé lǎoye','бабушка и дедушка по маминой линии']};
+  if(map[g]){items.push(map[g][0]);py.push(map[g][1]);ru.push(map[g][2])}
+  if(!items.length)return{zh:'我家有家人。',py:'Wǒ jiā yǒu jiārén.',ru:'В моей семье есть родные.',emo:'👨‍👩‍👧'};
+  return{zh:'我家有'+items.join('、')+'。',py:'Wǒ jiā yǒu '+py.join(', ')+'.',ru:'В моей семье есть: '+ru.join(', ')+'.',emo:'👨‍👩‍👧‍👦'};
+}
+function render(){
+  const name=val('name').trim()||'____', age=val('age'), month=val('month'), day=val('day'), useZodiac=document.getElementById('useZodiac').checked;
+  document.getElementById('zodiacBlock').classList.toggle('disabled',!useZodiac); document.getElementById('zodiac').disabled=!useZodiac;
+  document.querySelectorAll('.ruHint').forEach(x=>x.classList.toggle('hidden',!document.getElementById('showRuInForm').checked));
+  const [z,zp,zru,ze]=parts('zodiac'), [c,cp,cru,ce]=parts('color'), [es,esp,esru,ese]=parts('eyesSize'), [ec,ecp,ecru,ece]=parts('eyeColor'), [nose,np,nru,ne]=parts('nose'), [hl,hp,hru,he]=parts('hairLen'), [hc,hcp,hcru,hce]=parts('hairColor'), [ht,htp,htru,hte]=parts('height');
+  const fam=familySentence();
+  const lines=[{zh:`我叫${name}。`,py:`Wǒ jiào ${name}.`,ru:`Меня зовут ${name}.`,emo:'👧'},{zh:`我${age}岁。`,py:`Wǒ ${age} suì.`,ru:`Мне ${age} лет.`,emo:'🎂'},{zh:`我的生日是${month}月${day}日。`,py:`Wǒ de shēngrì shì ${month} yuè ${day} rì.`,ru:`Мой день рождения — ${month} месяц, ${day} число.`,emo:'📅'}];
+  if(useZodiac) lines.push({zh:`我属${z}。`,py:`Wǒ shǔ ${zp}.`,ru:`Я родилась в год ${zru}.`,emo:ze});
+  lines.push(fam,{zh:`我喜欢${c}。`,py:`Wǒ xǐhuan ${cp}.`,ru:`Я люблю ${cru} цвет.`,emo:ce},{zh:`我有${es}眼睛，${ec}眼睛。`,py:`Wǒ yǒu ${esp} yǎnjing, ${ecp} yǎnjing.`,ru:`У меня ${esru} глаза, цвет глаз — ${ecru}.`,emo:ese+ece},{zh:`我有${nose}鼻子。`,py:`Wǒ yǒu ${np} bízi.`,ru:`У меня ${nru} нос.`,emo:ne},{zh:`我有${hl}头发，${hc}头发。`,py:`Wǒ yǒu ${hp} tóufa, ${hcp} tóufa.`,ru:`У меня ${hru} волосы, цвет волос — ${hcru}.`,emo:he+hce},{zh:`我${ht}。`,py:`Wǒ ${htp}.`,ru:`Я ${htru}.`,emo:hte},{zh:`这就是我！`,py:`Zhè jiù shì wǒ!`,ru:`Вот такая я!`,emo:'✨'});
+  document.getElementById('essay').innerHTML=lines.map(l=>`<div class="sentence">${emoji(l.emo)}${l.zh}</div>`).join(''); document.getElementById('pinyin').innerHTML=lines.map(l=>`<div>${l.py}</div>`).join(''); document.getElementById('translation').innerHTML=lines.map(l=>`<div>${l.ru}</div>`).join(''); document.getElementById('emojiOnly').innerHTML=lines.map(l=>l.emo).join(' → '); window.currentZh=lines.map(l=>l.zh).join(' ');
+}
+function toggle(id){document.getElementById(id).classList.toggle('hidden')} function toggleEmojiHints(){showHints=!showHints;render()}
+function speakZh(){if(!('speechSynthesis' in window)){alert('В этом браузере нет встроенной озвучки.');return} window.speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(window.currentZh||''); u.lang='zh-CN'; u.rate=.82; u.pitch=1.05; const voices=window.speechSynthesis.getVoices(); const zhVoice=voices.find(v=>/zh|Chinese|Mandarin|普通话|中文/i.test(v.lang+v.name)); if(zhVoice)u.voice=zhVoice; window.speechSynthesis.speak(u)}
+document.addEventListener('input',e=>{if(e.target.id==='showOptionHints')fillAllOptions(); render()});
+fillAllOptions(); render(); if('speechSynthesis' in window){speechSynthesis.onvoiceschanged=()=>{}};
+</script>
+</body>
+</html>
