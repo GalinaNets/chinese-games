@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Транспортный тест-квест 2.0 — 倒影世界</title>
+<style>
+:root{
+  --bg:#060713; --panel:#111426; --panel2:#181b31; --line:rgba(255,255,255,.13);
+  --txt:#f7f4ff; --muted:#b9b3cf; --red:#ff3f5d; --orange:#ff9345; --blue:#75dcff;
+  --green:#64ffb4; --bad:#ff5d75; --yellow:#ffe36e;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; color:var(--txt);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;
+  background:
+    radial-gradient(circle at 15% 5%,rgba(255,63,93,.22),transparent 25%),
+    radial-gradient(circle at 85% 15%,rgba(117,220,255,.16),transparent 28%),
+    linear-gradient(180deg,#050611,#101223 55%,#050611);
+}
+.wrap{max-width:1180px;margin:auto;padding:18px}
+.hero,.card{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(24,27,49,.96),rgba(10,12,24,.97));
+  border-radius:26px; padding:20px; box-shadow:0 18px 50px rgba(0,0,0,.38);
+}
+.hero{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(255,63,93,.18),rgba(17,20,38,.96))}
+.hero:before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:32px 32px;mask-image:linear-gradient(to bottom,#000,transparent);
+}
+.hero>*{position:relative}
+h1{font-size:clamp(30px,5vw,58px);line-height:1;margin:0 0 10px}
+h2{font-size:25px;margin:0 0 12px}
+h3{margin:0 0 10px;font-size:20px}
+p{line-height:1.55}
+.sub{color:var(--muted);font-size:18px;max-width:900px}
+.badge{display:inline-block;border:1px solid var(--line);background:rgba(0,0,0,.24);padding:8px 12px;border-radius:999px;margin:5px 5px 0 0;font-size:14px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-top:14px}
+.score{font-size:24px;color:var(--green);font-weight:900}
+button{
+  border:0;border-radius:15px;padding:12px 15px;color:white;font-weight:850;cursor:pointer;font-size:15px;
+  background:linear-gradient(135deg,var(--red),var(--orange));box-shadow:0 8px 24px rgba(255,63,93,.22);
+}
+button.secondary{background:#252941;border:1px solid var(--line);box-shadow:none}
+button.ghost{background:transparent;border:1px solid var(--line);box-shadow:none}
+button.answer{
+  background:#20243b;border:1px solid var(--line);box-shadow:none;text-align:left;font-size:18px;
+  min-height:58px;
+}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.65;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:16px}
+.card{grid-column:span 12}
+@media(min-width:900px){.half{grid-column:span 6}.third{grid-column:span 4}}
+.story{background:rgba(0,0,0,.22);border:1px dashed rgba(255,255,255,.22);border-radius:18px;padding:14px;margin:10px 0;color:#eee9ff}
+.q{border-top:1px solid var(--line);padding:18px 0}
+.q:first-child{border-top:0}
+.cn{font-size:25px;line-height:1.75;letter-spacing:.3px}
+.ru{color:var(--muted);font-size:15px;margin-top:4px}
+.question{
+  margin:12px 0;padding:12px 14px;border-radius:16px;background:rgba(117,220,255,.1);
+  border:1px solid rgba(117,220,255,.22);font-size:21px;font-weight:850;
+}
+.answers{display:grid;grid-template-columns:1fr;gap:10px;margin-top:10px}
+@media(min-width:700px){.answers{grid-template-columns:1fr 1fr}}
+.correct{outline:3px solid var(--green)!important;background:rgba(100,255,180,.16)!important}
+.wrong{outline:3px solid var(--bad)!important;background:rgba(255,93,117,.14)!important}
+.feedback{font-weight:900;margin-top:10px;min-height:25px}.good{color:var(--green)}.bad{color:var(--bad)}.warn{color:var(--yellow)}
+.lightrow{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.light{width:22px;height:22px;border-radius:50%;background:var(--red);box-shadow:0 0 18px var(--red);animation:blink 1.8s infinite}
+.light:nth-child(2n){background:var(--blue);box-shadow:0 0 18px var(--blue);animation-delay:.3s}.light:nth-child(3n){background:var(--green);box-shadow:0 0 18px var(--green);animation-delay:.7s}.light:nth-child(4n){background:var(--orange);box-shadow:0 0 18px var(--orange);animation-delay:1s}
+@keyframes blink{0%,100%{opacity:.28;transform:scale(.9)}50%{opacity:1;transform:scale(1.07)}}
+.word{display:inline-block;background:#252941;border:1px solid var(--line);border-radius:13px;padding:10px 13px;margin:5px;cursor:pointer;font-size:19px}
+.zone{min-height:55px;border:1px dashed rgba(255,255,255,.28);border-radius:15px;padding:8px;background:rgba(0,0,0,.18);margin:8px 0}
+.pill{display:inline-block;padding:9px 12px;border:1px solid var(--line);border-radius:999px;background:#252941;margin:5px;cursor:pointer;font-size:18px}
+.selected{outline:3px solid var(--blue)}
+.catgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px}
+@media(min-width:850px){.catgrid{grid-template-columns:repeat(3,1fr)}}
+.cat{background:#111426;border:1px solid var(--line);border-radius:18px;padding:12px}
+textarea{width:100%;min-height:96px;background:#080914;color:white;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:16px}
+.mini{font-size:13px;color:var(--muted)}
+.table{width:100%;border-collapse:collapse;margin-top:10px}.table th,.table td{border:1px solid var(--line);padding:10px;text-align:left}.table th{background:#20243b}
+.hide{display:none}
+.footer{text-align:center;color:var(--muted);font-size:13px;margin:24px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>迷路在倒影世界 2.0 🚍🚲🚗</h1>
+    <div class="sub">Большой тест-квест по теме “транспорт” + повторение базы: семья, имя, возраст, цвета, еда, погода, одежда. Вопросы теперь нормальные, понятные, без “рассыпанных” иероглифов. Ответы перемешиваются при каждом новом запуске.</div>
+    <div class="lightrow">
+      <span class="light"></span><span class="light"></span><span class="light"></span><span class="light"></span><span class="light"></span>
+      <span class="light"></span><span class="light"></span><span class="light"></span><span class="light"></span><span class="light"></span>
+      <span class="light"></span><span class="light"></span><span class="light"></span>
+    </div>
+    <span class="badge">📖 чтение</span><span class="badge">🧠 грамматика</span><span class="badge">🔊 аудирование</span><span class="badge">🗣 говорение</span><span class="badge">✍️ иероглифика</span><span class="badge">🗂 категории</span>
+    <div class="controls">
+      <div>Счёт: <span class="score" id="score">0</span> <span class="mini" id="done">0 заданий проверено</span></div>
+      <div><button onclick="restart()">🔁 Новый проход</button><button class="secondary" onclick="toggleTeacher()">👩‍🏫 Методика</button></div>
+    </div>
+  </section>
+
+  <section id="teacher" class="card hide" style="margin-top:16px">
+    <h2>👩‍🏫 Методическая карта</h2>
+    <table class="table">
+      <tr><th>Блок</th><th>Что проверяем</th></tr>
+      <tr><td>阅读</td><td>понимание коротких текстов, поиск информации, отрицание 不</td></tr>
+      <tr><td>语法</td><td>坐 / 骑 / 开, порядок слов, вопросы 你怎么去… / 你穿什么</td></tr>
+      <tr><td>听力</td><td>понимание возраста, транспорта, одежды, еды, погоды на слух</td></tr>
+      <tr><td>汉字</td><td>распознавание иероглифов, визуально похожие варианты</td></tr>
+      <tr><td>口语</td><td>ответы на личные вопросы, мини-монолог, маршрут</td></tr>
+    </table>
+  </section>
+
+  <main class="grid">
+    <section class="card"><h2>📖 Зона 1. 阅读 — “Сообщения от огоньков”</h2><div class="story">Прочитай текст. Потом ответь на понятный вопрос. Никаких отдельных “安 / 娜 / ?” больше нет 😄</div><div id="reading"></div></section>
+    <section class="card half"><h2>🧠 Зона 2. 语法 — “Портал порядка слов”</h2><div class="story">Портал открывается только для нормальных китайских предложений.</div><div id="grammar"></div></section>
+    <section class="card half"><h2>🧩 Зона 3. Собери предложение</h2><div class="story">Нажимай на слова в правильном порядке.</div><div id="build"></div></section>
+    <section class="card"><h2>🔊 Зона 4. 听力 — “Рация из изнанки”</h2><div class="story">Нажми “Слушать”, потом выбери ответ. Работает через встроенную озвучку браузера.</div><div id="listen"></div></section>
+    <section class="card"><h2>✍️ Зона 5. 汉字 — “Двойники-монстры”</h2><div class="story">Монстр сделал похожие варианты. Найди правильный иероглиф или слово.</div><div id="hanzi"></div></section>
+    <section class="card"><h2>🗂 Зона 6. Категории — “Разложи по полкам”</h2><div class="story">Нажми на слово, потом на нужную категорию. Проверяй только когда всё разложено.</div><div id="cats"></div></section>
+    <section class="card"><h2>🗣 Финал. 口语 — “Связь через стену”</h2><div class="story">Ответь вслух. Учитель отмечает, получилось или нужно повторить.</div><div id="speak"></div></section>
+    <section class="card"><h2>🔐 Выход из изнанки</h2><p>Когда закончите, нажми кнопку и посмотри результат.</p><button onclick="finalResult()">Проверить финал</button><div id="final" class="feedback"></div></section>
+  </main>
+  <div class="footer">by Galina Netsvetaeva · Chinese transport quest 2.0</div>
+</div>
+
+<script>
+let score=0, checked=0, used=new Set(), selected=null;
+const TOTAL=37;
+
+function shuffle(a){return [...a].sort(()=>Math.random()-0.5)}
+function updateScore(){document.getElementById('score').textContent=score;document.getElementById('done').textContent=checked+' заданий проверено'}
+function mark(id,ok){if(used.has(id))return;used.add(id);checked++;if(ok)score++;updateScore()}
+function goodSound(){
+  try{const c=new (AudioContext||webkitAudioContext)();[523,659,784,1046].forEach((f,i)=>{let o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,c.currentTime+i*.08);g.gain.exponentialRampToValueAtTime(.16,c.currentTime+i*.08+.02);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+i*.08+.17);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.08);o.stop(c.currentTime+i*.08+.18)})}catch(e){}
+}
+function badSound(){
+  try{const c=new (AudioContext||webkitAudioContext)();let o=c.createOscillator(),g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(180,c.currentTime);o.frequency.exponentialRampToValueAtTime(55,c.currentTime+.35);g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.0001,c.currentTime+.38);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.4)}catch(e){}
+}
+function speak(text){speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(text);u.lang='zh-CN';u.rate=.82;u.pitch=.95;speechSynthesis.speak(u)}
+function mc(container,id,title,stimulus,question,answers,correct){
+  let q=document.createElement('div');q.className='q';
+  q.innerHTML=`<h3>${title}</h3>${stimulus?`<div class="cn">${stimulus}</div>`:''}<div class="question">👉 ${question}</div>`;
+  let box=document.createElement('div');box.className='answers';
+  shuffle(answers).forEach(a=>{
+    let b=document.createElement('button');b.className='answer';b.innerHTML=a;
+    b.onclick=()=>{
+      if(used.has(id))return;
+      let ok=a===correct;
+      [...box.children].forEach(x=>{x.disabled=true;if(x.innerHTML===correct)x.classList.add('correct')});
+      if(!ok)b.classList.add('wrong');
+      let f=document.createElement('div');f.className='feedback '+(ok?'good':'bad');
+      f.textContent=ok?'SIX SEVEN! ✅':'Не этот портал 😈 Правильный ответ: '+correct;
+      q.appendChild(f); ok?goodSound():badSound(); mark(id,ok);
+    };
+    box.appendChild(b);
+  });
+  q.appendChild(box);container.appendChild(q);
+}
+function renderReading(){
+  let c=document.getElementById('reading');c.innerHTML='';
+  [
+    ['r1','1. Сообщение от Анны','我叫安娜，今年十二岁。我家有四口人。我喜欢吃汉堡。今天我穿红色的裙子。','Какая цепочка эмодзи подходит к тексту?',['👧 12️⃣ 👨‍👩‍👧‍👦4️⃣ 🍔 ❤️👗','👦 13️⃣ 👨‍👩‍👧 🍟 💙👖','👧 12️⃣ 🌧️ 🚌 🧦','👩 4️⃣ 🚲 🍜 🖤👕'],'👧 12️⃣ 👨‍👩‍👧‍👦4️⃣ 🍔 ❤️👗'],
+    ['r2','2. Холодное утро','今天很冷，下雨。小明坐公共汽车去学校。','Какая цепочка эмодзи подходит к тексту?',['🥶 🌧️ 👦 🚌 🏫','☀️ 🥵 👧 🚲 🏫','❄️ 👨 🚗 🏢','🌧️ 👧 🚕 🛒'],'🥶 🌧️ 👦 🚌 🏫'],
+    ['r3','3. Ловушка с 不','我不喜欢吃薯条，我喜欢吃面条和披萨。','Какая цепочка эмодзи подходит к тексту?',['❌🍟 ✅🍜🍕','✅🍟 ❌🍜🍕','❌🍔 ✅🧦👗','✅🚌 ❌🍕'],'❌🍟 ✅🍜🍕'],
+    ['r4','4. Брат и велосипед','我哥哥十三岁。他今天骑自行车去公园。他穿蓝色的衣服。','Какая цепочка эмодзи подходит к тексту?',['👦 13️⃣ 🚲 🌳 💙👕','👧 12️⃣ 🚌 🏫 ❤️👗','👦 13️⃣ 🚕 🛒 🖤👖','👨 30️⃣ 🚗 🏢 💛👕'],'👦 13️⃣ 🚲 🌳 💙👕'],
+    ['r5','5. Такси в магазин','今天很热，天气很好。我和妈妈坐出租车去商店。','Какая цепочка эмодзи подходит к тексту?',['🥵 ☀️ 👧+👩 🚕 🛒','🥶 🌧️ 👦 🚌 🏫','☀️ 👧 🚲 🌳 👗','🌧️ 👩 🚇 🏫 🍔'],'🥵 ☀️ 👧+👩 🚕 🛒'],
+    ['r6','6. Семья и машина','我家有三口人。爸爸开汽车去工作，妈妈坐地铁去商店。','Какая цепочка эмодзи подходит к тексту?',['👨‍👩‍👧3️⃣ 👨 🚗 🏢 👩 🚇 🛒','👨‍👩‍👧‍👦4️⃣ 👨 🚌 🏫 👩 🚕 🛒','👨‍👩‍👧3️⃣ 👨 🚲 🌳 👩 🍕','👨‍👩‍👧‍👦4️⃣ 👧 🚗 🏫 👦 🚇 🏢'],'👨‍👩‍👧3️⃣ 👨 🚗 🏢 👩 🚇 🛒']
+  ].forEach(x=>mc(c,...x));
+}
+function renderGrammar(){
+  let c=document.getElementById('grammar');c.innerHTML='';
+  [
+    ['g1','1. Автобус','我 ___ 公共汽车去学校。','Какой глагол нужен?',['坐','骑','开','穿'],'坐'],
+    ['g2','2. Велосипед','她 ___ 自行车去公园。','Какой глагол нужен?',['骑','坐','开','吃'],'骑'],
+    ['g3','3. Машина','爸爸 ___ 汽车去工作。','Какой глагол нужен?',['开','骑','坐','叫'],'开'],
+    ['g4','4. Порядок слов','','Как правильно: “Я еду в школу на автобусе”?',['我坐公共汽车去学校。','我去在学校公共汽车。','我公共汽车坐去学校。','我吃公共汽车去学校。'],'我坐公共汽车去学校。'],
+    ['g5','5. Вопрос про маршрут','','Как спросить: “Как ты добираешься до школы?”',['你怎么去学校？','你几岁去学校？','你什么颜色去学校？','你穿什么学校？'],'你怎么去学校？'],
+    ['g6','6. Одежда','','Как спросить: “Что ты сегодня носишь?”',['你今天穿什么？','你今天吃什么？','你今天怎么去？','你今天几岁？'],'你今天穿什么？']
+  ].forEach(x=>mc(c,...x));
+}
+function renderBuild(){
+  let c=document.getElementById('build');c.innerHTML='';
+  let data=[
+    ['b1','1. Я еду в школу на автобусе',['我','坐','公共汽车','去','学校'],'我 坐 公共汽车 去 学校'],
+    ['b2','2. Она едет в парк на велосипеде',['她','骑','自行车','去','公园'],'她 骑 自行车 去 公园'],
+    ['b3','3. Папа едет на машине на работу',['爸爸','开','汽车','去','工作'],'爸爸 开 汽车 去 工作'],
+    ['b4','4. Сегодня холодно и идёт дождь',['今天','很冷','下雨'],'今天 很冷 下雨'],
+    ['b5','5. Что ты сегодня носишь?',['你','今天','穿','什么'],'你 今天 穿 什么']
+  ];
+  data.forEach(([id,title,words,ans])=>{
+    let q=document.createElement('div');q.className='q';
+    q.innerHTML=`<h3>${title}</h3><div class="zone" id="z_${id}"></div><div id="w_${id}"></div>`;
+    c.appendChild(q);
+    let wb=document.getElementById('w_'+id), z=document.getElementById('z_'+id);
+    shuffle(words).forEach(w=>{let s=document.createElement('span');s.className='word';s.textContent=w;s.onclick=()=>{if(!used.has(id))z.appendChild(s)};wb.appendChild(s)});
+    let check=document.createElement('button');check.textContent='Проверить';
+    check.onclick=()=>{if(used.has(id))return;let made=[...z.children].map(x=>x.textContent).join(' '), ok=made===ans;let f=document.createElement('div');f.className='feedback '+(ok?'good':'bad');f.textContent=ok?'SIX SEVEN! Предложение собрано ✅':'Правильно: '+ans;q.appendChild(f);ok?goodSound():badSound();mark(id,ok)};
+    let reset=document.createElement('button');reset.className='secondary';reset.style.marginLeft='8px';reset.textContent='Сброс';reset.onclick=()=>{if(!used.has(id))[...z.children].forEach(x=>wb.appendChild(x))};
+    q.append(check,reset);
+  });
+}
+function renderListen(){
+  let c=document.getElementById('listen');c.innerHTML='';
+  [
+    ['l1','1. Рация №1','我叫Mike。我十三岁。我今天坐地铁去学校。','Mike怎么去学校？',['坐地铁','坐公共汽车','骑自行车','开汽车'],'坐地铁'],
+    ['l2','2. Рация №2','今天下雨，很冷。我穿蓝色的衣服。','他/她穿什么颜色的衣服？',['蓝色','红色','黄色','绿色'],'蓝色'],
+    ['l3','3. Рация №3','我妹妹五岁。她喜欢吃披萨和汉堡。','妹妹喜欢吃什么？',['披萨和汉堡','面条和米饭','袜子和裙子','自行车和汽车'],'披萨和汉堡'],
+    ['l4','4. Рация №4','我和妈妈坐出租车去商店。','他们去哪里？',['商店','学校','公园','倒影世界'],'商店'],
+    ['l5','5. Рация №5','我不坐公共汽车，我骑自行车去学校。','他/她怎么去学校？',['骑自行车','坐公共汽车','开汽车','坐出租车'],'骑自行车']
+  ].forEach(([id,title,audio,question,answers,correct])=>{
+    let wrap=document.createElement('div');wrap.className='q';wrap.innerHTML=`<h3>${title}</h3><button class="ghost">🔊 Слушать</button>`;
+    wrap.querySelector('button').onclick=()=>speak(audio);c.appendChild(wrap);
+    mc(wrap,id,'','',question,answers,correct);
+  });
+}
+function renderHanzi(){
+  let c=document.getElementById('hanzi');c.innerHTML='';
+  [
+    ['h1','1. Найди “транспорт / машина”','🚗','Какой иероглиф подходит?',['车','东','云','马'],'车'],
+    ['h2','2. Найди автобус','🚌','Как по-китайски “автобус”?',['公共汽车','自行车','出租车','衣服'],'公共汽车'],
+    ['h3','3. Найди велосипед','🚲','Как по-китайски “велосипед”?',['自行车','公共汽车','汉堡','裙子'],'自行车'],
+    ['h4','4. Найди одежду','👕','Как по-китайски “одежда”?',['衣服','天气','面条','学校'],'衣服'],
+    ['h5','5. Найди юбку','👗','Как по-китайски “юбка”?',['裙子','裤子','袜子','汽车'],'裙子'],
+    ['h6','6. Двойник-монстр','车','Выбери точно такой же иероглиф: 车',['车','东','乐','云'],'车'],
+    ['h7','7. Двойник-монстр','天','Выбери точно такой же иероглиф: 天',['天','大','夫','太'],'天'],
+    ['h8','8. Двойник-монстр','口','Выбери точно такой же иероглиф: 口',['口','日','回','田'],'口']
+  ].forEach(x=>mc(c,...x));
+}
+function renderCats(){
+  let c=document.getElementById('cats');c.innerHTML='';selected=null;
+  let words=[['公共汽车','transport'],['自行车','transport'],['出租车','transport'],['汽车','transport'],['爸爸','family'],['妈妈','family'],['哥哥','family'],['妹妹','family'],['红色','colors'],['蓝色','colors'],['黑色','colors'],['汉堡','food'],['薯条','food'],['披萨','food'],['裙子','clothes'],['裤子','clothes'],['袜子','clothes'],['下雨','weather'],['很冷','weather'],['很热','weather']];
+  let cats=[['transport','交通'],['family','家庭'],['colors','颜色'],['food','食物'],['clothes','衣服'],['weather','天气']];
+  let box=document.createElement('div');
+  shuffle(words).forEach(([w,cat])=>{let p=document.createElement('span');p.className='pill';p.textContent=w;p.dataset.cat=cat;p.onclick=()=>{document.querySelectorAll('#cats .pill').forEach(x=>x.classList.remove('selected'));p.classList.add('selected');selected=p};box.appendChild(p)});
+  c.appendChild(box);
+  let grid=document.createElement('div');grid.className='catgrid';
+  cats.forEach(([key,name])=>{let d=document.createElement('div');d.className='cat';d.innerHTML=`<h3>${name}</h3><div class="zone" data-key="${key}"></div>`;d.querySelector('.zone').onclick=()=>{if(selected&&!used.has('cat')){d.querySelector('.zone').appendChild(selected);selected.classList.remove('selected');selected=null}};grid.appendChild(d)});
+  c.appendChild(grid);
+  let btn=document.createElement('button');btn.textContent='Проверить категории';btn.style.marginTop='10px';
+  btn.onclick=()=>{if(used.has('cat'))return;let ok=0,total=0;document.querySelectorAll('#cats .zone').forEach(z=>{[...z.children].forEach(w=>{total++;if(w.dataset.cat===z.dataset.key){ok++;w.style.outline='3px solid var(--green)'}else w.style.outline='3px solid var(--bad)'})});let all=ok===words.length;let f=document.createElement('div');f.className='feedback '+(all?'good':'bad');f.textContent=all?'SIX SEVEN! Всё разложено идеально ✅':`Верно ${ok} из ${words.length}. Можно обсудить ошибки.`;c.appendChild(f);all?goodSound():badSound();mark('cat',all)};
+  c.appendChild(btn);
+}
+function renderSpeak(){
+  let c=document.getElementById('speak');c.innerHTML='';
+  [
+    ['s1','1. База','你叫什么名字？你几岁？你家有几口人？'],
+    ['s2','2. Транспорт','你怎么去学校？你喜欢坐公共汽车吗？'],
+    ['s3','3. Одежда','今天你穿什么？什么颜色？'],
+    ['s4','4. Еда','你喜欢吃什么？你不喜欢吃什么？'],
+    ['s5','5. Погода','今天天气怎么样？你喜欢什么天气？'],
+    ['s6','6. Мини-монолог','介绍你自己：名字、年龄、家庭、天气、衣服、食物、交通。']
+  ].forEach(([id,title,txt])=>{
+    let q=document.createElement('div');q.className='q';
+    q.innerHTML=`<h3>${title}</h3><div class="question">${txt}</div><button class="ghost">🔊 Слушать вопрос</button> <button class="secondary ok">✅ Выполнено</button> <button class="secondary no">🌀 Повторить</button><textarea placeholder="Можно записать заметки/ошибки ученицы..."></textarea>`;
+    q.querySelector('.ghost').onclick=()=>speak(txt);
+    q.querySelector('.ok').onclick=()=>{if(used.has(id))return;let f=document.createElement('div');f.className='feedback good';f.textContent='SIX SEVEN! Устный ответ засчитан ✅';q.appendChild(f);goodSound();mark(id,true)};
+    q.querySelector('.no').onclick=()=>{if(used.has(id))return;let f=document.createElement('div');f.className='feedback bad';f.textContent='Нужно повторить после подсказки.';q.appendChild(f);badSound();mark(id,false)};
+    c.appendChild(q);
+  });
+}
+function finalResult(){
+  let p=Math.round(score/TOTAL*100), f=document.getElementById('final');
+  if(p>=80){f.className='feedback good';f.textContent=`SIX SEVEN!!! Портал открыт: ${score}/${TOTAL} (${p}%).`;goodSound()}
+  else if(p>=55){f.className='feedback warn';f.textContent=`Почти выбралась: ${score}/${TOTAL} (${p}%). Повторить транспорт + порядок слов.`}
+  else{f.className='feedback bad';f.textContent=`Пока портал закрыт: ${score}/${TOTAL} (${p}%). Это тренировочный круг.`;badSound()}
+}
+function restart(){score=0;checked=0;used=new Set();updateScore();document.getElementById('final').textContent='';renderAll();scrollTo({top:0,behavior:'smooth'})}
+function toggleTeacher(){document.getElementById('teacher').classList.toggle('hide')}
+function renderAll(){renderReading();renderGrammar();renderBuild();renderListen();renderHanzi();renderCats();renderSpeak()}
+renderAll();
+</script>
+</body>
+</html>
