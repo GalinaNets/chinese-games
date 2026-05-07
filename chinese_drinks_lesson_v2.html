@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Напитки 饮料 — интерактивный урок</title>
+  <style>
+    :root{
+      --bg1:#ffdc68; --bg2:#fff4c7; --paper:#fffdf6; --ink:#2b2b2b;
+      --line:#e5d58d; --blue:#9fd0ff; --green:#b8efc2; --pink:#ffd5e5;
+      --orange:#ffc98f; --purple:#d7c2ff; --shadow:0 16px 35px rgba(90,70,20,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; color:var(--ink);
+      font-family:Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(255,255,255,.75) 0 80px, transparent 82px),
+        radial-gradient(circle at 90% 18%, rgba(255,255,255,.55) 0 110px, transparent 112px),
+        linear-gradient(180deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{width:min(1120px,94vw); margin:0 auto 46px}
+    header{text-align:center; padding:28px 12px 14px}
+    h1{font-size:clamp(34px,6vw,66px); margin:0; line-height:1.05}
+    .sub{font-size:clamp(17px,2.6vw,25px); color:#665; margin-top:10px}
+    .topbar{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:16px 0 0;
+    }
+    button{
+      border:0; border-radius:18px; padding:12px 16px; cursor:pointer;
+      background:var(--blue); color:#20384f; font-size:17px; font-weight:800;
+      box-shadow:0 5px 0 rgba(0,0,0,.12);
+      transition:.12s transform;
+    }
+    button:hover{transform:translateY(-1px)}
+    button:active{transform:translateY(2px); box-shadow:0 2px 0 rgba(0,0,0,.12)}
+    .section{
+      background:rgba(255,253,246,.92);
+      border:4px solid #fff;
+      border-radius:30px; box-shadow:var(--shadow);
+      padding:24px; margin:18px 0;
+    }
+    h2{font-size:clamp(25px,3.2vw,38px); margin:0 0 16px}
+    .teacher-note{
+      background:#fff3b8; border:2px dashed #d8b839; border-radius:22px;
+      padding:16px; font-size:20px; line-height:1.45;
+    }
+    .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px}
+    .card{
+      position:relative; overflow:hidden; min-height:205px; border-radius:28px; padding:18px;
+      background:#fff; border:2px solid var(--line);
+      box-shadow:0 8px 18px rgba(0,0,0,.08);
+      display:flex; flex-direction:column; justify-content:space-between;
+    }
+    .emoji{font-size:46px; position:absolute; right:14px; top:10px}
+    .py{font-size:25px; color:#777; font-weight:800}
+    .hz{font-family:"KaiTi","STKaiti","SimSun",serif; font-size:58px; line-height:1.05}
+    .ru{font-size:27px; font-weight:900}
+    .card .actions{display:flex; gap:8px; flex-wrap:wrap}
+    .small{font-size:15px; padding:9px 12px; border-radius:14px}
+    .hideable{transition:.25s; border-radius:14px; display:inline-block; padding:0 4px}
+    body.shadow-mode .hideable{
+      color:transparent!important; text-shadow:0 0 12px rgba(0,0,0,.38);
+      background:linear-gradient(90deg,#d8d8d8,#efefef);
+      user-select:none;
+    }
+    body.shadow-mode .emoji.hideable{filter:blur(7px); opacity:.55}
+    .formula{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:14px;
+    }
+    .formula-card{background:#fff; border-radius:22px; padding:18px; border:2px solid #eee}
+    .formula-card b{font-size:31px}
+    .formula-card span{font-size:21px; color:#555}
+    .game-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:14px}
+    .task{background:#fff; border:2px solid #eee; border-radius:24px; padding:18px}
+    .q{font-size:27px; font-weight:900; margin-bottom:12px}
+    .choices{display:grid; gap:10px}
+    .choice{background:#f2f7ff; border:2px solid #d7e9ff; box-shadow:none; text-align:left; color:#26374a; font-size:20px}
+    .choice.correct{background:#d8ffdd; border-color:#69c971}
+    .choice.wrong{background:#ffe0e0; border-color:#e47777}
+    .fb{min-height:30px; margin-top:12px; font-weight:900; font-size:20px}
+    .match{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+    .col{display:grid; gap:10px}
+    .pill{
+      background:#fff; border:2px solid #ddd; border-radius:18px; padding:14px;
+      text-align:center; font-size:23px; cursor:pointer; user-select:none;
+    }
+    .pill.selected{outline:5px solid var(--bg1)}
+    .pill.done{background:#dcffdf; border-color:#67c96e; opacity:.75}
+    .detective{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:14px;
+    }
+    .mystery{
+      min-height:170px; background:linear-gradient(135deg,#fff,#f5fbff);
+      border:2px solid #d8e8f8; border-radius:24px; padding:18px; text-align:center;
+      display:flex; flex-direction:column; justify-content:center; gap:8px;
+    }
+    .bigemoji{font-size:54px}
+    .mystery .answer{font-family:"KaiTi","STKaiti","SimSun",serif; font-size:44px}
+    .dragline{
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:center;
+      background:#fff; border-radius:22px; padding:18px; border:2px solid #eee;
+    }
+    .token{
+      border:2px solid #ddd; border-radius:16px; background:#fafafa; padding:12px 16px;
+      font-size:24px; cursor:pointer; user-select:none;
+    }
+    .token.used{opacity:.35}
+    .sentence-box{
+      min-height:64px; border:3px dashed #c7b45b; border-radius:18px; background:#fff9d9;
+      padding:12px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; justify-content:center;
+    }
+    .dialogue{
+      background:#f7fbff; border-left:9px solid var(--blue); border-radius:22px;
+      padding:18px; font-size:25px; line-height:1.8;
+    }
+    .badge{display:inline-block; background:#fff1a5; padding:4px 10px; border-radius:999px}
+    @media(max-width:650px){
+      .match{grid-template-columns:1fr}
+      .section{padding:18px}
+      .hz{font-size:50px}
+    }
+    @media print{
+      button,.topbar{display:none!important}
+      body{background:white}
+      .section{box-shadow:none; break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🥤 饮料 Напитки</h1>
+    <div class="sub">интерактивный урок: слушаем, угадываем, читаем и играем</div>
+    <div class="topbar">
+      <button onclick="toggleShadow()">🌗 Спрятать / показать подсказки</button>
+      <button onclick="speakText('牛奶，果汁，咖啡，可乐，雪碧，茶')">🔊 Послушать все слова</button>
+      <button onclick="resetAll()">🔄 Перемешать задания</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="section">
+      <h2>0. Как пользоваться режимом «тень»</h2>
+      <div class="teacher-note">
+        Нажмите кнопку <b>«Спрятать / показать подсказки»</b> — переводы, pinyin и некоторые ответы превратятся в «тень».
+        Так можно сначала спросить ребёнка, а потом открыть ответ.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>1. Слова урока</h2>
+      <div class="cards" id="cards"></div>
+    </section>
+
+    <section class="section">
+      <h2>2. Мини-фразы</h2>
+      <div class="formula">
+        <div class="formula-card"><b>我喝……</b><br><span>Я пью……</span></div>
+        <div class="formula-card"><b>你喝什么？</b><br><span>Что ты пьёшь?</span></div>
+        <div class="formula-card"><b>我喜欢喝……</b><br><span>Я люблю пить……</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>3. Быстрый квиз: выбери перевод</h2>
+      <div class="game-grid" id="quiz"></div>
+    </section>
+
+    <section class="section">
+      <h2>4. Детектив напитков 🕵️‍♀️</h2>
+      <div class="teacher-note" style="margin-bottom:14px">
+        Сначала включите «тень». Ребёнок видит эмодзи и пытается назвать напиток по-китайски. Потом откройте ответ.
+      </div>
+      <div class="detective" id="detective"></div>
+    </section>
+
+    <section class="section">
+      <h2>5. Соедини слово и перевод</h2>
+      <div class="match">
+        <div class="col" id="leftMatch"></div>
+        <div class="col" id="rightMatch"></div>
+      </div>
+      <div class="fb" id="matchFeedback"></div>
+    </section>
+
+    <section class="section">
+      <h2>6. Собери фразу 🧩</h2>
+      <div class="teacher-note" style="margin-bottom:14px">
+        Нажимай на карточки по порядку. Нужно собрать фразу: <span class="badge">我喜欢喝茶</span> — «Я люблю пить чай».
+      </div>
+      <div class="sentence-box" id="sentenceBox"></div>
+      <div class="dragline" id="tokens"></div>
+      <div class="fb" id="sentenceFeedback"></div>
+      <button onclick="resetSentence()">Собрать заново</button>
+    </section>
+
+    <section class="section">
+      <h2>7. Диалог с озвучкой</h2>
+      <div class="dialogue">
+        <div>👧 你喝什么？</div>
+        <div>👦 我喝<span class="hideable">茶</span>。你呢？</div>
+        <div>👧 我喝<span class="hideable">果汁</span>。</div>
+        <div>👦 我喜欢喝<span class="hideable">可乐</span>。</div>
+      </div>
+      <button onclick="speakText('你喝什么？我喝茶。你呢？我喝果汁。我喜欢喝可乐。')">🔊 Послушать диалог</button>
+    </section>
+  </main>
+
+<script>
+const words = [
+  {hz:"牛奶", py:"niú nǎi", ru:"молоко", emoji:"🥛"},
+  {hz:"果汁", py:"guǒ zhī", ru:"сок", emoji:"🧃"},
+  {hz:"咖啡", py:"kā fēi", ru:"кофе", emoji:"☕"},
+  {hz:"可乐", py:"kě lè", ru:"кола", emoji:"🥤"},
+  {hz:"雪碧", py:"xuě bì", ru:"спрайт", emoji:"🫧"},
+  {hz:"茶", py:"chá", ru:"чай", emoji:"🍵"}
+];
+
+function shuffle(arr){ return [...arr].sort(()=>Math.random()-0.5); }
+
+function speakText(text){
+  if(!window.speechSynthesis){ alert("Озвучка не поддерживается в этом браузере"); return; }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "zh-CN"; u.rate = 0.78;
+  speechSynthesis.speak(u);
+}
+
+function toggleShadow(){ document.body.classList.toggle("shadow-mode"); }
+
+function renderCards(){
+  document.getElementById("cards").innerHTML = words.map(w=>`
+    <div class="card">
+      <div class="emoji">${w.emoji}</div>
+      <div>
+        <div class="py hideable">${w.py}</div>
+        <div class="hz">${w.hz}</div>
+        <div class="ru hideable">${w.ru}</div>
+      </div>
+      <div class="actions">
+        <button class="small" onclick="speakText('${w.hz}')">🔊 слушать</button>
+        <button class="small" onclick="speakText('我喝${w.hz}')">我喝…</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderQuiz(){
+  document.getElementById("quiz").innerHTML = shuffle(words).map(w=>{
+    const options = shuffle([w.ru, ...shuffle(words.filter(x=>x.ru!==w.ru)).slice(0,2).map(x=>x.ru)]);
+    return `<div class="task">
+      <div class="q">${w.emoji} ${w.hz} <span class="hideable" style="color:#777;font-size:20px">${w.py}</span></div>
+      <div class="choices">
+        ${options.map(opt=>`<button class="choice" onclick="choose(this,'${opt}','${w.ru}')">${opt}</button>`).join("")}
+      </div>
+      <div class="fb"></div>
+    </div>`;
+  }).join("");
+}
+
+function choose(btn,opt,correct){
+  const task = btn.closest(".task");
+  task.querySelectorAll(".choice").forEach(b=>b.disabled=true);
+  const fb = task.querySelector(".fb");
+  if(opt===correct){ btn.classList.add("correct"); fb.textContent="✅ Верно!"; }
+  else{
+    btn.classList.add("wrong"); fb.textContent="❌ Правильно: " + correct;
+    task.querySelectorAll(".choice").forEach(b=>{ if(b.textContent===correct) b.classList.add("correct"); });
+  }
+}
+
+function renderDetective(){
+  document.getElementById("detective").innerHTML = shuffle(words).map(w=>`
+    <div class="mystery">
+      <div class="bigemoji">${w.emoji}</div>
+      <button class="small" onclick="speakText('${w.hz}')">🔊 звук</button>
+      <div class="answer hideable">${w.hz}</div>
+      <div class="hideable" style="font-size:22px;font-weight:800">${w.ru} · ${w.py}</div>
+    </div>
+  `).join("");
+}
+
+let selected = null, matched = 0;
+function renderMatch(){
+  selected = null; matched = 0;
+  document.getElementById("matchFeedback").textContent = "";
+  document.getElementById("leftMatch").innerHTML = shuffle(words).map(w=>`
+    <div class="pill" data-side="left" data-key="${w.ru}" onclick="selectMatch(this)">${w.hz}<br><small class="hideable">${w.py}</small></div>
+  `).join("");
+  document.getElementById("rightMatch").innerHTML = shuffle(words).map(w=>`
+    <div class="pill" data-side="right" data-key="${w.ru}" onclick="selectMatch(this)">${w.emoji} <span class="hideable">${w.ru}</span></div>
+  `).join("");
+}
+
+function selectMatch(el){
+  if(el.classList.contains("done")) return;
+  if(!selected){
+    selected = el; el.classList.add("selected");
+    if(el.dataset.side==="left") speakText(el.textContent.trim().slice(0,2));
+    return;
+  }
+  if(selected === el){ el.classList.remove("selected"); selected=null; return; }
+  if(selected.dataset.side === el.dataset.side){
+    selected.classList.remove("selected"); selected=el; el.classList.add("selected"); return;
+  }
+  if(selected.dataset.key === el.dataset.key){
+    selected.classList.remove("selected"); selected.classList.add("done"); el.classList.add("done");
+    matched++;
+    document.getElementById("matchFeedback").textContent = matched===words.length ? "🎉 Все пары найдены!" : "✅ Есть пара!";
+  }else{
+    document.getElementById("matchFeedback").textContent = "Не пара 🙂 попробуй ещё!";
+    selected.classList.remove("selected");
+  }
+  selected=null;
+}
+
+const target = ["我","喜欢","喝","茶"];
+const distractors = ["你","可乐","果汁"];
+let built = [];
+function resetSentence(){
+  built = [];
+  document.getElementById("sentenceFeedback").textContent = "";
+  document.getElementById("sentenceBox").innerHTML = "";
+  document.getElementById("tokens").innerHTML = shuffle([...target, ...distractors]).map(t=>`
+    <div class="token" onclick="pickToken(this,'${t}')">${t}</div>
+  `).join("");
+}
+function pickToken(el,t){
+  if(el.classList.contains("used")) return;
+  built.push(t); el.classList.add("used");
+  const span = document.createElement("div");
+  span.className = "token"; span.textContent = t;
+  document.getElementById("sentenceBox").appendChild(span);
+  if(built.length === target.length){
+    const ok = built.join("") === target.join("");
+    document.getElementById("sentenceFeedback").textContent = ok ? "✅ 太好了! 我喜欢喝茶。" : "❌ Почти! Нужный порядок: 我 + 喜欢 + 喝 + 茶";
+    if(ok) speakText("我喜欢喝茶");
+  }
+}
+
+function resetAll(){
+  renderQuiz(); renderDetective(); renderMatch(); resetSentence();
+}
+
+renderCards();
+resetAll();
+</script>
+</body>
+</html>
