@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Итоговый тест по китайскому языку | HSK1–HSK2</title>
+  <style>
+    :root{
+      --bg:#f6f2ea;
+      --card:#fffaf1;
+      --ink:#273238;
+      --muted:#6c757d;
+      --red:#d94a38;
+      --gold:#f5b942;
+      --green:#3b9b76;
+      --blue:#3f7fbf;
+      --purple:#7b61ff;
+      --line:#e5d7bd;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color:var(--ink);
+      background:
+        linear-gradient(rgba(248,244,236,.92), rgba(248,244,236,.92)),
+        url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?q=80&w=1600&auto=format&fit=crop');
+      background-size:cover;
+      background-attachment:fixed;
+      background-position:center;
+      min-height:100vh;
+    }
+    header{
+      padding:26px 18px 14px;
+      text-align:center;
+    }
+    .badge{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding:8px 13px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.65);
+      font-size:14px;
+      color:#5a4a35;
+    }
+    h1{margin:14px auto 8px; max-width:900px; font-size:clamp(28px,4vw,48px); line-height:1.05}
+    .subtitle{max-width:820px; margin:0 auto; color:var(--muted); font-size:17px}
+    main{max-width:1120px; margin:0 auto; padding:14px 16px 40px}
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      display:grid; grid-template-columns: 1fr auto; gap:12px; align-items:center;
+      padding:12px; margin-bottom:18px;
+      border:1px solid var(--line); border-radius:22px;
+      background:rgba(255,250,241,.92); backdrop-filter: blur(8px);
+      box-shadow:0 8px 26px rgba(99,70,20,.08);
+    }
+    .progress-wrap{height:14px; background:#eadcc4; border-radius:999px; overflow:hidden}
+    .progress{height:100%; width:0%; background:linear-gradient(90deg,var(--green),var(--gold),var(--red)); transition:.35s}
+    .scorebox{font-weight:800; white-space:nowrap; padding:8px 12px; background:#fff; border-radius:14px; border:1px solid var(--line)}
+    section{
+      margin:18px 0;
+      padding:22px;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:rgba(255,250,241,.92);
+      box-shadow:0 12px 36px rgba(74,53,20,.08);
+    }
+    .section-head{display:flex; gap:14px; align-items:flex-start; justify-content:space-between; margin-bottom:14px}
+    .section-title{margin:0; font-size:25px}
+    .section-note{margin:5px 0 0; color:var(--muted)}
+    .points{background:#fff; border:1px solid var(--line); border-radius:14px; padding:8px 10px; font-weight:700; color:#7a4b00; white-space:nowrap}
+    .task{padding:16px; border-radius:20px; background:#fff; border:1px solid #eadcc4; margin:12px 0}
+    .task h3{margin:0 0 10px; font-size:18px}
+    .grid{display:grid; gap:12px}
+    .grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    @media(max-width:760px){.grid.two,.grid.three,.grid.four{grid-template-columns:1fr}.topbar{grid-template-columns:1fr}.section-head{display:block}.points{display:inline-block;margin-top:10px}}
+    button,.pill{
+      border:0; border-radius:16px; padding:12px 14px;
+      font-size:16px; cursor:pointer;
+      background:#f4ead8; color:var(--ink);
+      transition:.18s transform,.18s background,.18s box-shadow;
+    }
+    button:hover,.pill:hover{transform:translateY(-1px); box-shadow:0 8px 18px rgba(74,53,20,.1)}
+    button.primary{background:var(--red); color:white; font-weight:800}
+    button.secondary{background:var(--blue); color:white; font-weight:800}
+    button.good{background:var(--green); color:white; font-weight:800}
+    button.ghost{background:#fff; border:1px solid var(--line)}
+    .option{display:block; width:100%; text-align:left; background:#f8f2e7; border:1px solid transparent}
+    .option.selected{border-color:var(--blue); background:#eaf3ff}
+    .option.correct{border-color:var(--green); background:#e9f8f1}
+    .option.wrong{border-color:var(--red); background:#fff0ee}
+    .hanzi{font-size:26px; font-weight:800}.pinyin{color:var(--muted); font-size:14px}.ru{font-size:14px; color:#785b31}
+    .category-board{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:12px}
+    @media(max-width:880px){.category-board{grid-template-columns:1fr 1fr}}
+    .cat{min-height:170px; padding:12px; border:2px dashed #d8c49d; border-radius:18px; background:#fffdf8}
+    .cat h4{margin:0 0 8px}.wordbank{display:flex; flex-wrap:wrap; gap:8px; margin:10px 0}
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:9px 11px; border-radius:999px; background:#fff; border:1px solid #decba8; cursor:grab; user-select:none; font-weight:700}
+    .chip small{font-weight:500;color:var(--muted)}
+    .cat .chip{margin:4px}
+    textarea,input[type="text"]{width:100%; min-height:44px; border:1px solid var(--line); border-radius:16px; padding:12px; font-size:16px; background:#fffdf8}
+    textarea{min-height:110px; resize:vertical}
+    .reading{line-height:1.9; font-size:19px; background:#fffdf8; border-left:6px solid var(--gold); padding:14px 16px; border-radius:16px}
+    .feedback{margin-top:10px; font-weight:700}.ok{color:var(--green)}.bad{color:var(--red)}
+    .speaking-card{font-size:48px; text-align:center; padding:20px; background:#f8f2e7; border-radius:22px}
+    .teacher{background:#eef6ff; border:1px solid #cfe5ff; border-radius:20px; padding:14px; color:#24466b}
+    footer{text-align:center; color:#8a7657; padding:22px; font-size:14px}
+    .hidden{display:none!important}
+    .result{font-size:22px; font-weight:900; padding:16px; border-radius:18px; background:#fff; border:1px solid var(--line)}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="badge">🏮 Итоговый тест · HSK1–HSK2 · 12–13 лет</div>
+    <h1>中文挑战赛：мой китайский уровень</h1>
+    <p class="subtitle">Проверяем лексику, грамматику, чтение, аудирование и говорение. Можно проходить на уроке или как контрольный квест.</p>
+  </header>
+
+  <main>
+    <div class="topbar">
+      <div class="progress-wrap"><div id="progress" class="progress"></div></div>
+      <div class="scorebox">Баллы: <span id="score">0</span>/<span id="maxScore">0</span></div>
+    </div>
+
+    <section id="intro">
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">Как проходить</h2>
+          <p class="section-note">Ученик выполняет задания, а учитель может отдельно оценить говорение и развернутые ответы.</p>
+        </div>
+      </div>
+      <div class="teacher">
+        <b>Для учителя:</b> автоматические задания дают баллы сразу. Говорение оценивается вручную по критериям: понятность, лексика, грамматика, произношение, связность. Максимум — 100 баллов.
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">1. Лексика: разложи слова по категориям</h2>
+          <p class="section-note">Большой итоговый блок лексики. Перетащи слова в правильные группы. Можно использовать мышку или палец.</p>
+        </div>
+        <div class="points">20 баллов</div>
+      </div>
+      <div class="task">
+        <div id="wordbank" class="wordbank"></div>
+        <div class="category-board" id="categoryBoard"></div>
+        <button class="primary" onclick="checkCategories()">Проверить категории</button>
+        <div id="catFeedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">2. Вопросы на китайском: выбери правильный ответ</h2>
+          <p class="section-note">Понимание вопросов + базовые речевые модели HSK1–HSK2. Ответы всегда перемешиваются случайным образом.</p>
+        </div>
+        <div class="points">20 баллов</div>
+      </div>
+      <div id="qaTasks"></div>
+      <button class="primary" onclick="checkQA()">Проверить ответы</button>
+      <div id="qaFeedback" class="feedback"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">3. Чтение: прочитай текст и ответь</h2>
+          <p class="section-note">Текст уровня HSK2 с большим количеством вопросов на понимание и детали.</p>
+        </div>
+        <div class="points">20 баллов</div>
+      </div>
+      <div class="task">
+        <div class="reading">
+          我叫安东。我十二岁，是学生。我家有四口人：爸爸、妈妈、妹妹和我。我的爸爸是医生，妈妈是老师。我们家有一只小狗，它很可爱。星期六我常常和朋友去公园打篮球。今天很热，我想喝冰水，可是妈妈说：“不要喝太多冰水！”晚上我们在家吃饭，我喜欢吃米饭、鸡蛋和西红柿。
+        </div>
+      </div>
+      <div id="readingTasks"></div>
+      <button class="primary" onclick="checkReading()">Проверить чтение</button>
+      <div id="readingFeedback" class="feedback"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">4. Аудирование: послушай и выбери ответ</h2>
+          <p class="section-note">Нажми “слушать”. Если голос не сработал, учитель может прочитать фразу.</p>
+        </div>
+        <div class="points">20 баллов</div>
+      </div>
+      <div id="listenTasks"></div>
+      <button class="primary" onclick="checkListening()">Проверить аудирование</button>
+      <div id="listenFeedback" class="feedback"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">5. Грамматика: вставь пропущенное слово</h2>
+          <p class="section-note">Проверь грамматику HSK1–HSK2: послелоги, 是, 有, 喜欢, 在, 想 и базовые конструкции.</p>
+        </div>
+        <div class="points">20 баллов</div>
+      </div>
+      <div id="grammarTasks"></div>
+      <button class="primary" onclick="checkGrammar()">Проверить грамматику</button>
+      <div id="grammarFeedback" class="feedback"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">6. Эмодзи и смысл текста</h2>
+          <p class="section-note">Подбери правильные эмодзи к китайским предложениям.</p>
+        </div>
+        <div class="points">10 баллов</div>
+      </div>
+      <div id="emojiTasks"></div>
+      <button class="primary" onclick="checkEmoji()">Проверить эмодзи</button>
+      <div id="emojiFeedback" class="feedback"></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h2 class="section-title">7. Говорение и письмо: мини-рассказ</h2>
+          <p class="section-note">Расскажи устно, а затем можно записать план или текст.</p>
+        </div>
+        <div class="points">20 баллов вручную</div>
+      </div>
+      <div class="grid two">
+        <div class="task">
+          <h3>🎭 Эмоции и ситуация</h3>
+          <div class="speaking-card">😄 😢 😠 😴 🤔</div>
+          <p>Выбери 2–3 эмоции и расскажи по-китайски: когда ты так себя чувствуешь и почему.</p>
+          <p class="pinyin">Можно использовать: 我很… / 因为… / 今天… / 我想… / 我不想…</p>
+        </div>
+        <div class="task">
+          <h3>🏠 Мой день / моя семья / моя комната</h3>
+          <p>Составь рассказ 6–8 предложений. Включи минимум:</p>
+          <ul>
+            <li>имя, возраст, семья;</li>
+            <li>что любишь есть/пить;</li>
+            <li>что есть в комнате;</li>
+            <li>куда ходишь или что делаешь в выходные;</li>
+            <li>одну эмоцию и причину.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="task">
+        <h3>Черновик ответа</h3>
+        <textarea id="story" placeholder="Например: 我叫……我十二岁。我家有……我喜欢……我的房间有……星期六我……今天我很……因为……"></textarea>
+        <div class="grid two" style="margin-top:10px">
+          <button class="secondary" onclick="startRecording()">🎙 Начать запись</button>
+          <button class="ghost" onclick="stopRecording()">⏹ Остановить</button>
+        </div>
+        <div id="recordings" style="margin-top:10px"></div>
+      </div>
+      <div class="teacher">
+        <b>Оценивание говорения — 20 баллов:</b> 4 б. понятность, 4 б. лексика, 4 б. грамматика, 4 б. произношение, 4 б. связность рассказа.
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Финал</h2>
+      <button class="good" onclick="showFinal()">Показать результат</button>
+      <div id="finalResult" class="result hidden" style="margin-top:12px"></div>
+    </section>
+  </main>
+
+  <footer>by Galina Netsvetaeva</footer>
+
+  <script>
+    const state = {score:0, max:80, completed:{cat:false,qa:false,reading:false,listening:false}};
+    document.getElementById('maxScore').textContent = state.max + 20;
+
+    function updateScore(){
+      document.getElementById('score').textContent = state.score;
+      document.getElementById('progress').style.width = Math.min(100, state.score/100*100) + '%';
+    }
+    function addScore(key, points){
+      if(!state.completed[key]){ state.score += points; state.completed[key]=true; updateScore(); }
+    }
+
+    const categories = {
+      'Погода': ['天气','热','冷','下雨','下雪','风','太阳','阴天'],
+      'Части тела': ['眼睛','嘴巴','鼻子','耳朵','头','手','脚','头发'],
+      'Времена года': ['春天','夏天','秋天','冬天','暖和','凉快','季节','下雪'],
+      'Одежда': ['衣服','裤子','鞋','帽子','裙子','袜子','外套','T恤'],
+      'Послелоги': ['前面','后面','旁边','里面','外面','左边','右边','上面'],
+      'Дом и мебель': ['桌子','椅子','床','沙发','书桌','门','窗户','电视'],
+      'Страны': ['中国','俄罗斯','美国','英国','日本','韩国','法国','德国'],
+      'Еда': ['米饭','鸡蛋','西红柿','苹果','面条','牛奶','面包','香蕉']
+    };
+    const wordTranslations = {爸爸:'папа',妈妈:'мама',妹妹:'младшая сестра',米饭:'рис',鸡蛋:'яйцо',西红柿:'помидор',桌子:'стол',椅子:'стул',床:'кровать',前面:'перед',后面:'за',旁边:'рядом'};
+    let dragged = null;
+    function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+    function initCategories(){
+      const wb=document.getElementById('wordbank');
+      const all=shuffle(Object.values(categories).flat());
+      all.forEach(w=>wb.appendChild(makeChip(w)));
+      const board=document.getElementById('categoryBoard');
+      Object.keys(categories).forEach(cat=>{
+        const div=document.createElement('div'); div.className='cat'; div.dataset.cat=cat;
+        div.innerHTML=`<h4>${cat}</h4>`;
+        div.addEventListener('dragover',e=>e.preventDefault());
+        div.addEventListener('drop',e=>{e.preventDefault(); if(dragged) div.appendChild(dragged)});
+        board.appendChild(div);
+      });
+      wb.addEventListener('dragover',e=>e.preventDefault());
+      wb.addEventListener('drop',e=>{e.preventDefault(); if(dragged) wb.appendChild(dragged)});
+    }
+    function makeChip(w){
+      const c=document.createElement('span'); c.className='chip'; c.draggable=true; c.dataset.word=w;
+      c.innerHTML=`${w}`;
+      c.addEventListener('dragstart',()=>dragged=c);
+      c.addEventListener('dragend',()=>dragged=null);
+      c.addEventListener('click',()=>{ // mobile fallback: move to next category
+        const cats=[...document.querySelectorAll('.cat')];
+        const current=c.parentElement.classList.contains('cat')?cats.indexOf(c.parentElement):-1;
+        cats[(current+1)%cats.length].appendChild(c);
+      });
+      return c;
+    }
+    function checkCategories(){
+      let correct=0, total=0;
+      document.querySelectorAll('.cat').forEach(cat=>{
+        const name=cat.dataset.cat;
+        cat.querySelectorAll('.chip').forEach(ch=>{total++; if(categories[name].includes(ch.dataset.word)) correct++;});
+      });
+      const pts=Math.round(correct/total*20);
+      addScore('cat', pts);
+      document.getElementById('catFeedback').innerHTML=`<span class="${pts>=15?'ok':'bad'}">${correct}/12 правильно. Баллы: ${pts}/20.</span>`;
+    }
+
+    const qa = [
+      {q:'你多大？', a:'我十二岁。', opts:['我十二岁。','我是学生。','我喜欢红色。']},
+      {q:'你家有几口人？', a:'我家有四口人。', opts:['今天很热。','我家有四口人。','我在学校。']},
+      {q:'你喜欢吃什么？', a:'我喜欢吃面条。', opts:['桌子在床旁边。','我喜欢吃面条。','我会说汉语。']},
+      {q:'你的书在哪儿？', a:'我的书在桌子上。', opts:['我很高兴。','我的书在桌子上。','我星期六去公园。']},
+      {q:'你为什么很高兴？', a:'因为今天是我的生日。', opts:['前面有一只猫。','因为今天是我的生日。','我不喝茶。']},
+      {q:'你星期天做什么？', a:'我星期天看电影。', opts:['我的妈妈是老师。','我星期天看电影。','今天我很累。']},
+      {q:'你的房间里有什么？', a:'我的房间里有床和桌子。', opts:['我不喜欢咖啡。','我的房间里有床和桌子。','后面是学校。']},
+      {q:'你想喝什么？', a:'我想喝茶。', opts:['我想喝茶。','我在商店。','我有两只猫。']},
+      {q:'你会不会说汉语？', a:'我会说一点汉语。', opts:['我会说一点汉语。','我今年十三岁。','我喜欢篮球。']},
+      {q:'你的朋友喜欢什么运动？', a:'他喜欢打篮球。', opts:['他喜欢打篮球。','我家有五口人。','今天星期三。']}
+    ];
+    function renderChoiceTasks(containerId, data, prefix){
+      const box=document.getElementById(containerId); box.innerHTML='';
+      data.forEach((item,i)=>{
+        const div=document.createElement('div'); div.className='task';
+        div.innerHTML=`<h3>${i+1}. <span class="hanzi">${item.q}</span></h3>`;
+        shuffle([...item.opts]).forEach(opt=>{
+          const b=document.createElement('button'); b.className='option'; b.textContent=opt; b.dataset.value=opt; b.name=prefix+i;
+          b.onclick=()=>{document.querySelectorAll(`[name="${prefix+i}"]`).forEach(x=>x.classList.remove('selected')); b.classList.add('selected')};
+          div.appendChild(b);
+        });
+        box.appendChild(div);
+      });
+    }
+    function checkGeneric(data,prefix,key,feedbackId){
+      let correct=0;
+      data.forEach((item,i)=>{
+        const selected=document.querySelector(`[name="${prefix+i}"].selected`);
+        document.querySelectorAll(`[name="${prefix+i}"]`).forEach(btn=>{
+          if(btn.dataset.value===item.a) btn.classList.add('correct');
+          if(selected && btn===selected && btn.dataset.value!==item.a) btn.classList.add('wrong');
+        });
+        if(selected && selected.dataset.value===item.a) correct++;
+      });
+      const pts=Math.round(correct/data.length*20);
+      addScore(key,pts);
+      document.getElementById(feedbackId).innerHTML=`<span class="${pts>=15?'ok':'bad'}">${correct}/${data.length} правильно. Баллы: ${pts}/20.</span>`;
+    }
+    function checkQA(){checkGeneric(qa,'qa','qa','qaFeedback')}
+
+    const reading = [
+      {q:'安东几岁？', a:'十二岁', opts:['二十岁','十二岁','十岁']},
+      {q:'安东的妈妈做什么工作？', a:'老师', opts:['老师','学生','医生']},
+      {q:'星期六安东常常去哪儿？', a:'公园', opts:['商店','公园','学校']},
+      {q:'安东喜欢吃什么？', a:'米饭、鸡蛋和西红柿', opts:['包子、茶和羊肉','米饭、鸡蛋和西红柿','面条、苹果和鱼']},
+      {q:'他们家有几口人？', a:'四口人', opts:['两口人','四口人','五口人']},
+      {q:'安东家有什么动物？', a:'一只小狗', opts:['一只小狗','两只猫','一只鸟']},
+      {q:'今天天气怎么样？', a:'很热', opts:['很冷','下雨','很热']},
+      {q:'晚上他们在哪里吃饭？', a:'在家', opts:['在学校','在饭店','在家']}
+    ];
+    function checkReading(){checkGeneric(reading,'rd','reading','readingFeedback')}
+
+    const listening = [
+      {audio:'我的房间里有一张床和两把椅子。', q:'房间里有什么？', a:'一张床和两把椅子', opts:['三只小狗','一张床和两把椅子','一个医生']},
+      {audio:'今天我很累，因为我有很多作业。', q:'他为什么很累？', a:'因为有很多作业', opts:['因为天气很冷','因为有很多作业','因为他不喜欢猫']},
+      {audio:'我星期天想和爸爸妈妈去饭店吃饭。', q:'他星期天想去哪儿？', a:'饭店', opts:['学校','饭店','医院']},
+      {audio:'我的书在桌子上，手机在椅子下面。', q:'手机在哪儿？', a:'椅子下面', opts:['床旁边','椅子下面','桌子上']},
+      {audio:'我最喜欢的颜色是蓝色，因为很好看。', q:'他最喜欢什么颜色？', a:'蓝色', opts:['红色','绿色','蓝色']},
+      {audio:'我的妹妹今年九岁，她很喜欢小动物。', q:'妹妹几岁？', a:'九岁', opts:['十二岁','九岁','七岁']},
+      {audio:'放学以后，我常常和朋友一起打篮球。', q:'放学以后他常常做什么？', a:'打篮球', opts:['看电视','打篮球','做饭']},
+      {audio:'妈妈现在在厨房做饭，爸爸在客厅看电视。', q:'爸爸在哪里？', a:'在客厅', opts:['在厨房','在学校','在客厅']}
+    ];
+
+    const grammar = [
+      {q:'我的书 ___ 桌子上。', a:'在', opts:['在','是','有']},
+      {q:'我 ___ 两个妹妹。', a:'有', opts:['有','在','喜欢']},
+      {q:'今天很热，我 ___ 喝水。', a:'想', opts:['想','会','叫']},
+      {q:'我喜欢 ___ 篮球。', a:'打', opts:['打','喝','看']},
+      {q:'妈妈 ___ 老师。', a:'是', opts:['是','有','在']},
+      {q:'猫在椅子 ___ 。', a:'下面', opts:['下面','天气','学校']}
+    ];
+
+    const emoji = [
+      {q:'今天下雨，我很冷。', a:'🌧️🥶', opts:['🌧️🥶','☀️😎','🍜😋']},
+      {q:'我喜欢吃面条和米饭。', a:'🍜🍚', opts:['🐶⚽','🍜🍚','😴🛏️']},
+      {q:'星期天我和朋友打篮球。', a:'🏀👫', opts:['🏀👫','📚😢','🍎👂']},
+      {q:'冬天我穿外套和帽子。', a:'🧥🧢❄️', opts:['🧥🧢❄️','👕☀️','🍉🏖️']}
+    ];
+    function speakChinese(text){
+      const u=new SpeechSynthesisUtterance(text); u.lang='zh-CN'; u.rate=.78; speechSynthesis.cancel(); speechSynthesis.speak(u);
+    }
+    function renderListening(){
+      const box=document.getElementById('listenTasks'); box.innerHTML='';
+      listening.forEach((item,i)=>{
+        const div=document.createElement('div'); div.className='task';
+        div.innerHTML=`<h3>${i+1}. ${item.q}</h3><button class="secondary" onclick="speakChinese('${item.audio}')">🔊 Слушать</button>`;
+        shuffle([...item.opts]).forEach(opt=>{
+          const b=document.createElement('button'); b.className='option'; b.textContent=opt; b.dataset.value=opt; b.name='ls'+i;
+          b.onclick=()=>{document.querySelectorAll(`[name="ls${i}"]`).forEach(x=>x.classList.remove('selected')); b.classList.add('selected')};
+          div.appendChild(b);
+        });
+        box.appendChild(div);
+      });
+    }
+    function checkListening(){checkGeneric(listening,'ls','listening','listenFeedback')}
+    function checkGrammar(){checkGeneric(grammar,'gr','grammar','grammarFeedback')}
+    function checkEmoji(){checkGeneric(emoji,'em','emoji','emojiFeedback')}
+
+    let mediaRecorder, chunks=[];
+    async function startRecording(){
+      try{
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        mediaRecorder=new MediaRecorder(stream); chunks=[];
+        mediaRecorder.ondataavailable=e=>chunks.push(e.data);
+        mediaRecorder.onstop=()=>{
+          const blob=new Blob(chunks,{type:'audio/webm'});
+          const url=URL.createObjectURL(blob);
+          const audio=document.createElement('audio'); audio.controls=true; audio.src=url;
+          document.getElementById('recordings').appendChild(audio);
+        };
+        mediaRecorder.start();
+        document.getElementById('recordings').innerHTML='<b class="ok">Запись идет…</b><br>';
+      }catch(e){alert('Не удалось включить микрофон. Можно ответить устно без записи.');}
+    }
+    function stopRecording(){ if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop(); }
+
+    function showFinal(){
+      const manual = 20;
+      const auto = state.score;
+      let level = auto>=70?'Отличная база HSK2': auto>=55?'Хороший уровень, есть что закрепить':'Нужно повторить ключевые темы';
+      document.getElementById('finalResult').classList.remove('hidden');
+      document.getElementById('finalResult').innerHTML=`Автоматические баллы: ${auto}/80.<br>Говорение добавляет учитель: до ${manual} баллов.<br>Предварительный вывод: ${level}.`;
+    }
+
+    initCategories();
+    renderChoiceTasks('qaTasks',qa,'qa');
+    renderChoiceTasks('readingTasks',reading,'rd');
+    renderListening();
+    renderChoiceTasks('grammarTasks',grammar,'gr');
+    renderChoiceTasks('emojiTasks',emoji,'em');
+    updateScore();
+  </script>
+</body>
+</html>
