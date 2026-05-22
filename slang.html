@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chinese Internet Slang Quest — Bogdan</title>
+  <style>
+    :root{
+      --bg1:#0b1026; --bg2:#27133f; --card:#ffffff12; --card2:#ffffff1e;
+      --text:#fff8ff; --muted:#d9d2ec; --accent:#ff4fd8; --accent2:#38f5ff;
+      --good:#78ffae; --bad:#ff6b8a; --gold:#ffd166; --dark:#120a22;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0; font-family:Inter, Arial, "Microsoft YaHei", sans-serif; color:var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255,79,216,.28), transparent 30%),
+        radial-gradient(circle at 86% 12%, rgba(56,245,255,.22), transparent 28%),
+        radial-gradient(circle at 50% 92%, rgba(255,209,102,.14), transparent 36%),
+        linear-gradient(135deg,var(--bg1),var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{max-width:1160px; margin:0 auto; padding:24px 14px 70px}
+    header{
+      min-height:86vh; display:flex; align-items:center; justify-content:center; text-align:center;
+    }
+    .hero,.section,.game,.final{
+      border:1px solid rgba(255,255,255,.18);
+      background:linear-gradient(145deg, rgba(255,255,255,.13), rgba(255,255,255,.06));
+      border-radius:32px; box-shadow:0 22px 70px rgba(0,0,0,.34); backdrop-filter:blur(14px);
+    }
+    .hero{width:min(960px,100%); padding:42px 22px}
+    .kicker{color:var(--accent2); letter-spacing:.14em; text-transform:uppercase; font-weight:900}
+    h1{font-size:clamp(36px,7vw,78px); line-height:.96; margin:14px 0 16px}
+    h2{font-size:clamp(26px,4vw,42px); margin:42px 0 16px}
+    h3{font-size:24px; margin:12px 0}
+    p{font-size:18px; color:var(--muted); line-height:1.55}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px; margin:14px 8px 0; padding:14px 20px;
+      border-radius:999px; border:0; color:#13081d; background:linear-gradient(90deg,var(--accent2),var(--accent),var(--gold));
+      font-weight:900; font-size:17px; text-decoration:none; cursor:pointer; box-shadow:0 10px 30px rgba(255,79,216,.23);
+    }
+    .ghost{background:#ffffff12; color:var(--text); border:1px solid #ffffff25}
+    .chips{display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:22px}
+    .chip{padding:9px 12px; border-radius:999px; background:#ffffff12; border:1px solid #ffffff22}
+    .section,.game,.final{padding:24px; margin:26px 0}
+    .toolbar{display:flex; gap:10px; flex-wrap:wrap; margin:14px 0 20px}
+    .smallBtn{
+      border:1px solid rgba(255,255,255,.24); background:#ffffff12; color:white;
+      padding:10px 13px; border-radius:15px; font-weight:800; cursor:pointer;
+    }
+    .counter{color:var(--gold); font-weight:900; margin-left:auto; align-self:center}
+    .grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px}
+    .flip-card{perspective:1000px; min-height:290px}
+    .flip-inner{
+      position:relative; width:100%; height:100%; min-height:290px; transition:transform .6s;
+      transform-style:preserve-3d; cursor:pointer;
+    }
+    .flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+    .front,.back{
+      position:absolute; inset:0; backface-visibility:hidden;
+      background:rgba(255,255,255,.11); border:1px solid rgba(255,255,255,.20); border-radius:26px;
+      padding:22px; overflow:hidden; box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+    .front:before,.back:before{
+      content:""; position:absolute; right:-34px; bottom:-48px; width:145px; height:145px; border-radius:50%;
+      background:rgba(56,245,255,.12);
+    }
+    .back{transform:rotateY(180deg)}
+    .hanzi{font-size:clamp(56px,7vw,82px); font-weight:900; margin:26px 0 12px; line-height:1}
+    .front .hint{color:var(--muted); font-size:17px}
+    .meaning{color:var(--gold); font-weight:900; font-size:20px; line-height:1.25}
+    .ex{margin-top:12px; font-size:18px; line-height:1.45}
+    .py{color:var(--accent2); font-size:15px; font-weight:800}
+    .ru{color:var(--muted); font-size:15px}
+    .sound{
+      position:absolute; right:16px; top:16px; width:42px; height:42px; border-radius:50%;
+      border:1px solid rgba(255,255,255,.25); background:#ffffff18; color:white; font-size:20px;
+      display:grid; place-items:center; cursor:pointer; z-index:3;
+    }
+    .label{display:inline-block; padding:6px 10px; border-radius:999px; background:#00000028; color:var(--accent2); font-weight:900}
+    .game iframe{width:100%; max-width:100%; height:470px; border-radius:20px; background:white}
+    .gameHead{display:flex; gap:14px; align-items:center; justify-content:space-between; flex-wrap:wrap}
+    .num{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#10091e; font-weight:900}
+    .taskGrid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:16px}
+    .mini{padding:16px; border-radius:22px; background:#ffffff10; border:1px solid #ffffff1d}
+    select,input{width:100%; padding:12px 14px; border-radius:14px; border:1px solid #ffffff22; background:#16172e; color:var(--text); font-size:16px; margin-top:10px}
+    .checkBtn{margin-top:12px; padding:11px 14px; border-radius:14px; border:0; background:var(--accent2); font-weight:900; cursor:pointer}
+    .result{margin-top:10px; font-weight:800; min-height:24px}
+    .dialogue{display:grid; gap:12px}
+    .bubble{padding:14px 16px; border-radius:20px; background:#ffffff12; border:1px solid #ffffff1b}
+    .bubble b{color:var(--accent2)}
+    .toggle{background:#ffffff16; border:1px solid #ffffff2b; color:white; border-radius:14px; padding:9px 12px; cursor:pointer; margin-top:8px}
+    .hiddenText{display:none; margin-top:8px; color:var(--muted)}
+    .listenBox{display:grid; grid-template-columns:1fr auto; gap:12px; align-items:end}
+    .emojiChoices{display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-top:16px}
+    .emojiCard{font-size:34px; padding:16px; text-align:center; border-radius:22px; background:#ffffff12; border:1px solid #ffffff22; cursor:pointer}
+    .emojiCard span{display:block; font-size:15px; color:var(--muted); margin-top:6px}
+    .final{text-align:center; padding:36px 20px}
+    .badge{font-size:72px}
+    footer{text-align:center; color:#d3cbe8; margin-top:38px}
+    @media(max-width:900px){
+      .grid,.taskGrid{grid-template-columns:1fr}
+      .game iframe{height:390px}
+      .emojiChoices{grid-template-columns:repeat(2,1fr)}
+      .section,.game,.final{padding:16px; border-radius:24px}
+      .flip-card,.flip-inner{min-height:305px}
+      .counter{margin-left:0}
+      .listenBox{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="hero">
+      <div class="kicker">中国网络用语 · Chinese Internet Slang</div>
+      <h1>Slang Quest<br>for Bogdan 😎</h1>
+      <p>Сначала открываем карточки и слушаем китайские слова, потом закрепляем через ситуации, Wordwall и финальные диалоги.</p>
+      <a class="btn" href="#vocab">开始 Start</a>
+      <a class="btn ghost" href="#games">Go to games</a>
+      <div class="chips">
+        <div class="chip">🔊 voice</div><div class="chip">🃏 flip-cards</div><div class="chip">🎮 Wordwall</div><div class="chip">🇨🇳 Chinese</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="vocab">
+    <div class="kicker">Step 1</div>
+    <h2>Flip-cards: unlock vocabulary 🃏</h2>
+    <p>Сначала видно только слово. Нажми на карточку — она перевернётся, прозвучит слово, появятся pinyin, English meaning и пример.</p>
+    <div class="toolbar">
+      <button class="smallBtn" onclick="flipAll(true)">Открыть все</button>
+      <button class="smallBtn" onclick="flipAll(false)">Закрыть все</button>
+      <button class="smallBtn" onclick="speakRandom()">🔊 Listen and find</button>
+      <span class="counter" id="counter">Opened: 0 / 13</span>
+    </div>
+    <div class="grid" id="vocabGrid"></div>
+  </section>
+
+  <section class="section">
+    <div class="kicker">Listening mini-game</div>
+    <h2>What did you hear? 🎧</h2>
+    <p>Нажми кнопку, послушай слово и выбери, что прозвучало.</p>
+    <div class="mini listenBox">
+      <div>
+        <button class="btn" onclick="newListen()">🔊 Play random word</button>
+        <select id="listenSelect">
+          <option value="">Choose the word...</option>
+        </select>
+        <div class="result" id="listenResult"></div>
+      </div>
+      <button class="checkBtn" onclick="checkListen()">Check</button>
+    </div>
+  </section>
+
+  <section class="game" id="games">
+    <div class="gameHead"><div><div class="kicker">Step 2</div><h2>Match the slang 🎯</h2><p>Сначала сопоставь слова и значения.</p></div><div class="num">1</div></div>
+    <iframe src="https://wordwall.net/embed/play/110100/093/595" frameborder="0" allowfullscreen></iframe>
+  </section>
+
+  <section class="section">
+    <div class="kicker">Extra task</div>
+    <h2>Emoji Challenge 🧩</h2>
+    <p>Выбери подходящее слово для каждой emoji-ситуации.</p>
+    <div class="taskGrid" id="emojiTask"></div>
+  </section>
+
+  <section class="game">
+    <div class="gameHead"><div><div class="kicker">Step 3</div><h2>Situations in English / Russian 🎭</h2><p>Теперь проверяем сленг через ситуации.</p></div><div class="num">2</div></div>
+    <iframe src="https://wordwall.net/embed/play/110100/837/643" frameborder="0" allowfullscreen></iframe>
+  </section>
+
+  <section class="section">
+    <div class="kicker">Extra task</div>
+    <h2>Guess the slang 💬</h2>
+    <p>Прочитай ситуацию и выбери китайское слово.</p>
+    <div class="taskGrid" id="guessTask"></div>
+  </section>
+
+  <section class="game">
+    <div class="gameHead"><div><div class="kicker">Step 4</div><h2>Situations in Chinese 🇨🇳</h2><p>Сложнее: ситуации уже на китайском.</p></div><div class="num">3</div></div>
+    <iframe src="https://wordwall.net/embed/play/110103/403/844" frameborder="0" allowfullscreen></iframe>
+  </section>
+
+  <section class="section">
+    <div class="kicker">Before final</div>
+    <h2>Mini-dialogues 🎧</h2>
+    <p>Прочитай диалоги. Можно послушать китайский текст и открыть pinyin + English.</p>
+    <div class="dialogue" id="dialogues"></div>
+  </section>
+
+  <section class="game">
+    <div class="gameHead"><div><div class="kicker">Final Wordwall</div><h2>Dialogues: boss level 🧠</h2><p>Самый сложный уровень: диалоги.</p></div><div class="num">4</div></div>
+    <iframe src="https://wordwall.net/embed/play/110103/857/347" frameborder="0" allowfullscreen></iframe>
+  </section>
+
+  <section class="section">
+    <div class="kicker">Final choice</div>
+    <h2>Which slang describes you today? 😅</h2>
+    <div class="emojiChoices">
+      <div class="emojiCard" onclick="finalPick('You are the legend today. 太牛了！')">😎<span>牛</span></div>
+      <div class="emojiCard" onclick="finalPick('Just observing the chaos. 打酱油模式开启。')">🤷<span>打酱油</span></div>
+      <div class="emojiCard" onclick="finalPick('Go touch some grass... but first finish Chinese 😅')">🏳️<span>摆烂</span></div>
+      <div class="emojiCard" onclick="finalPick('Super fan energy unlocked! 星人模式。')">⭐<span>星人</span></div>
+      <div class="emojiCard" onclick="finalPick('This result is insane. 绝了！')">🔥<span>绝了</span></div>
+    </div>
+    <h3 id="finalComment" style="color:var(--gold); margin-top:20px"></h3>
+  </section>
+
+  <section class="final">
+    <div class="badge">🏆</div>
+    <h2>中国网络用语达人</h2>
+    <h3>Chinese Internet Slang Master</h3>
+    <p>Bogdan unlocked all 13 slang expressions.</p>
+    <a class="btn" href="#vocab">Play again</a>
+  </section>
+
+  <footer>by Galina Netsvetaeva · Chinese Slang Quest</footer>
+</div>
+
+<script>
+  const vocab = [
+    {w:"牛", p:"niú", m:"awesome / badass", ex:"这个视频太牛了！", py:"Zhège shìpín tài niú le!", en:"This video is awesome."},
+    {w:"打酱油", p:"dǎ jiàngyóu", m:"not my business / just passing by", ex:"我只是来打酱油的。", py:"Wǒ zhǐ shì lái dǎ jiàngyóu de.", en:"I'm just passing by."},
+    {w:"富二代", p:"fù èr dài", m:"rich kid / trust fund baby", ex:"他是富二代，天天换手机。", py:"Tā shì fù èr dài, tiāntiān huàn shǒujī.", en:"He is a rich kid and changes phones all the time."},
+    {w:"官二代", p:"guān èr dài", m:"privileged official’s kid", ex:"大家都说他是官二代。", py:"Dàjiā dōu shuō tā shì guān èr dài.", en:"Everyone says he is an official’s privileged kid."},
+    {w:"灌水", p:"guànshuǐ", m:"spam / post meaningless content", ex:"别在群里灌水。", py:"Bié zài qún lǐ guànshuǐ.", en:"Don’t spam in the group chat."},
+    {w:"山寨", p:"shānzhài", m:"knock-off / fake", ex:"这是山寨版，不是真的。", py:"Zhè shì shānzhài bǎn, bù shì zhēn de.", en:"This is a knock-off version, not real."},
+    {w:"阴阳怪气", p:"yīnyáng guàiqì", m:"sarcastic / passive-aggressive", ex:"你别阴阳怪气地说话。", py:"Nǐ bié yīnyáng-guàiqì de shuōhuà.", en:"Don’t speak in that passive-aggressive way."},
+    {w:"有一说一", p:"yǒu yī shuō yī", m:"to be honest", ex:"有一说一，这个游戏很好玩。", py:"Yǒu yī shuō yī, zhège yóuxì hěn hǎowán.", en:"To be honest, this game is fun."},
+    {w:"舔狗", p:"tiǎngǒu", m:"simp / desperate admirer", ex:"他天天给她发消息，像个舔狗。", py:"Tā tiāntiān gěi tā fā xiāoxi, xiàng ge tiǎngǒu.", en:"He texts her every day like a simp."},
+    {w:"星人", p:"xīngrén", m:"super fan / obsessed person", ex:"我是奶茶星人。", py:"Wǒ shì nǎichá xīngrén.", en:"I’m a milk tea obsessed person."},
+    {w:"绝了", p:"jué le", m:"amazing / insane", ex:"这个答案绝了！", py:"Zhège dá’àn jué le!", en:"This answer is insane!"},
+    {w:"绿茶", p:"lǜchá", m:"fake innocent / manipulative girl", ex:"她看起来很无辜，但有点绿茶。", py:"Tā kànqǐlái hěn wúgū, dàn yǒudiǎn lǜchá.", en:"She looks innocent, but a bit manipulative."},
+    {w:"摆烂", p:"bǎilàn", m:"give up / stop trying / let it rot", ex:"我不想努力了，我要摆烂。", py:"Wǒ bù xiǎng nǔlì le, wǒ yào bǎilàn.", en:"I don’t want to try anymore. I give up."}
+  ];
+  const words = vocab.map(x=>x.w);
+  let listenAnswer = "";
+
+  function speak(text){
+    if(!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "zh-CN";
+    u.rate = 0.78;
+    u.pitch = 1.02;
+    window.speechSynthesis.speak(u);
+  }
+
+  function renderVocab(){
+    const grid = document.getElementById("vocabGrid");
+    grid.innerHTML = vocab.map((v,i)=>`
+      <div class="flip-card" data-i="${i}">
+        <div class="flip-inner" onclick="flipCard(${i})">
+          <div class="front">
+            <button class="sound" onclick="event.stopPropagation(); speak('${v.w}')">🔊</button>
+            <span class="label">tap to unlock</span>
+            <div class="hanzi">${v.w}</div>
+            <div class="hint">Сначала вспомни значение сам. Потом нажми на карточку.</div>
+          </div>
+          <div class="back">
+            <button class="sound" onclick="event.stopPropagation(); speak('${v.ex}')">🔊</button>
+            <span class="label">${v.p}</span>
+            <div class="meaning">${v.m}</div>
+            <div class="ex">${v.ex}<br><span class="py">${v.py}</span><br><span class="ru">${v.en}</span></div>
+          </div>
+        </div>
+      </div>`).join("");
+    document.getElementById("listenSelect").innerHTML = '<option value="">Choose the word...</option>' + words.map(w=>`<option value="${w}">${w}</option>`).join("");
+    updateCounter();
+  }
+
+  function flipCard(i){
+    const card = document.querySelector(`.flip-card[data-i="${i}"]`);
+    const willOpen = !card.classList.contains("flipped");
+    card.classList.toggle("flipped");
+    if(willOpen) speak(vocab[i].w);
+    updateCounter();
+  }
+
+  function flipAll(open){
+    document.querySelectorAll(".flip-card").forEach(c=>c.classList.toggle("flipped", open));
+    updateCounter();
+  }
+
+  function updateCounter(){
+    const n = document.querySelectorAll(".flip-card.flipped").length;
+    document.getElementById("counter").textContent = `Opened: ${n} / ${vocab.length}`;
+  }
+
+  function speakRandom(){
+    const item = vocab[Math.floor(Math.random()*vocab.length)];
+    speak(item.w);
+  }
+
+  function newListen(){
+    const item = vocab[Math.floor(Math.random()*vocab.length)];
+    listenAnswer = item.w;
+    document.getElementById("listenSelect").value = "";
+    document.getElementById("listenResult").textContent = "";
+    speak(item.w);
+  }
+
+  function checkListen(){
+    const val = document.getElementById("listenSelect").value;
+    const r = document.getElementById("listenResult");
+    if(!listenAnswer){ r.style.color = "var(--gold)"; r.textContent = "First play a random word."; return; }
+    if(val === listenAnswer){ r.style.color = "var(--good)"; r.textContent = "Correct! ✅ " + listenAnswer; }
+    else { r.style.color = "var(--bad)"; r.textContent = "Not yet. Try again or play again."; }
+  }
+
+  const emojiItems = [
+    ["🐮🔥", "Something is awesome.", "牛"], ["🤷🚶", "I’m just passing by.", "打酱油"],
+    ["💸👦", "Rich kid.", "富二代"], ["🏛️👦", "Privileged official’s kid.", "官二代"],
+    ["💬💬💬", "Spam meaningless content.", "灌水"], ["👜❌", "Fake / knock-off.", "山寨"],
+    ["😏🗯️", "Passive-aggressive.", "阴阳怪气"], ["🧍💬", "To be honest...", "有一说一"],
+    ["😍🐶", "Simp energy.", "舔狗"], ["⭐🤩", "Super fan / obsessed person.", "星人"],
+    ["🔥🤯", "Amazing / insane.", "绝了"], ["🍵😇", "Fake innocent.", "绿茶"],
+    ["🏳️🛌", "Give up / stop trying.", "摆烂"]
+  ];
+
+  const guessItems = [
+    ["Tom buys the newest iPhone every year. His parents are millionaires.", "富二代"],
+    ["Anna says: “Oh wow, you are soooo smart.” But actually she is mocking her friend.", "阴阳怪气"],
+    ["Mike texts a girl every day. She never replies.", "舔狗"],
+    ["Someone posts 50 random messages in the class chat.", "灌水"],
+    ["The shoes look like Nike, but they are fake.", "山寨"],
+    ["A boy says: “Whatever. I don’t care anymore. I won’t study.”", "摆烂"],
+    ["A friend says: “To be honest, this song is actually good.”", "有一说一"],
+    ["Someone is obsessed with bubble tea and drinks it every day.", "星人"]
+  ];
+
+  const dialogues = [
+    ["A: 你看这个视频了吗？<br>B: 太牛了！", "Nǐ kàn zhège shìpín le ma? Tài niú le!", "Did you watch this video? It was awesome!", "你看这个视频了吗？太牛了！"],
+    ["A: 你怎么不说话？<br>B: 我只是来打酱油的。", "Nǐ zěnme bù shuōhuà? Wǒ zhǐ shì lái dǎ jiàngyóu de.", "Why aren't you talking? I'm just passing by.", "你怎么不说话？我只是来打酱油的。"],
+    ["A: 他天天送礼物。<br>B: 真是个舔狗。", "Tā tiāntiān sòng lǐwù. Zhēn shì ge tiǎngǒu.", "He gives gifts every day. What a simp.", "他天天送礼物。真是个舔狗。"],
+    ["A: 这个包是真的吗？<br>B: 不，这是山寨的。", "Zhège bāo shì zhēn de ma? Bù, zhè shì shānzhài de.", "Is this bag real? No, it’s a knock-off.", "这个包是真的吗？不，这是山寨的。"],
+    ["A: 你为什么不复习？<br>B: 我今天想摆烂。", "Nǐ wèishénme bù fùxí? Wǒ jīntiān xiǎng bǎilàn.", "Why aren’t you reviewing? Today I want to give up.", "你为什么不复习？我今天想摆烂。"]
+  ];
+
+  function makeSelect(correct, idx, type){
+    return `<select id="${type}${idx}">
+      <option value="">Choose...</option>
+      ${words.map(w=>`<option value="${w}">${w}</option>`).join("")}
+    </select>
+    <button class="checkBtn" onclick="checkAnswer('${type}${idx}','${correct}')">Check</button>
+    <div class="result" id="${type}${idx}r"></div>`;
+  }
+
+  function renderTasks(){
+    document.getElementById("emojiTask").innerHTML = emojiItems.map((it,i)=>`
+      <div class="mini"><div class="label">${it[0]}</div><h3>${it[1]}</h3>${makeSelect(it[2], i, "e")}</div>`).join("");
+
+    document.getElementById("guessTask").innerHTML = guessItems.map((it,i)=>`
+      <div class="mini"><h3>Situation ${i+1}</h3><p>${it[0]}</p>${makeSelect(it[1], i, "g")}</div>`).join("");
+
+    document.getElementById("dialogues").innerHTML = dialogues.map((d,i)=>`
+      <div class="bubble"><b>${d[0]}</b><br>
+      <button class="toggle" onclick="speak('${d[3]}')">🔊 Listen</button>
+      <button class="toggle" onclick="toggleNext(this)">Show pinyin + English</button>
+      <div class="hiddenText">${d[1]}<br>${d[2]}</div></div>`).join("");
+  }
+
+  function checkAnswer(id, correct){
+    const val = document.getElementById(id).value;
+    const box = document.getElementById(id+"r");
+    if(val === correct){ box.style.color = "var(--good)"; box.textContent = "Correct! ✅ " + correct; speak(correct); }
+    else if(!val){ box.style.color = "var(--gold)"; box.textContent = "Choose an answer first."; }
+    else{ box.style.color = "var(--bad)"; box.textContent = "Not yet. Try again."; }
+  }
+
+  function toggleNext(btn){
+    const box = btn.nextElementSibling;
+    box.style.display = box.style.display === "block" ? "none" : "block";
+    btn.textContent = box.style.display === "block" ? "Hide" : "Show pinyin + English";
+  }
+
+  function finalPick(text){
+    document.getElementById("finalComment").textContent = text;
+  }
+
+  renderVocab();
+  renderTasks();
+</script>
+</body>
+</html>
