@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSKK 中级 — тренажёр ответа на 2 минуты</title>
+<style>
+:root{
+--ink:#162033;--muted:#64748b;--card:rgba(255,255,255,.9);--line:rgba(255,255,255,.62);
+--blue:#4263eb;--violet:#7c3aed;--pink:#db4b8f;--soft:#eef2ff;--good:#0f8a5f;
+--shadow:0 24px 70px rgba(53,63,112,.15)
+}
+*{box-sizing:border-box}
+body{
+margin:0;color:var(--ink);
+font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+background:
+radial-gradient(circle at 10% 8%,rgba(255,255,255,.95) 0 5%,transparent 22%),
+radial-gradient(circle at 88% 16%,rgba(255,255,255,.8) 0 4%,transparent 20%),
+linear-gradient(135deg,#dff4ff 0%,#eee7ff 46%,#ffe7f0 100%);
+min-height:100vh;
+background-attachment:fixed
+}
+body:before,body:after{
+content:"";position:fixed;z-index:-1;border-radius:999px;filter:blur(4px);opacity:.55
+}
+body:before{width:320px;height:320px;right:-90px;top:120px;background:linear-gradient(135deg,#8ec5fc,#e0c3fc)}
+body:after{width:270px;height:270px;left:-70px;bottom:40px;background:linear-gradient(135deg,#fbc2eb,#a6c1ee)}
+header{max-width:1220px;margin:auto;padding:38px 24px 18px}
+.kicker{display:inline-flex;gap:8px;align-items:center;padding:8px 13px;border:1px solid rgba(255,255,255,.7);border-radius:999px;background:rgba(255,255,255,.55);backdrop-filter:blur(12px);font-size:13px}
+h1{font-size:clamp(34px,5vw,62px);line-height:1.02;letter-spacing:-.045em;margin:17px 0 10px}
+.subtitle{max-width:850px;font-size:17px;line-height:1.65;color:#4b5b72}
+main{max-width:1220px;margin:auto;padding:0 24px 50px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);backdrop-filter:blur(18px);padding:22px}
+.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}
+@media(max-width:920px){.grid{grid-template-columns:1fr}}
+.section-title{display:flex;align-items:center;gap:11px;margin-bottom:15px}
+.section-title h2{margin:0;font-size:23px}
+.badge{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;color:white;font-weight:800;background:linear-gradient(135deg,var(--blue),var(--violet))}
+.structure{display:grid;gap:10px}
+.structure-item{display:grid;grid-template-columns:42px 1fr;gap:12px;padding:13px 14px;border:1px solid #e8ebf1;border-radius:15px;background:rgba(248,250,252,.75)}
+.num{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--blue);font-weight:800}
+.cn{font-size:18px;font-weight:800} .ru{font-size:14px;color:var(--muted);margin-top:3px}
+.timer{font-size:68px;font-weight:900;text-align:center;letter-spacing:-.055em;color:white;background:linear-gradient(135deg,#172033,#293653);border-radius:22px;padding:24px 10px;font-variant-numeric:tabular-nums}
+.timer-label{text-align:center;color:var(--muted);margin:10px 0}
+.btnrow{display:flex;flex-wrap:wrap;gap:9px}
+button,select{font:inherit}
+button{border:0;border-radius:13px;padding:11px 15px;font-weight:800;cursor:pointer;transition:.18s}
+button:hover{transform:translateY(-1px)}
+.primary{color:white;background:linear-gradient(135deg,var(--blue),var(--violet))}
+.secondary{color:#263a66;background:#e9efff}
+.ghost{color:#364152;background:#f1f4f8}
+.pink{color:white;background:linear-gradient(135deg,#ef5da8,#8b5cf6)}
+.progress{height:11px;background:#e5eaf2;border-radius:999px;overflow:hidden;margin-top:13px} .bar{height:100%;width:0;background:linear-gradient(90deg,#4f7cff,#b45cff)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px} .tab.active{background:#172033;color:white}
+.stage{display:none} .stage.active{display:block}
+.tip{background:linear-gradient(135deg,#eef4ff,#f7efff);border-left:4px solid var(--blue);padding:14px 15px;border-radius:13px;line-height:1.55}
+.toolbar{display:grid;grid-template-columns:1fr 180px 160px;gap:10px}
+@media(max-width:760px){.toolbar{grid-template-columns:1fr}}
+select{width:100%;padding:12px 13px;border:1px solid #dbe1eb;border-radius:13px;background:white}
+.questionbox{margin-top:14px;padding:20px;border-radius:20px;color:white;background:linear-gradient(135deg,#3f5efb,#8d5cf6 62%,#d957a1)}
+.qcn{font-size:27px;font-weight:900;line-height:1.35} .qru{margin-top:7px;opacity:.9}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px} .pill{font-size:12px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.18)}
+.promptgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+@media(max-width:700px){.promptgrid{grid-template-columns:1fr}}
+.prompt{padding:13px;border:1px solid #e6eaf0;border-radius:15px;background:rgba(255,255,255,.8)} .prompt strong{display:block;margin-bottom:4px}
+textarea{width:100%;min-height:130px;border:1px solid #dbe1eb;border-radius:15px;padding:14px;font:inherit;line-height:1.6;resize:vertical}
+.example{white-space:pre-line;line-height:1.8;margin-top:12px;padding:16px;border:1px solid #eadff6;border-radius:15px;background:linear-gradient(135deg,#fff,#faf4ff)}
+.hidden{display:none}
+.checks{display:grid;gap:9px} .check{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border-radius:12px;background:#f8fafc}
+.statbar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media(max-width:680px){.statbar{grid-template-columns:repeat(2,1fr)}}
+.stat{padding:13px;border-radius:15px;background:#f7f8fc;border:1px solid #e6e9f0;text-align:center} .stat b{display:block;font-size:24px}
+.mini{font-size:13px;color:var(--muted);line-height:1.5}
+.modebox{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:760px){.modebox{grid-template-columns:1fr}}
+.mode{padding:15px;border-radius:16px;border:1px solid #e5e9f0;background:#fff}
+.mode h3{margin:0 0 7px}
+footer{text-align:center;color:#657286;padding:0 20px 35px;font-size:13px}
+
+.record-card{margin-top:20px}
+.recorder-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:820px){.recorder-grid{grid-template-columns:1fr}}
+.recorder-panel{padding:16px;border:1px solid #e4e8f0;border-radius:18px;background:rgba(255,255,255,.78)}
+.rec-status{display:flex;align-items:center;gap:9px;font-weight:800;margin-bottom:10px}
+.rec-dot{width:11px;height:11px;border-radius:50%;background:#94a3b8}
+.rec-dot.live{background:#ef4444;box-shadow:0 0 0 7px rgba(239,68,68,.12);animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.15)}}
+audio{width:100%;margin-top:12px}
+.analysis-box{margin-top:13px;padding:15px;border-radius:15px;background:linear-gradient(135deg,#f8fbff,#fbf7ff);border:1px solid #e5e7ef;line-height:1.65}
+.analysis-box h4{margin:0 0 8px}
+.feedback-list{display:grid;gap:8px}
+.feedback-item{padding:10px 12px;border-radius:12px;background:#fff;border:1px solid #e8ebf1}
+.small-note{font-size:12px;color:#6b7280;line-height:1.5}
+
+</style>
+</head>
+<body>
+<header>
+<div class="kicker">HSKK 中级 · 口语训练 · 30 вопросов</div>
+<h1>Говори свободно<br>в течение 2 минут</h1>
+<div class="subtitle">Тренажёр ведёт от короткого ответа к полноценной речи: позиция → две причины → пример → личное мнение → вывод. Можно выбирать тему, сложность или получать случайный вопрос.</div>
+</header>
+<main>
+<div class="grid">
+<section class="card">
+<div class="section-title"><span class="badge">1</span><h2>Каркас ответа</h2></div>
+<div class="structure">
+<div class="structure-item"><div class="num">1</div><div><div class="cn">直接回答问题</div><div class="ru">Сразу дай ясный ответ.</div></div></div>
+<div class="structure-item"><div class="num">2</div><div><div class="cn">说明两个原因</div><div class="ru">Назови две причины: 首先、其次、另外.</div></div></div>
+<div class="structure-item"><div class="num">3</div><div><div class="cn">举一个例子</div><div class="ru">Добавь пример: 比如、有一次、在我的生活中.</div></div></div>
+<div class="structure-item"><div class="num">4</div><div><div class="cn">表达自己的看法</div><div class="ru">Скажи, что думаешь или чувствуешь.</div></div></div>
+<div class="structure-item"><div class="num">5</div><div><div class="cn">做一个小总结</div><div class="ru">Заверши коротким выводом.</div></div></div>
+</div>
+</section>
+<section class="card">
+<div class="section-title"><span class="badge">2</span><h2>Таймер</h2></div>
+<div class="timer" id="timer">02:00</div>
+<div class="timer-label" id="timerLabel">Подготовка</div>
+<div class="btnrow">
+<button class="primary" onclick="startTimer(120,'Подготовка')">2 мин готовиться</button>
+<button class="pink" onclick="startTimer(120,'Ответ')">2 мин отвечать</button>
+<button class="ghost" onclick="pauseTimer()">Пауза</button>
+<button class="ghost" onclick="resetTimer()">Сброс</button>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<p class="mini">На первых попытках можно отвечать 30–60 секунд. Затем добавлять причины, пример и вывод.</p>
+</section>
+</div>
+
+<section class="card" style="margin-top:20px">
+<div class="section-title"><span class="badge">3</span><h2>Лестница сложности</h2></div>
+<div class="tabs">
+<button class="tab active" data-tab="s1">30 секунд</button>
+<button class="tab" data-tab="s2">60 секунд</button>
+<button class="tab" data-tab="s3">90 секунд</button>
+<button class="tab" data-tab="s4">2 минуты</button>
+</div>
+<div class="stage active" id="s1"><div class="tip"><b>Цель:</b> прямой ответ + одна причина. Формула: 我觉得……，因为……</div><br><button class="secondary" onclick="startTimer(30,'Ответ · 30 секунд')">Начать</button></div>
+<div class="stage" id="s2"><div class="tip"><b>Цель:</b> ответ + две причины. Формула: 首先……，其次……</div><br><button class="secondary" onclick="startTimer(60,'Ответ · 60 секунд')">Начать</button></div>
+<div class="stage" id="s3"><div class="tip"><b>Цель:</b> добавить конкретный пример. Формула: 比如…… / 有一次……</div><br><button class="secondary" onclick="startTimer(90,'Ответ · 90 секунд')">Начать</button></div>
+<div class="stage" id="s4"><div class="tip"><b>Цель:</b> полный каркас и вывод. Формула: 回答 + 原因 + 例子 + 看法 + 总结</div><br><button class="primary" onclick="startTimer(120,'Полный ответ')">Начать</button></div>
+</section>
+
+<section class="card" style="margin-top:20px">
+<div class="section-title"><span class="badge">4</span><h2>Бесконечный тренажёр</h2></div>
+<div class="toolbar">
+<select id="questionSelect" onchange="renderQuestion()"></select>
+<select id="categorySelect" onchange="buildQuestionList()"><option value="Все">Все темы</option></select>
+<select id="levelSelect" onchange="buildQuestionList()"><option value="Все">Все уровни</option><option>Легко</option><option>Средне</option><option>Сложно</option></select>
+</div>
+<div class="btnrow" style="margin-top:10px">
+<button class="primary" onclick="nextQuestion()">Следующий вопрос</button>
+<button class="secondary" onclick="randomQuestion()">Случайный вопрос</button>
+<button class="ghost" onclick="toggleTranslation()">Скрыть/показать перевод</button>
+<button class="ghost" onclick="markDone()">Отметить попытку</button>
+</div>
+<div class="questionbox">
+<div class="qcn" id="qCn"></div>
+<div class="qru" id="qRu"></div>
+<div class="meta"><span class="pill" id="qCat"></span><span class="pill" id="qLevel"></span><span class="pill" id="qCount"></span></div>
+</div>
+<div class="promptgrid" id="promptGrid"></div>
+<h3>Черновик: только ключевые слова</h3>
+<textarea id="draft" placeholder="Например: 首先… / 去北京 / 跟家人 / 很放松 / 总的来说…"></textarea>
+<div class="btnrow" style="margin-top:10px">
+<button class="ghost" onclick="saveDraft()">Сохранить</button>
+<button class="ghost" onclick="clearDraft()">Очистить</button>
+<button class="secondary" onclick="toggleExample()">Показать пример</button>
+<button class="pink" onclick="challengeMode()">Режим экзамена</button>
+</div>
+<div class="example hidden" id="exampleBox"></div>
+</section>
+
+<div class="grid" style="margin-top:20px">
+<section class="card">
+<div class="section-title"><span class="badge">5</span><h2>Дополнительные режимы</h2></div>
+<div class="modebox">
+<div class="mode"><h3>Без подсказок</h3><p class="mini">Скрыть опоры и отвечать только по вопросу.</p><button class="ghost" onclick="togglePrompts()">Скрыть/показать</button></div>
+<div class="mode"><h3>Одна новая связка</h3><p class="mini">Перед ответом выбери одну связку и обязательно используй её.</p><button class="ghost" onclick="newConnector()">Получить связку</button><p id="connector" style="font-weight:800"></p></div>
+<div class="mode"><h3>Перезапуск</h3><p class="mini">Ответь второй раз на тот же вопрос, но лучше и связнее.</p><button class="ghost" onclick="startTimer(120,'Повторный ответ')">Повторить 2 минуты</button></div>
+</div>
+</section>
+<section class="card">
+<div class="section-title"><span class="badge">6</span><h2>Самопроверка</h2></div>
+<div class="checks">
+<label class="check"><input type="checkbox"> Сразу ответила на вопрос.</label>
+<label class="check"><input type="checkbox"> Назвала минимум две причины.</label>
+<label class="check"><input type="checkbox"> Привела пример.</label>
+<label class="check"><input type="checkbox"> Использовала связки.</label>
+<label class="check"><input type="checkbox"> Сделала вывод.</label>
+<label class="check"><input type="checkbox"> Не переходила на русский.</label>
+</div>
+</section>
+</div>
+
+<section class="card" style="margin-top:20px">
+<div class="section-title"><span class="badge">7</span><h2>Моя статистика</h2></div>
+<div class="statbar">
+<div class="stat"><b id="attempts">0</b><span class="mini">попыток</span></div>
+<div class="stat"><b id="unique">0</b><span class="mini">разных вопросов</span></div>
+<div class="stat"><b id="streak">0</b><span class="mini">серия сегодня</span></div>
+<div class="stat"><b>30</b><span class="mini">вопросов в базе</span></div>
+</div>
+</section>
+
+<section class="card record-card">
+<div class="section-title"><span class="badge">8</span><h2>Запись и автоматический разбор</h2></div>
+<div class="recorder-grid">
+  <div class="recorder-panel">
+    <div class="rec-status"><span class="rec-dot" id="recDot"></span><span id="recStatus">Запись не начата</span></div>
+    <div class="btnrow">
+      <button class="primary" onclick="startRecording()">🎙 Начать запись</button>
+      <button class="pink" onclick="stopRecording()">■ Остановить</button>
+      <button class="ghost" onclick="clearRecording()">Очистить</button>
+    </div>
+    <audio id="audioPlayback" controls class="hidden"></audio>
+    <p class="small-note">Браузер попросит доступ к микрофону. Запись остаётся в браузере и никуда не отправляется.</p>
+  </div>
+
+  <div class="recorder-panel">
+    <h3 style="margin-top:0">Распознанный текст</h3>
+    <textarea id="speechText" placeholder="Здесь появится китайская расшифровка. Её можно исправить вручную перед разбором."></textarea>
+    <div class="btnrow" style="margin-top:10px">
+      <button class="secondary" onclick="startRecognitionOnly()">Распознать речь</button>
+      <button class="primary" onclick="analyzeSpeech()">Разобрать ответ</button>
+    </div>
+    <p class="small-note">Распознавание речи зависит от браузера. Лучше всего проверить Chrome или Edge. На некоторых устройствах функция может быть недоступна.</p>
+  </div>
+</div>
+
+<div class="analysis-box hidden" id="analysisBox">
+  <h4>Тренировочный разбор</h4>
+  <div class="feedback-list" id="feedbackList"></div>
+  <p class="small-note">Это локальная учебная оценка по структуре текста, а не официальный балл HSKK и не полноценная нейросетевая проверка произношения.</p>
+</div>
+</section>
+
+</main>
+<footer>HSKK 中级 · тренажёр развёрнутого ответа</footer>
+<script>
+const questions=[{"cat": "Личное", "level": "Легко", "cn": "你最喜欢什么季节？为什么？", "ru": "Какое время года тебе нравится больше всего? Почему?", "prompts": [["Прямой ответ", "我最喜欢……"], ["Причина 1", "这个季节的天气怎么样？"], ["Причина 2", "你可以做什么？"], ["Пример", "你常常跟谁一起做什么？"], ["Отношение", "为什么你觉得开心或放松？"], ["Вывод", "所以，对我来说……"]], "example": "我最喜欢夏天，因为夏天天气很热，我可以去海边。首先，夏天有很长的假期，我可以好好休息。其次，我可以跟家人或者朋友一起游泳、散步和聊天。比如，去年夏天我们常常周末去海边，我觉得很开心，也很放松。另外，夏天有很多好吃的水果。总的来说，对我来说，夏天是最快乐的季节。"}, {"cat": "Личное", "level": "Легко", "cn": "你最喜欢的一天是什么样的？", "ru": "Как выглядит твой идеальный день?", "prompts": [["Начало", "对我来说，最好的一天是……"], ["Утро", "早上你想做什么？"], ["День", "白天你想去哪里？"], ["Люди", "你想跟谁一起？"], ["Причина", "为什么这样的一天让你开心？"], ["Вывод", "总的来说……"]], "example": "对我来说，最好的一天不用太忙。早上我可以睡得晚一点，然后慢慢吃早饭。白天我想跟朋友一起去市中心散步、喝咖啡或者看电影。晚上我想跟家人一起吃饭，聊一聊今天发生的事情。这样的日子很简单，但是让我觉得很放松。总的来说，理想的一天不一定特别精彩，最重要的是心情好。"}, {"cat": "Личное", "level": "Легко", "cn": "你平时怎么放松？", "ru": "Как ты обычно отдыхаешь?", "prompts": [["Прямой ответ", "我平时会……"], ["Способ 1", "你一个人的时候做什么？"], ["Способ 2", "你跟朋友一起做什么？"], ["Пример", "最近你怎么放松？"], ["Эффект", "这些活动让你感觉怎么样？"], ["Вывод", "所以，我觉得……"]], "example": "我平时有几种放松的方法。一个人的时候，我喜欢听音乐、看视频或者睡一会儿。跟朋友在一起的时候，我们会聊天、散步，有时候也会去咖啡馆。比如，上个周末我学习以后很累，所以我听了一个小时的音乐。后来我的心情好多了。总的来说，休息对学习很重要。"}, {"cat": "Учёба", "level": "Легко", "cn": "你为什么学习中文？", "ru": "Почему ты изучаешь китайский язык?", "prompts": [["Прямой ответ", "我学习中文是因为……"], ["Причина 1", "你喜欢中国的什么？"], ["Причина 2", "中文以后有什么用？"], ["Сложность", "你觉得什么最难？"], ["Пример", "最近你学会了什么？"], ["Вывод", "虽然……但是……"]], "example": "我学习中文有几个原因。首先，我对中国文化和汉字很感兴趣。其次，中文以后对学习、旅行或者工作都有帮助。对我来说，声调和汉字有时候比较难，但是我也觉得很有意思。比如，最近我可以用中文回答更长的问题了。虽然学习中文不容易，但是我想继续学下去。"}, {"cat": "Учёба", "level": "Средне", "cn": "你觉得学习语言最重要的是什么？", "ru": "Что самое важное в изучении языка?", "prompts": [["Позиция", "我觉得最重要的是……"], ["Причина 1", "为什么坚持很重要？"], ["Причина 2", "练习什么最有用？"], ["Пример", "你自己怎么学习？"], ["Совет", "你会给别人什么建议？"], ["Вывод", "所以……"]], "example": "我觉得学习语言最重要的是坚持。因为如果我们只学习几天，然后很长时间不复习，就很容易忘记。除了坚持以外，经常开口说也很重要。比如，我每周上课以后会复习生词，也会试着回答问题。即使说得不完美，也要继续练习。总的来说，每天学习一点，比偶尔学习很多更有效。"}, {"cat": "Учёба", "level": "Средне", "cn": "你喜欢一个人学习还是跟别人一起学习？", "ru": "Ты предпочитаешь учиться одна или вместе с другими?", "prompts": [["Прямой ответ", "我更喜欢……"], ["Причина 1", "一个人学习有什么好处？"], ["Причина 2", "一起学习有什么好处？"], ["Пример", "你什么时候选择哪一种？"], ["Сравнение", "哪一种效率更高？"], ["Вывод", "对我来说……"]], "example": "我更喜欢一个人学习，因为我可以按照自己的速度学习，也比较容易集中注意力。但是，跟别人一起学习也有好处，我们可以讨论问题、互相帮助。比如，背生词的时候我喜欢一个人学习，可是练习口语的时候最好有一个同伴。总的来说，两种方法都很有用，要看学习的内容。"}, {"cat": "Технологии", "level": "Средне", "cn": "你觉得手机给我们的生活带来了哪些好处和坏处？", "ru": "Какие преимущества и недостатки принёс телефон в нашу жизнь?", "prompts": [["Позиция", "手机有好处，也有坏处。"], ["Польза 1", "手机怎么帮助学习？"], ["Польза 2", "手机怎么帮助交流？"], ["Недостаток", "长时间玩手机会怎么样？"], ["Пример", "你自己什么时候用手机？"], ["Вывод", "所以，我们应该……"]], "example": "我觉得手机给我们的生活带来了很多方便，但是也有一些坏处。首先，我们可以用手机查资料、学习语言，也可以了解新的东西。其次，我们可以随时给家人和朋友打电话或者发信息。比如，我学习中文的时候，经常用手机查生词和听录音。不过，如果我们长时间玩手机，眼睛会很累，也会浪费时间。总的来说，手机很有用，但是我们应该合理地使用它。"}, {"cat": "Технологии", "level": "Средне", "cn": "你觉得人工智能能帮助学生学习吗？", "ru": "Может ли искусственный интеллект помогать ученикам учиться?", "prompts": [["Позиция", "我觉得人工智能可以……"], ["Польза 1", "它能怎么解释问题？"], ["Польза 2", "它能怎么帮助练习？"], ["Риск", "使用时要注意什么？"], ["Пример", "你会怎么使用它？"], ["Вывод", "总的来说……"]], "example": "我觉得人工智能可以帮助学生学习。首先，它可以解释不明白的问题，也可以提供更多练习。其次，学生可以用它检查作文或者练习口语。不过，我们不能完全依靠人工智能，因为它有时候也会出错。比如，我会用它整理生词，但是最后还要自己复习。总的来说，人工智能是一个工具，最重要的还是学生自己思考。"}, {"cat": "Технологии", "level": "Средне", "cn": "你怎么看短视频越来越流行？", "ru": "Как ты относишься к популярности коротких видео?", "prompts": [["Позиция", "我觉得短视频……"], ["Плюс", "为什么它们有意思？"], ["Минус", "为什么会浪费时间？"], ["Пример", "你平时看什么内容？"], ["Совет", "怎么控制时间？"], ["Вывод", "所以……"]], "example": "我觉得短视频很方便，也很有吸引力。我们可以在很短的时间里看到新闻、知识或者有趣的内容。但是，短视频也容易让人忘记时间。比如，本来只想看十分钟，最后可能看了一个小时。对我来说，最好的办法是先规定时间。总的来说，短视频不是坏东西，关键是怎么使用。"}, {"cat": "Путешествия", "level": "Легко", "cn": "如果你有一个月的假期，你最想去哪里？为什么？", "ru": "Если бы у тебя был месяц каникул, куда бы ты больше всего хотела поехать и почему?", "prompts": [["Прямой ответ", "我最想去……"], ["Причина 1", "你想看什么？"], ["Причина 2", "你想吃什么或体验什么？"], ["Пример", "你想跟谁一起去？"], ["Дополнение", "你还能练习什么？"], ["Вывод", "我希望以后……"]], "example": "如果我有一个月的假期，我最想去中国。首先，我想去北京看看长城和故宫，因为我对中国历史很感兴趣。其次，我想去上海，看看现代的城市生活。我也想品尝不同的中国菜。如果有机会，我想跟家人一起去。另外，我还可以跟中国人说中文，提高口语水平。我希望以后真的能去中国旅行。"}, {"cat": "Путешествия", "level": "Средне", "cn": "旅行的时候，你觉得计划重要吗？", "ru": "Важен ли план во время путешествия?", "prompts": [["Позиция", "我觉得计划……"], ["Причина 1", "提前计划有什么好处？"], ["Причина 2", "为什么也要灵活？"], ["Пример", "你有过什么旅行经验？"], ["Баланс", "计划和自由怎么结合？"], ["Вывод", "总的来说……"]], "example": "我觉得旅行前做计划很重要。提前了解交通、酒店和景点，可以节省很多时间，也能避免一些问题。但是，计划不能太严格，因为旅行中常常会有变化。比如，天气不好时，我们可能需要改变安排。对我来说，最好的方法是先安排重要的事情，同时留一点自由时间。"}, {"cat": "Путешествия", "level": "Средне", "cn": "你喜欢去大城市旅行还是去自然景点？", "ru": "Ты предпочитаешь путешествовать в большие города или на природу?", "prompts": [["Прямой ответ", "我更喜欢……"], ["Плюс 1", "那里可以做什么？"], ["Плюс 2", "那里给你什么感觉？"], ["Сравнение", "另一种旅行有什么特点？"], ["Пример", "你去过哪里？"], ["Вывод", "所以……"]], "example": "我更喜欢去大城市旅行，因为那里有很多博物馆、餐厅和有意思的建筑。我也喜欢观察不同城市的生活。自然景点当然更安静，也适合休息。比如，去年我去过一个很大的城市，每天都参观不同的地方。虽然很累，但是我觉得很有意思。总的来说，我喜欢内容丰富的旅行。"}, {"cat": "Дружба", "level": "Средне", "cn": "你认为朋友最重要的品质是什么？", "ru": "Какое качество ты считаешь самым важным для друга?", "prompts": [["Позиция", "我认为最重要的品质是……"], ["Причина 1", "为什么这个品质很重要？"], ["Причина 2", "没有这个品质会怎么样？"], ["Пример", "你有这样的朋友吗？"], ["Личное мнение", "好朋友应该怎么做？"], ["Вывод", "所以，我觉得……"]], "example": "我认为朋友最重要的品质是诚实。因为朋友之间应该互相信任，如果一个人总是说谎，我们就很难相信他。其次，真正的朋友会告诉你真话，也会在你有困难的时候帮助你。比如，我不开心的时候，我的好朋友会听我说话，也会给我建议。对我来说，朋友不一定要很多，但是一定要真诚。"}, {"cat": "Дружба", "level": "Средне", "cn": "你觉得朋友之间应该每天联系吗？", "ru": "Должны ли друзья общаться каждый день?", "prompts": [["Позиция", "我觉得不一定……"], ["Причина 1", "为什么不用每天联系？"], ["Причина 2", "什么时候应该联系？"], ["Пример", "你和朋友怎么交流？"], ["Отношение", "真正的朋友是什么样的？"], ["Вывод", "总的来说……"]], "example": "我觉得朋友之间不一定要每天联系。大家都有自己的学习和生活，有时候很忙。但是，如果朋友有困难或者需要帮助，我们应该关心他。比如，我和有些朋友不是每天聊天，可是见面的时候还是有很多话可以说。对我来说，真正的友谊不只看联系的次数，更重要的是理解和信任。"}, {"cat": "Семья", "level": "Легко", "cn": "你喜欢跟家人一起做什么？", "ru": "Что тебе нравится делать вместе с семьёй?", "prompts": [["Начало", "我喜欢跟家人一起……"], ["Дело 1", "你们平时做什么？"], ["Дело 2", "周末会做什么？"], ["Пример", "最近一次是什么时候？"], ["Чувство", "为什么你喜欢？"], ["Вывод", "对我来说……"]], "example": "我喜欢跟家人一起吃饭、散步和旅行。平时大家都比较忙，所以一起吃晚饭的时候，我们可以聊一聊今天发生的事情。周末有时间的话，我们也会出去走走。比如，上个周末我们一起去了一个新的地方。对我来说，跟家人在一起让我觉得安心，也让我可以真正放松。"}, {"cat": "Семья", "level": "Средне", "cn": "父母应该帮助孩子做所有的决定吗？", "ru": "Должны ли родители принимать за ребёнка все решения?", "prompts": [["Позиция", "我觉得父母应该帮助，但是……"], ["Причина 1", "父母为什么有经验？"], ["Причина 2", "孩子为什么也要自己决定？"], ["Пример", "哪些事情可以自己选择？"], ["Баланс", "父母怎么帮助更好？"], ["Вывод", "所以……"]], "example": "我觉得父母应该帮助孩子，但是不应该替孩子做所有决定。父母有更多生活经验，可以提醒孩子注意问题。不过，孩子也需要学习独立思考。比如，选择兴趣爱好时，父母可以提出建议，但是最后应该听听孩子自己的想法。总的来说，最好的方法是一起讨论，而不是一个人决定。"}, {"cat": "Здоровье", "level": "Средне", "cn": "你觉得怎样才能保持健康？", "ru": "Как можно сохранять здоровье?", "prompts": [["Позиция", "我觉得要保持健康，需要……"], ["Привычка 1", "饮食方面要注意什么？"], ["Привычка 2", "运动和睡眠为什么重要？"], ["Пример", "你自己有什么习惯？"], ["Сложность", "为什么坚持不容易？"], ["Вывод", "总的来说……"]], "example": "我觉得保持健康需要几个好习惯。首先，我们应该吃得比较均衡，不要总吃甜食和快餐。其次，睡眠和运动也很重要。比如，我有时间的时候会散步，也会尽量早点睡觉。当然，坚持这些习惯并不容易。总的来说，健康不是一天形成的，需要每天注意一点。"}, {"cat": "Здоровье", "level": "Средне", "cn": "学生每天需要运动吗？", "ru": "Нужно ли ученикам заниматься спортом каждый день?", "prompts": [["Позиция", "我觉得每天活动一下……"], ["Причина 1", "运动对身体有什么好处？"], ["Причина 2", "运动对学习有什么帮助？"], ["Пример", "什么运动最方便？"], ["Ограничение", "一定要很长时间吗？"], ["Вывод", "所以……"]], "example": "我觉得学生每天都应该活动一下。运动不仅对身体有好处，也可以帮助我们放松大脑。学习时间太长的时候，人容易累，也很难集中注意力。比如，每天散步三十分钟或者做简单的运动就可以。不一定要去健身房，也不一定要运动很久。最重要的是形成习惯。"}, {"cat": "Общество", "level": "Средне", "cn": "你怎么看越来越多外国人学习中文？", "ru": "Как ты относишься к тому, что всё больше иностранцев изучают китайский язык?", "prompts": [["Позиция", "我觉得这是一件……的事情。"], ["Причина 1", "为什么有人为了工作学习中文？"], ["Причина 2", "中国文化有什么吸引力？"], ["Трудность", "中文哪些方面比较难？"], ["Личный пример", "你学习中文有什么感受？"], ["Вывод", "总的来说……"]], "example": "我觉得越来越多外国人学习中文是一件很好的事情。首先，中国的发展很快，很多人学习中文是为了工作。其次，有的人喜欢中国文化、美食或者历史，所以他们想学中文。虽然汉字和声调比较难，但是学习中文也很有意思。比如，我学习中文以后，可以看懂一些汉字，也能跟更多的人交流。"}, {"cat": "Общество", "level": "Сложно", "cn": "你觉得现代人的生活节奏太快吗？", "ru": "Слишком ли быстрый ритм жизни у современных людей?", "prompts": [["Позиция", "我觉得现在的生活节奏……"], ["Причина 1", "人们为什么总是很忙？"], ["Причина 2", "科技让生活更快还是更方便？"], ["Пример", "你什么时候觉得压力大？"], ["Совет", "怎么让生活慢一点？"], ["Вывод", "总的来说……"]], "example": "我觉得现代人的生活节奏确实比较快。很多人需要学习、工作，还要处理很多信息。科技让生活更方便，但是也让我们随时都在看消息。比如，有时候休息的时候，我们还是会检查手机。对我来说，最好的办法是安排没有手机的时间。总的来说，快节奏有好处，但我们也需要学会休息。"}, {"cat": "Общество", "level": "Сложно", "cn": "你觉得成功的标准是什么？", "ru": "Что является критерием успеха?", "prompts": [["Позиция", "我觉得成功不只是……"], ["Причина 1", "钱和工作重要吗？"], ["Причина 2", "兴趣和幸福重要吗？"], ["Пример", "你认为谁是成功的人？"], ["Личное мнение", "对你来说什么最重要？"], ["Вывод", "所以……"]], "example": "我觉得成功不只是赚很多钱或者有很好的工作。成功也可以是做自己喜欢的事情，同时有时间陪家人和朋友。每个人的标准都不一样。比如，有的人希望事业发展得很好，有的人更重视自由和幸福。对我来说，成功就是有目标，也能过自己喜欢的生活。"}, {"cat": "Экология", "level": "Средне", "cn": "普通人可以为保护环境做什么？", "ru": "Что обычные люди могут делать для защиты окружающей среды?", "prompts": [["Позиция", "普通人可以从小事开始。"], ["Действие 1", "怎么减少塑料？"], ["Действие 2", "怎么节约水和电？"], ["Пример", "你自己能做什么？"], ["Ограничение", "一个人的作用小吗？"], ["Вывод", "如果大家都……"]], "example": "我觉得普通人可以从生活中的小事开始保护环境。比如，我们可以少用一次性塑料袋，也可以节约水和电。出门不远的时候，可以走路或者坐公共交通。一个人的作用可能不大，但是如果很多人都这样做，结果就会不一样。总的来说，保护环境不一定很难，重要的是每天坚持。"}, {"cat": "Еда", "level": "Легко", "cn": "你最喜欢什么食物？为什么？", "ru": "Какая еда тебе нравится больше всего и почему?", "prompts": [["Прямой ответ", "我最喜欢吃……"], ["Вкус", "它是什么味道？"], ["Причина", "为什么你喜欢？"], ["Пример", "你什么时候常常吃？"], ["Кто готовит", "谁做得最好？"], ["Вывод", "对我来说……"]], "example": "我最喜欢吃意大利面，因为它很好吃，也有很多不同的做法。我特别喜欢奶油味或者西红柿味的意大利面。平时没有很多时间的时候，这道菜也比较方便。比如，周末我有时候会跟家人一起吃。对我来说，喜欢一道菜不只是因为味道，也因为它会让我想到一些开心的时刻。"}, {"cat": "Еда", "level": "Средне", "cn": "你觉得年轻人应该学会做饭吗？", "ru": "Нужно ли молодым людям уметь готовить?", "prompts": [["Позиция", "我觉得应该……"], ["Причина 1", "做饭为什么有用？"], ["Причина 2", "自己做饭有什么好处？"], ["Пример", "你会做什么？"], ["Ограничение", "需要做得很专业吗？"], ["Вывод", "总的来说……"]], "example": "我觉得年轻人应该学会做一些简单的饭。首先，做饭是一种基本的生活能力。其次，自己做饭通常更健康，也可以省钱。比如，会做鸡蛋、面条和沙拉就已经很方便了。不一定要做得像专业厨师一样。总的来说，学会做饭会让生活更独立。"}, {"cat": "Книги и кино", "level": "Легко", "cn": "你喜欢看书还是看电影？", "ru": "Ты предпочитаешь читать книги или смотреть фильмы?", "prompts": [["Прямой ответ", "我更喜欢……"], ["Причина 1", "为什么更方便或更有意思？"], ["Причина 2", "它给你什么感觉？"], ["Сравнение", "另一种方式有什么优点？"], ["Пример", "最近看了什么？"], ["Вывод", "所以……"]], "example": "我更喜欢看电影，因为电影有画面、音乐和演员，比较容易让我进入故事。看电影也很适合跟朋友一起。不过，看书可以让我们自己想象人物和环境。比如，最近我看了一部很有意思的电影，看完以后还跟朋友讨论了很久。总的来说，两种方式都很好，只是我平时更常看电影。"}, {"cat": "Книги и кино", "level": "Средне", "cn": "一部好电影最重要的是什么？", "ru": "Что самое важное в хорошем фильме?", "prompts": [["Позиция", "我觉得最重要的是……"], ["Причина 1", "故事为什么重要？"], ["Причина 2", "演员或音乐有什么作用？"], ["Пример", "你喜欢哪一部电影？"], ["Личное чувство", "好电影会让人怎么样？"], ["Вывод", "总的来说……"]], "example": "我觉得一部好电影最重要的是故事。即使画面很漂亮，如果故事没有意思，观众也很快会忘记。演员的表演和音乐也很重要，它们可以让人物和气氛更真实。比如，我喜欢那些看完以后还能让人思考的电影。总的来说，好电影不仅让人娱乐，也会留下深刻的印象。"}, {"cat": "Будущее", "level": "Средне", "cn": "你希望十年后的生活是什么样的？", "ru": "Какой ты хотела бы видеть свою жизнь через десять лет?", "prompts": [["Начало", "十年以后，我希望……"], ["Учёба/работа", "你想做什么？"], ["Место", "你想住在哪里？"], ["Люди", "你希望谁在你身边？"], ["Причина", "为什么这样的生活适合你？"], ["Вывод", "我知道未来会变化，但是……"]], "example": "十年以后，我希望自己有一份喜欢的工作，也有足够的自由时间。我想住在一个方便、漂亮的城市，但是也希望生活不要太忙。我希望家人和好朋友都在我身边。对我来说，理想的生活不是每天都很精彩，而是比较稳定，也能做自己喜欢的事情。虽然未来会变化，但是我希望自己一直有新的目标。"}, {"cat": "Будущее", "level": "Сложно", "cn": "科技会让未来的生活变得更好吗？", "ru": "Сделают ли технологии жизнь в будущем лучше?", "prompts": [["Позиция", "我觉得科技会……"], ["Плюс 1", "哪些事情会更方便？"], ["Плюс 2", "学习或医疗会怎么变化？"], ["Риск", "可能出现什么问题？"], ["Баланс", "我们应该怎么使用科技？"], ["Вывод", "所以……"]], "example": "我觉得科技会让未来的生活更方便，但是不一定解决所有问题。人工智能、交通和医疗技术可能帮助人们节省时间，也提高生活质量。不过，科技也可能带来新的问题，比如人们更依赖机器，或者个人信息不安全。总的来说，科技本身没有好坏，关键是人们怎么使用它。"}, {"cat": "Выбор", "level": "Средне", "cn": "遇到困难的时候，你会坚持还是放弃？", "ru": "Когда ты сталкиваешься с трудностями, ты продолжаешь или сдаёшься?", "prompts": [["Позиция", "一般来说，我会……"], ["Причина 1", "为什么坚持重要？"], ["Причина 2", "什么时候可以改变方法？"], ["Пример", "你遇到过什么困难？"], ["Урок", "你从中学到了什么？"], ["Вывод", "所以……"]], "example": "一般来说，遇到困难的时候我会先坚持一下。因为很多事情一开始都不容易，如果马上放弃，就不知道自己能不能做到。但是，坚持不等于一直用同一种方法。比如，学习中文的时候，如果一个方法没有效果，我会换一种方法。总的来说，困难不是失败，它可以帮助我们找到更适合自己的办法。"}, {"cat": "Выбор", "level": "Сложно", "cn": "做决定的时候，应该听自己的还是听别人的？", "ru": "При принятии решения нужно слушать себя или других?", "prompts": [["Позиция", "我觉得两方面都要考虑。"], ["Причина 1", "别人为什么能给建议？"], ["Причина 2", "为什么最后要自己决定？"], ["Пример", "什么决定适合听建议？"], ["Баланс", "怎么判断建议是否合适？"], ["Вывод", "总的来说……"]], "example": "我觉得做决定的时候，既要听自己的想法，也可以听别人的建议。别人可能有更多经验，可以看到我们没有注意到的问题。但是，最后做决定的人还是自己，因为只有自己最了解自己的情况。比如，选择学校或者兴趣时，可以听父母和老师的意见，再认真想一想自己的目标。"}];
+let filtered=[...questions.keys()];
+let current=0,timerInterval=null,total=120,remaining=120,translationVisible=true,promptsVisible=true;
+const connectors=["首先……，其次……","不但……而且……","虽然……但是……","对我来说……","比如……","另外……","总的来说……","一方面……，另一方面……","如果……就……","因为……所以……"];
+function buildFilters(){
+ const cats=[...new Set(questions.map(q=>q.cat))];
+ document.getElementById('categorySelect').innerHTML='<option value="Все">Все темы</option>'+cats.map(c=>`<option>${c}</option>`).join('');
+}
+function buildQuestionList(){
+ const c=document.getElementById('categorySelect').value,l=document.getElementById('levelSelect').value;
+ filtered=questions.map((q,i)=>({q,i})).filter(x=>(c==="Все"||x.q.cat===c)&&(l==="Все"||x.q.level===l)).map(x=>x.i);
+ const sel=document.getElementById('questionSelect');
+ sel.innerHTML=filtered.map(i=>`<option value="${i}">${questions[i].cn}</option>`).join('');
+ if(!filtered.includes(current)) current=filtered[0]??0;
+ sel.value=current; renderQuestion();
+}
+function renderQuestion(){
+ current=+document.getElementById('questionSelect').value;
+ const q=questions[current];
+ qCn.textContent=q.cn;qRu.textContent=q.ru;qCat.textContent=q.cat;qLevel.textContent=q.level;
+ qCount.textContent=`${filtered.indexOf(current)+1} / ${filtered.length}`;
+ promptGrid.innerHTML=q.prompts.map((p,i)=>`<div class="prompt"><strong>${i+1}. ${p[0]}</strong>${p[1]}</div>`).join('');
+ exampleBox.textContent=q.example;exampleBox.classList.add('hidden');
+ draft.value=localStorage.getItem('draft_'+current)||'';
+ qRu.style.display=translationVisible?'block':'none';
+ promptGrid.style.display=promptsVisible?'grid':'none';
+}
+function nextQuestion(){let pos=filtered.indexOf(current);current=filtered[(pos+1)%filtered.length];questionSelect.value=current;renderQuestion()}
+function randomQuestion(){current=filtered[Math.floor(Math.random()*filtered.length)];questionSelect.value=current;renderQuestion()}
+function toggleTranslation(){translationVisible=!translationVisible;renderQuestion()}
+function togglePrompts(){promptsVisible=!promptsVisible;promptGrid.style.display=promptsVisible?'grid':'none'}
+function toggleExample(){exampleBox.classList.toggle('hidden')}
+function saveDraft(){localStorage.setItem('draft_'+current,draft.value);alert('Черновик сохранён')}
+function clearDraft(){draft.value='';localStorage.removeItem('draft_'+current)}
+function newConnector(){connector.textContent=connectors[Math.floor(Math.random()*connectors.length)]}
+function formatTime(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function updateTimer(){timer.textContent=formatTime(remaining);bar.style.width=((total-remaining)/total*100)+'%'}
+function startTimer(sec,label){clearInterval(timerInterval);total=sec;remaining=sec;timerLabel.textContent=label;updateTimer();timerInterval=setInterval(()=>{remaining--;updateTimer();if(remaining<=0){clearInterval(timerInterval);timerLabel.textContent='Время закончилось';beep()}},1000)}
+function pauseTimer(){clearInterval(timerInterval)}
+function resetTimer(){clearInterval(timerInterval);total=120;remaining=120;timerLabel.textContent='Подготовка';updateTimer()}
+function beep(){try{const c=new (AudioContext||webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.value=.08;o.start();setTimeout(()=>{o.stop();c.close()},500)}catch(e){}}
+function markDone(){
+ let a=+(localStorage.getItem('attempts')||0)+1;localStorage.setItem('attempts',a);
+ let done=JSON.parse(localStorage.getItem('doneQuestions')||'[]');if(!done.includes(current))done.push(current);localStorage.setItem('doneQuestions',JSON.stringify(done));
+ let today=new Date().toDateString(),d=JSON.parse(localStorage.getItem('daily')||'{}');d[today]=(d[today]||0)+1;localStorage.setItem('daily',JSON.stringify(d));updateStats();
+}
+function updateStats(){
+ attempts.textContent=localStorage.getItem('attempts')||0;
+ unique.textContent=JSON.parse(localStorage.getItem('doneQuestions')||'[]').length;
+ let today=new Date().toDateString(),d=JSON.parse(localStorage.getItem('daily')||'{}');streak.textContent=d[today]||0;
+}
+function challengeMode(){
+ exampleBox.classList.add('hidden');promptsVisible=false;translationVisible=false;renderQuestion();startTimer(120,'Экзамен · ответ');
+}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.stage').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.tab).classList.add('active')});
+buildFilters();buildQuestionList();updateTimer();updateStats();
+
+let mediaRecorder=null;
+let recordedChunks=[];
+let recordedBlob=null;
+let speechRecognition=null;
+let recognitionActive=false;
+
+function setRecStatus(text,live=false){
+  document.getElementById('recStatus').textContent=text;
+  document.getElementById('recDot').classList.toggle('live',live);
+}
+
+async function startRecording(){
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    recordedChunks=[];
+    mediaRecorder=new MediaRecorder(stream);
+    mediaRecorder.ondataavailable=e=>{if(e.data.size>0) recordedChunks.push(e.data)};
+    mediaRecorder.onstop=()=>{
+      recordedBlob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||'audio/webm'});
+      const url=URL.createObjectURL(recordedBlob);
+      const audio=document.getElementById('audioPlayback');
+      audio.src=url;
+      audio.classList.remove('hidden');
+      stream.getTracks().forEach(t=>t.stop());
+      setRecStatus('Запись завершена');
+    };
+    mediaRecorder.start();
+    setRecStatus('Идёт запись…',true);
+    startRecognitionOnly();
+  }catch(e){
+    alert('Не удалось получить доступ к микрофону: '+e.message);
+  }
+}
+
+function stopRecording(){
+  if(mediaRecorder && mediaRecorder.state!=='inactive') mediaRecorder.stop();
+  if(speechRecognition && recognitionActive){
+    try{speechRecognition.stop()}catch(e){}
+  }
+  setRecStatus('Остановка записи…');
+}
+
+function clearRecording(){
+  recordedChunks=[];recordedBlob=null;
+  const audio=document.getElementById('audioPlayback');
+  audio.removeAttribute('src');audio.classList.add('hidden');
+  document.getElementById('speechText').value='';
+  document.getElementById('analysisBox').classList.add('hidden');
+  setRecStatus('Запись не начата');
+}
+
+function startRecognitionOnly(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){
+    alert('В этом браузере встроенное распознавание речи не поддерживается.');
+    return;
+  }
+  if(recognitionActive) return;
+  speechRecognition=new SR();
+  speechRecognition.lang='zh-CN';
+  speechRecognition.continuous=true;
+  speechRecognition.interimResults=true;
+  let finalText=document.getElementById('speechText').value.trim();
+  speechRecognition.onstart=()=>{recognitionActive=true};
+  speechRecognition.onresult=e=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      const t=e.results[i][0].transcript;
+      if(e.results[i].isFinal) finalText+=(finalText?' ':'')+t;
+      else interim+=t;
+    }
+    document.getElementById('speechText').value=(finalText+(interim?' '+interim:'')).trim();
+  };
+  speechRecognition.onerror=e=>{recognitionActive=false;console.warn(e)};
+  speechRecognition.onend=()=>{recognitionActive=false};
+  try{speechRecognition.start()}catch(e){}
+}
+
+function analyzeSpeech(){
+  const text=document.getElementById('speechText').value.trim();
+  if(!text){alert('Сначала добавьте или распознайте текст ответа.');return}
+  const q=questions[current];
+  const chars=(text.match(/[\u3400-\u9fff]/g)||[]).length;
+  const connectorsFound=connectors.filter(c=>text.includes(c.replace(/……|，.*/g,'')));
+  const hasExample=/比如|例如|有一次|在我的生活中/.test(text);
+  const hasConclusion=/总的来说|所以|这就是我的看法|总之/.test(text);
+  const hasReason=/因为|首先|其次|另外|一方面|另一方面/.test(text);
+  const sentences=text.split(/[。！？!?]/).filter(x=>x.trim()).length;
+  const repeated=(text.match(/我觉得/g)||[]).length;
+
+  let items=[];
+  items.push(`<div class="feedback-item"><b>Объём:</b> примерно ${chars} китайских знаков, ${sentences} смысловых фрагментов.</div>`);
+  items.push(`<div class="feedback-item"><b>Связки:</b> ${connectorsFound.length?connectorsFound.join('、'):'связки почти не обнаружены'}. ${connectorsFound.length<2?'Добавьте 首先、其次、比如 или 总的来说.':'Связки помогают удерживать структуру.'}</div>`);
+  items.push(`<div class="feedback-item"><b>Структура:</b> ${hasReason?'есть объяснение причин':'не хватает явных причин'}; ${hasExample?'есть пример':'добавьте один конкретный пример'}; ${hasConclusion?'есть вывод':'закончите коротким выводом'}.</div>`);
+  if(chars<80) items.push(`<div class="feedback-item"><b>Как расширить:</b> ответ пока короткий. Добавьте вторую причину, один пример из жизни и пояснение своих чувств.</div>`);
+  else if(chars<140) items.push(`<div class="feedback-item"><b>Как расширить:</b> объём уже неплохой, но для двух минут можно подробнее раскрыть пример.</div>`);
+  else items.push(`<div class="feedback-item"><b>Содержание:</b> объём подходит для развёрнутого ответа. Теперь важнее связность и естественность речи.</div>`);
+  if(repeated>=3) items.push(`<div class="feedback-item"><b>Повторы:</b> 我觉得 повторяется ${repeated} раза. Часть повторов можно заменить на 对我来说、我认为、在我看来.</div>`);
+  items.push(`<div class="feedback-item"><b>Следующая попытка:</b> ответьте ещё раз без чтения полного текста, используя только 5–7 ключевых слов.</div>`);
+
+  document.getElementById('feedbackList').innerHTML=items.join('');
+  document.getElementById('analysisBox').classList.remove('hidden');
+}
+
+</script>
+</body>
+</html>
