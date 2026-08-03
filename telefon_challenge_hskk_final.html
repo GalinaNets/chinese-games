@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电话挑战 — тренажёр звонков</title>
+<style>
+:root{--bg:#0f172a;--panel:#111827;--card:#1f2937;--text:#f8fafc;--muted:#cbd5e1;--accent:#f97316;--good:#22c55e;--danger:#ef4444;--line:#334155}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,"Noto Sans SC",sans-serif;background:linear-gradient(135deg,#0b1020,#111827);color:var(--text)}
+.app{max-width:1180px;margin:auto;padding:22px}.hero,.panel{background:rgba(17,24,39,.95);border:1px solid #263246;border-radius:22px;box-shadow:0 18px 45px rgba(0,0,0,.35)}
+.hero{padding:28px;margin-bottom:18px}.hero h1{margin:0;font-size:42px}.hero p{color:var(--muted);font-size:17px;line-height:1.5}
+.layout{display:grid;grid-template-columns:300px 1fr;gap:18px}.panel{padding:18px}.list{display:flex;flex-direction:column;gap:8px;max-height:75vh;overflow:auto}
+.item{background:#172033;color:white;border:1px solid var(--line);border-radius:12px;padding:11px;text-align:left;cursor:pointer}.item.active,.item:hover{border-color:var(--accent)}
+.main{display:flex;flex-direction:column;gap:14px}.card{background:#172033;border:1px solid var(--line);border-radius:18px;padding:18px}.title{font-size:28px;font-weight:800}.desc,.mission{color:var(--muted);line-height:1.5}.mission{margin-top:10px;border-left:4px solid var(--accent);padding:10px;background:#0f172a;border-radius:8px}
+.controls{display:flex;flex-wrap:wrap;gap:10px}.btn{border:none;border-radius:12px;padding:11px 15px;font-weight:700;cursor:pointer;background:var(--accent)}.btn.secondary{background:#263246;color:white;border:1px solid #3b4a61}.btn.good{background:var(--good)}
+.phone{background:#030712;border:7px solid #1f2937;border-radius:34px;padding:16px;max-width:320px;margin:auto;text-align:center}.screen{min-height:210px;border-radius:22px;background:#0f172a;padding:22px}.avatar{width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#facc15);display:grid;place-items:center;color:#111827;font-size:30px;font-weight:800;margin:0 auto 12px}
+.callBtns{display:flex;justify-content:center;gap:16px;margin-top:15px}.round{width:56px;height:56px;border-radius:50%;border:none;font-size:24px;cursor:pointer}.call{background:var(--good)}.hang{background:var(--danger);color:white}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}.box{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:14px}.q{background:#172033;border:1px solid #2c3b52;border-radius:12px;padding:11px;margin-bottom:9px}.cn{font-size:18px;font-weight:700}.py{color:#fbbf24;margin-top:4px}.ru{color:var(--muted);margin-top:4px}
+textarea{width:100%;min-height:150px;background:#0b1220;color:white;border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit}.hidden{display:none!important}.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{background:#172033;border:1px solid var(--line);padding:8px 10px;border-radius:999px}
+.stop{background:#2a1b1b;border:1px solid #7f1d1d;padding:14px;border-radius:14px}.stop b{color:#fca5a5}
+
+.task-list{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.task-row{background:#0f172a;border:1px solid var(--line);border-radius:14px;padding:12px}
+.task-head{display:flex;gap:10px;align-items:flex-start}
+.task-num{min-width:30px;height:30px;border-radius:50%;background:var(--accent);color:#111827;display:grid;place-items:center;font-weight:800}
+.task-text{font-weight:700;line-height:1.45}
+.answer-input{width:100%;margin-top:10px;background:#0b1220;color:white;border:1px solid var(--line);border-radius:10px;padding:11px;font:inherit}
+.feedback{margin-top:8px;font-size:14px;line-height:1.4}
+.feedback.ok{color:#86efac}.feedback.warn{color:#fde68a}.feedback.bad{color:#fca5a5}
+.model-answer{margin-top:8px;padding:9px 10px;background:#172033;border-radius:10px;border:1px solid #2c3b52}
+.score{font-weight:800;margin-top:10px}
+
+
+.box{min-width:0;overflow:hidden}
+.box label.q{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  width:100%;
+  margin:0 0 9px 0;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  word-break:normal;
+  line-height:1.45;
+}
+.box label.q input{
+  flex:0 0 auto;
+  margin-top:4px;
+}
+#checklist{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+#checklist .q{
+  margin:0;
+}
+
+
+.word-bank{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.word-chip{background:#172033;border:1px solid var(--line);border-radius:999px;padding:8px 10px;cursor:pointer;color:#f8fafc}
+.word-chip:hover{border-color:var(--accent)}
+.variant-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.variant{background:#172033;border:1px solid #2c3b52;border-radius:10px;padding:10px}
+.variant .cn{font-size:17px}
+.level-badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800;margin-left:6px}
+.level-simple{background:#1e3a8a;color:#dbeafe}
+.level-natural{background:#14532d;color:#dcfce7}
+.level-formal{background:#78350f;color:#fef3c7}
+.task-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:9px}
+
+
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin-top:10px}
+.vocab-card{background:#172033;border:1px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;text-align:left;color:#f8fafc}
+.vocab-card:hover{border-color:var(--accent);transform:translateY(-1px)}
+.vocab-hanzi{font-size:18px;font-weight:800}
+.vocab-pinyin{font-size:13px;color:#fbbf24;margin-top:3px}
+.vocab-ru{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.35}
+
+
+.call-prompts{margin-top:14px;width:100%;text-align:left;background:#111827;border:1px solid var(--line);border-radius:14px;padding:12px}
+.call-prompts-title{font-weight:800;margin-bottom:8px;color:#f8fafc}
+.call-prompt{display:flex;gap:8px;align-items:flex-start;color:#e2e8f0;font-size:14px;line-height:1.4;margin:7px 0}
+.call-prompt-num{min-width:22px;height:22px;border-radius:50%;background:var(--accent);color:#111827;display:grid;place-items:center;font-weight:800;font-size:12px}
+
+@media(max-width:1050px){.grid{grid-template-columns:1fr}}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<section class="hero">
+<h1>电话挑战 · Звонки без паники</h1>
+<p>18 ситуаций для HSKK: в каждой ситуации ровно 5 понятных пунктов, полезные слова по кнопке, несколько допустимых вариантов вопроса, автоматическая проверка и устный дубль.</p>
+</section>
+
+<div class="layout">
+<aside class="panel"><h3>Куда звоним?</h3><div class="list" id="list"></div></aside>
+
+<main class="main">
+<div class="card">
+<div class="title" id="title"></div>
+<div class="desc" id="desc"></div>
+<div class="mission" id="mission"></div>
+<div class="controls" style="margin-top:12px"><button class="btn secondary" id="generalWordsBtn">📚 Полезные слова ситуации</button></div>
+<div class="box hidden" id="generalWordsBox" style="margin-top:10px"><div class="word-bank" id="generalWords"></div></div>
+<h3 style="margin-bottom:8px">Пять пунктов звонка</h3>
+<div class="task-list" id="taskList"></div>
+<div class="controls" style="margin-top:12px">
+<button class="btn good" id="checkAllBtn">Проверить все 5 вопросов</button>
+<button class="btn secondary" id="clearBtn">Очистить ответы</button>
+</div>
+<div class="score" id="score"></div>
+</div>
+
+<div class="card phone">
+<div class="screen">
+<div class="avatar" id="avatar">电</div>
+<h3 id="phoneTitle">Выберите ситуацию</h3>
+<div id="phoneStatus" class="desc">Готово к звонку</div><div class="call-prompts" id="callPrompts"><div class="call-prompts-title">Что нужно спросить:</div><div id="callPromptList"></div></div>
+<div class="callBtns">
+<button class="round call" id="callBtn">☎</button>
+<button class="round hang" id="hangBtn">✕</button>
+</div>
+</div>
+</div>
+
+<div class="controls">
+<button class="btn" id="callMain">📞 Позвонить</button>
+<button class="btn secondary" id="hintsBtn">💡 Подсказки</button>
+<button class="btn secondary" id="answersBtn">✅ Идеальные вопросы</button>
+<button class="btn secondary" id="randomBtn">🎲 Случайная ситуация</button>
+</div>
+
+<div class="grid">
+<div class="box">
+<h3>Устный дубль</h3>
+<div class="desc">После письменной проверки позвоните ещё раз и задайте все пять вопросов устно.</div>
+<div class="controls" style="margin-top:10px">
+<button class="btn good" id="recordBtn">🎙 Запись</button>
+<button class="btn secondary" id="stopBtn">⏹ Стоп</button>
+<button class="btn secondary" id="playBtn">▶ Прослушать</button>
+</div>
+<div id="recordStatus" class="desc">Микрофон не запущен.</div>
+</div>
+
+<div class="box">
+<h3>Проверка</h3>
+<div id="checklist">
+<label class="q"><input type="checkbox"><span>Все пять пунктов задания заданы?</span></label>
+<label class="q"><input type="checkbox"><span>Не перепутаны 几点 / 什么时候 / 多长时间?</span></label>
+<label class="q"><input type="checkbox"><span>Для вопроса «как добраться?» использовано 怎么?</span></label>
+<label class="q"><input type="checkbox"><span>Каждый вопрос закончен и понятен?</span></label>
+<label class="q"><input type="checkbox"><span>Между вопросами есть небольшие паузы?</span></label>
+</div>
+</div>
+</div>
+
+<div class="box hidden" id="hintsBox"><h3>Подсказки</h3><div class="chips" id="hints"></div></div>
+<div class="box hidden" id="answersBox"><h3>Идеальные формулировки</h3><div id="answers"></div></div>
+
+<div class="stop"><b>Стоп-ошибки:</b> 去在 нельзя; 觉得 ≠ 记得; 几点 = «во сколько», 什么时候 = «когда», 多长时间 = «как долго»; 怎么去 = «как добраться», 怎么样 = «какой / как тебе»; 拍照片, 这张照片, 出租车, 可以拍照吗。</div>
+</main>
+</div>
+</div>
+
+<script>
+const S=[
+["课","Курсы китайского языка","Вы звоните в языковой центр.","Узнайте дату начала, расписание, продолжительность, стоимость и число учеников.",["报名","暑假","课程","什么时候","几点","多长时间","学费"],[
+["暑假的汉语课什么时候开始？","Shǔjià de Hànyǔ kè shénme shíhou kāishǐ?","Когда начинается летний курс?"],
+["你们一般几点上课？","Nǐmen yìbān jǐ diǎn shàngkè?","Во сколько занятия?"],
+["这个课程一共上多长时间？","Zhège kèchéng yígòng shàng duō cháng shíjiān?","Сколько длится курс?"],
+["学费是多少？","Xuéfèi shì duōshao?","Сколько стоит обучение?"],
+["一个班有多少学生？","Yí ge bān yǒu duōshao xuésheng?","Сколько учеников в группе?"]]],
+["店","Гостиница","Вы хотите забронировать номер на три дня.","Узнайте цену, завтрак, заселение, Wi‑Fi и расстояние до центра.",["订房间","住三天","一晚上","包括","入住","Wi-Fi","市中心"],[
+["您好，我想订一个房间，住三天。","Nínhǎo, wǒ xiǎng dìng yí ge fángjiān, zhù sān tiān.","Я хочу номер на три дня."],
+["一个房间一晚上多少钱？","Yí ge fángjiān yì wǎnshang duōshao qián?","Цена за ночь?"],
+["房费包括早饭吗？","Fángfèi bāokuò zǎofàn ma?","Завтрак включён?"],
+["几点可以入住？","Jǐ diǎn kěyǐ rùzhù?","Во сколько заселение?"],
+["房间里有免费的Wi-Fi吗？","Fángjiān lǐ yǒu miǎnfèi de Wi-Fi ma?","Есть бесплатный Wi‑Fi?"],
+["酒店离市中心远吗？","Jiǔdiàn lí shì zhōngxīn yuǎn ma?","Далеко от центра?"]]],
+["博","Музей","Вы звоните в музей.","Узнайте часы работы, билет, скидку, фото и дорогу.",["博物馆","开门","关门","门票","优惠","拍照","怎么去"],[
+["博物馆几点开门，几点关门？","Bówùguǎn jǐ diǎn kāimén, jǐ diǎn guānmén?","Часы работы?"],
+["门票多少钱一张？","Ménpiào duōshao qián yì zhāng?","Цена билета?"],
+["学生有优惠吗？","Xuésheng yǒu yōuhuì ma?","Есть скидка студентам?"],
+["博物馆里可以拍照吗？","Bówùguǎn lǐ kěyǐ pāizhào ma?","Можно фотографировать?"],
+["怎么去博物馆？","Zěnme qù bówùguǎn?","Как добраться?"]]],
+["医","Клиника","Вы записываетесь к врачу.","Узнайте время, цену, документы, адрес и перенос записи.",["挂号","医生","有时间吗","证件","地址","改时间"],[
+["明天下午医生有时间吗？","Míngtiān xiàwǔ yīshēng yǒu shíjiān ma?","Есть время завтра?"],
+["挂号费是多少？","Guàhàofèi shì duōshao?","Цена приёма?"],
+["需要带什么证件？","Xūyào dài shénme zhèngjiàn?","Какие документы?"],
+["医院的地址是什么？","Yīyuàn de dìzhǐ shì shénme?","Какой адрес?"],
+["可以改时间吗？","Kěyǐ gǎi shíjiān ma?","Можно перенести?"]]],
+["车","Такси","Вы вызываете такси.","Назовите адрес, узнайте ожидание, цену, оплату и багаж.",["叫出租车","地址","等多长时间","多少钱","刷卡","行李"],[
+["我想叫一辆出租车。","Wǒ xiǎng jiào yí liàng chūzūchē.","Хочу вызвать такси."],
+["大概要等多长时间？","Dàgài yào děng duō cháng shíjiān?","Сколько ждать?"],
+["到机场大概多少钱？","Dào jīchǎng dàgài duōshao qián?","Цена до аэропорта?"],
+["可以刷卡吗？","Kěyǐ shuākǎ ma?","Можно картой?"],
+["我有两个大行李箱，可以吗？","Wǒ yǒu liǎng ge dà xínglixiāng, kěyǐ ma?","Можно с двумя чемоданами?"]]],
+["餐","Доставка еды","Вы заказываете еду.","Узнайте меню, остроту, время, минимум заказа и оплату.",["外卖","辣不辣","送到","最低消费","现金"],[
+["你们可以送外卖吗？","Nǐmen kěyǐ sòng wàimài ma?","Есть доставка?"],
+["这个菜辣不辣？","Zhège cài là bu là?","Острое?"],
+["大概多长时间能送到？","Dàgài duō cháng shíjiān néng sòng dào?","Сколько ждать?"],
+["有最低消费吗？","Yǒu zuìdī xiāofèi ma?","Есть минимум заказа?"],
+["可以用现金付款吗？","Kěyǐ yòng xiànjīn fùkuǎn ma?","Можно наличными?"]]],
+["修","Ремонт телефона","Вы звоните в сервис.","Опишите проблему, узнайте срок, цену, гарантию и деталь.",["手机坏了","屏幕","修理","多长时间","保证","零件"],[
+["我的手机屏幕坏了，可以修吗？","Wǒ de shǒujī píngmù huài le, kěyǐ xiū ma?","Можно починить экран?"],
+["修理要多长时间？","Xiūlǐ yào duō cháng shíjiān?","Срок ремонта?"],
+["大概多少钱？","Dàgài duōshao qián?","Примерная цена?"],
+["修好以后有保证吗？","Xiūhǎo yǐhòu yǒu bǎozhèng ma?","Есть гарантия?"],
+["有这个零件吗？","Yǒu zhège língjiàn ma?","Есть деталь?"]]],
+["水","Аварийная служба","У вас течёт труба.","Сообщите адрес, проблему, срочность, время приезда и цену.",["水管漏水","地址","严重","什么时候能来","维修费"],[
+["我家里的水管漏水了。","Wǒ jiālǐ de shuǐguǎn lòushuǐ le.","Протекает труба."],
+["我的地址是……","Wǒ de dìzhǐ shì...","Мой адрес..."],
+["请尽快来。","Qǐng jǐnkuài lái.","Приезжайте скорее."],
+["什么时候能来？","Shénme shíhou néng lái?","Когда сможете приехать?"],
+["维修费大概是多少？","Wéixiūfèi dàgài shì duōshao?","Сколько стоит ремонт?"]]],
+["货","Магазин","Вы ищете конкретный товар.","Узнайте наличие, цвет, размер, цену и возможность отложить.",["有货吗","颜色","尺码","打折","留一下"],[
+["这个商品现在有货吗？","Zhège shāngpǐn xiànzài yǒu huò ma?","Есть в наличии?"],
+["有黑色的吗？","Yǒu hēisè de ma?","Есть чёрный?"],
+["有大一点儿的尺码吗？","Yǒu dà yìdiǎnr de chǐmǎ ma?","Есть размер больше?"],
+["现在打折吗？","Xiànzài dǎzhé ma?","Есть скидка?"],
+["可以帮我留到晚上吗？","Kěyǐ bāng wǒ liú dào wǎnshang ma?","Можно отложить?"]]],
+["健","Фитнес-клуб","Вы звоните в фитнес-клуб.","Узнайте расписание, пробное занятие, цену, бассейн и тренера.",["健身房","课程表","体验课","会员费","游泳池","教练"],[
+["课程表在哪儿可以看？","Kèchéngbiǎo zài nǎr kěyǐ kàn?","Где расписание?"],
+["可以先上一次体验课吗？","Kěyǐ xiān shàng yí cì tǐyànkè ma?","Есть пробное?"],
+["一个月多少钱？","Yí ge yuè duōshao qián?","Цена за месяц?"],
+["有游泳池吗？","Yǒu yóuyǒngchí ma?","Есть бассейн?"],
+["可以请私人教练吗？","Kěyǐ qǐng sīrén jiàoliàn ma?","Есть тренер?"]]],
+["童","Детский кружок","Вы звоните в детский центр.","Узнайте возраст, дни, цену, пробное занятие и что взять.",["适合几岁","星期几","学费","体验课","带什么"],[
+["这个课程适合几岁的孩子？","Zhège kèchéng shìhé jǐ suì de háizi?","Для какого возраста?"],
+["每个星期几上课？","Měi ge xīngqī jǐ shàngkè?","По каким дням?"],
+["一个月多少钱？","Yí ge yuè duōshao qián?","Цена?"],
+["可以先参加一次体验课吗？","Kěyǐ xiān cānjiā yí cì tǐyànkè ma?","Есть пробное?"],
+["第一次上课需要带什么？","Dì-yī cì shàngkè xūyào dài shénme?","Что взять?"]]],
+["图","Библиотека","Вы звоните в библиотеку.","Узнайте часы, билет, документы, срок выдачи и штраф.",["图书馆","关门","借书证","证件","借多长时间","罚款"],[
+["图书馆今天几点关门？","Túshūguǎn jīntiān jǐ diǎn guānmén?","Когда закрывается?"],
+["怎么办借书证？","Zěnme bàn jièshūzhèng?","Как оформить билет?"],
+["需要带什么证件？","Xūyào dài shénme zhèngjiàn?","Какие документы?"],
+["一本书可以借多长时间？","Yì běn shū kěyǐ jiè duō cháng shíjiān?","На какой срок книга?"],
+["晚还书要交罚款吗？","Wǎn huán shū yào jiāo fákuǎn ma?","Есть штраф?"]]],
+["机","Авиакомпания","Вы звоните перед полётом.","Узнайте багаж, регистрацию, место, питание и перенос.",["行李","托运行李","提前多长时间","选座位","飞机餐","改签"],[
+["可以带多少行李？","Kěyǐ dài duōshao xíngli?","Сколько багажа?"],
+["托运行李最多多少公斤？","Tuōyùn xíngli zuìduō duōshao gōngjīn?","Максимальный вес?"],
+["需要提前多长时间到机场？","Xūyào tíqián duō cháng shíjiān dào jīchǎng?","За сколько приехать?"],
+["可以提前选座位吗？","Kěyǐ tíqián xuǎn zuòwèi ma?","Можно выбрать место?"],
+["飞机上有饭吗？","Fēijī shàng yǒu fàn ma?","Есть питание?"]]],
+["邮","Почта","Вы отправляете посылку.","Узнайте цену, срок, отслеживание, упаковку и документы.",["寄包裹","运费","多长时间","查询","包装","护照"],[
+["我想寄一个包裹，运费是多少？","Wǒ xiǎng jì yí ge bāoguǒ, yùnfèi shì duōshao?","Цена доставки?"],
+["大概多长时间能到？","Dàgài duō cháng shíjiān néng dào?","Срок доставки?"],
+["可以在网上查询吗？","Kěyǐ zài wǎngshàng cháxún ma?","Можно отслеживать?"],
+["可以帮我包装吗？","Kěyǐ bāng wǒ bāozhuāng ma?","Поможете упаковать?"],
+["需要带护照吗？","Xūyào dài hùzhào ma?","Нужен паспорт?"]]],
+["发","Парикмахерская","Вы записываетесь на стрижку.","Узнайте время, цену, мастера, длительность и отмену.",["预约","理发","有时间吗","多少钱","发型师","多长时间"],[
+["今天下午有时间吗？","Jīntiān xiàwǔ yǒu shíjiān ma?","Есть время сегодня?"],
+["剪头发多少钱？","Jiǎn tóufa duōshao qián?","Цена стрижки?"],
+["可以选择发型师吗？","Kěyǐ xuǎnzé fàxíngshī ma?","Можно выбрать мастера?"],
+["大概要多长时间？","Dàgài yào duō cháng shíjiān?","Сколько длится?"],
+["可以取消预约吗？","Kěyǐ qǔxiāo yùyuē ma?","Можно отменить?"]]],
+["房","Аренда квартиры","Вы звоните по объявлению.","Узнайте цену, залог, коммунальные услуги, мебель и просмотр.",["租房","房租","押金","水电费","家具","看房"],[
+["这套房子还出租吗？","Zhè tào fángzi hái chūzū ma?","Ещё сдаётся?"],
+["一个月的房租是多少？","Yí ge yuè de fángzū shì duōshao?","Цена за месяц?"],
+["需要交押金吗？","Xūyào jiāo yājīn ma?","Нужен залог?"],
+["水电费包括在房租里吗？","Shuǐdiànfèi bāokuò zài fángzū lǐ ma?","Коммунальные включены?"],
+["什么时候可以看房？","Shénme shíhou kěyǐ kàn fáng?","Когда посмотреть?"]]],
+["票","Театр","Вы звоните в кассу.","Узнайте билеты, цену, места, время начала и возврат.",["演出","还有票吗","多少钱","座位","几点开始","退票"],[
+["星期六的演出还有票吗？","Xīngqīliù de yǎnchū hái yǒu piào ma?","Есть билеты?"],
+["最便宜的票多少钱？","Zuì piányi de piào duōshao qián?","Самый дешёвый билет?"],
+["还有前面的座位吗？","Hái yǒu qiánmiàn de zuòwèi ma?","Есть места ближе?"],
+["演出几点开始？","Yǎnchū jǐ diǎn kāishǐ?","Во сколько начало?"],
+["可以买票以后退票吗？","Kěyǐ mǎi piào yǐhòu tuìpiào ma?","Можно вернуть билет?"]]],
+["网","Интернет-провайдер","У вас не работает интернет.","Сообщите проблему, узнайте причину, срок, перезагрузку и мастера.",["不能上网","怎么回事","多长时间","重新启动","维修人员"],[
+["我家里不能上网了。","Wǒ jiālǐ bù néng shàngwǎng le.","Интернет не работает."],
+["这是怎么回事？","Zhè shì zěnme huí shì?","В чём проблема?"],
+["大概多长时间能修好？","Dàgài duō cháng shíjiān néng xiūhǎo?","Когда починят?"],
+["需要重新启动路由器吗？","Xūyào chóngxīn qǐdòng lùyóuqì ma?","Перезапустить роутер?"],
+["可以请维修人员来吗？","Kěyǐ qǐng wéixiū rényuán lái ma?","Может приехать мастер?"]]]
+];
+
+let current=0, timer=null, audioCtx=null, recorder=null, chunks=[], audioURL=null;
+const $=id=>document.getElementById(id);
+
+
+function normalizeChinese(text){
+ return (text||"").toLowerCase()
+  .replace(/[？?！!。，、,.；;：:\s]/g,"")
+  .replace(/兒/g,"儿")
+  .replace(/wifi/g,"wi-fi");
+}
+function containsAny(n, arr){ return arr.some(x=>n.includes(normalizeChinese(x))); }
+
+
+const VOCAB={
+"报名":["bàomíng","записываться, регистрироваться"],
+"暑假":["shǔjià","летние каникулы"],
+"课程":["kèchéng","курс, учебная программа"],
+"什么时候":["shénme shíhou","когда"],
+"几点":["jǐ diǎn","во сколько"],
+"多长时间":["duō cháng shíjiān","как долго, сколько времени"],
+"多久":["duōjiǔ","как долго"],
+"学费":["xuéfèi","плата за обучение"],
+"开始":["kāishǐ","начинаться, начинать"],
+"开门":["kāimén","открываться"],
+"关门":["guānmén","закрываться"],
+"可以":["kěyǐ","можно"],
+"大概":["dàgài","примерно"],
+"需要":["xūyào","нужно, требоваться"],
+"一共":["yígòng","всего"],
+"订房间":["dìng fángjiān","бронировать номер"],
+"住三天":["zhù sān tiān","жить три дня"],
+"一晚上":["yì wǎnshang","одна ночь"],
+"包括":["bāokuò","включать в себя"],
+"入住":["rùzhù","заселяться"],
+"Wi-Fi":["Wi-Fi","Wi-Fi"],
+"市中心":["shì zhōngxīn","центр города"],
+"价格":["jiàgé","цена"],
+"费用":["fèiyòng","расходы, стоимость"],
+"房费":["fángfèi","стоимость номера"],
+"有早饭":["yǒu zǎofàn","есть завтрак"],
+"含早饭":["hán zǎofàn","включая завтрак"],
+"住进去":["zhù jìnqu","заселиться"],
+"网络":["wǎngluò","интернет, сеть"],
+"博物馆":["bówùguǎn","музей"],
+"门票":["ménpiào","входной билет"],
+"优惠":["yōuhuì","скидка, льгота"],
+"拍照":["pāizhào","фотографировать"],
+"怎么去":["zěnme qù","как добраться"],
+"怎么走":["zěnme zǒu","как пройти"],
+"坐":["zuò","ехать на транспорте"],
+"地铁":["dìtiě","метро"],
+"公交车":["gōngjiāochē","автобус"],
+"走":["zǒu","идти"],
+"学生票":["xuéshengpiào","студенческий билет"],
+"打折":["dǎzhé","делать скидку"],
+"照相":["zhàoxiàng","фотографировать"],
+"挂号":["guàhào","записываться к врачу"],
+"医生":["yīshēng","врач"],
+"有时间吗":["yǒu shíjiān ma","есть ли свободное время"],
+"证件":["zhèngjiàn","документ, удостоверение"],
+"地址":["dìzhǐ","адрес"],
+"改时间":["gǎi shíjiān","перенести время"],
+"护照":["hùzhào","паспорт"],
+"身份证":["shēnfènzhèng","удостоверение личности"],
+"叫出租车":["jiào chūzūchē","вызвать такси"],
+"出租车":["chūzūchē","такси"],
+"等多长时间":["děng duō cháng shíjiān","сколько ждать"],
+"多少钱":["duōshao qián","сколько стоит"],
+"刷卡":["shuākǎ","платить картой"],
+"行李":["xíngli","багаж"],
+"箱子":["xiāngzi","чемодан, ящик"],
+"外卖":["wàimài","доставка еды, еда навынос"],
+"辣不辣":["là bu là","острое или нет"],
+"送到":["sòng dào","доставить"],
+"最低消费":["zuìdī xiāofèi","минимальная сумма заказа"],
+"现金":["xiànjīn","наличные"],
+"手机坏了":["shǒujī huài le","телефон сломался"],
+"屏幕":["píngmù","экран"],
+"修理":["xiūlǐ","ремонтировать"],
+"保证":["bǎozhèng","гарантия"],
+"零件":["língjiàn","деталь, запчасть"],
+"水管漏水":["shuǐguǎn lòushuǐ","труба протекает"],
+"严重":["yánzhòng","серьёзный"],
+"什么时候能来":["shénme shíhou néng lái","когда сможете приехать"],
+"维修费":["wéixiūfèi","стоимость ремонта"],
+"尽快":["jǐnkuài","как можно скорее"],
+"马上":["mǎshàng","сразу, немедленно"],
+"有货吗":["yǒu huò ma","есть ли в наличии"],
+"颜色":["yánsè","цвет"],
+"尺码":["chǐmǎ","размер одежды"],
+"留一下":["liú yíxià","отложить, оставить"],
+"黑色":["hēisè","чёрный цвет"],
+"健身房":["jiànshēnfáng","тренажёрный зал"],
+"课程表":["kèchéngbiǎo","расписание занятий"],
+"体验课":["tǐyànkè","пробное занятие"],
+"会员费":["huìyuánfèi","членский взнос, абонемент"],
+"游泳池":["yóuyǒngchí","бассейн"],
+"教练":["jiàoliàn","тренер"],
+"适合几岁":["shìhé jǐ suì","для какого возраста подходит"],
+"星期几":["xīngqī jǐ","какой день недели"],
+"带什么":["dài shénme","что взять с собой"],
+"图书馆":["túshūguǎn","библиотека"],
+"借书证":["jièshūzhèng","читательский билет"],
+"借多长时间":["jiè duō cháng shíjiān","на какой срок взять"],
+"罚款":["fákuǎn","штраф"],
+"托运行李":["tuōyùn xíngli","регистрируемый багаж"],
+"提前多长时间":["tíqián duō cháng shíjiān","за сколько времени заранее"],
+"选座位":["xuǎn zuòwèi","выбрать место"],
+"飞机餐":["fēijīcān","питание в самолёте"],
+"改签":["gǎiqiān","изменить дату или рейс в билете"],
+"寄包裹":["jì bāoguǒ","отправить посылку"],
+"运费":["yùnfèi","стоимость доставки"],
+"查询":["cháxún","проверять, отслеживать"],
+"包装":["bāozhuāng","упаковывать"],
+"预约":["yùyuē","записываться заранее"],
+"理发":["lǐfà","стричься"],
+"发型师":["fàxíngshī","парикмахер, стилист"],
+"取消":["qǔxiāo","отменять"],
+"租房":["zū fáng","снимать жильё"],
+"房租":["fángzū","арендная плата"],
+"押金":["yājīn","залог"],
+"水电费":["shuǐdiànfèi","плата за воду и электричество"],
+"家具":["jiājù","мебель"],
+"看房":["kàn fáng","осматривать квартиру"],
+"演出":["yǎnchū","представление, выступление"],
+"还有票吗":["hái yǒu piào ma","остались ли билеты"],
+"座位":["zuòwèi","место, сиденье"],
+"退票":["tuìpiào","вернуть билет"],
+"不能上网":["bù néng shàngwǎng","не работает интернет"],
+"怎么回事":["zěnme huí shì","что случилось, в чём дело"],
+"重新启动":["chóngxīn qǐdòng","перезапустить"],
+"维修人员":["wéixiū rényuán","мастер, сотрудник ремонта"],
+"房间":["fángjiān","комната, номер"],
+"早饭":["zǎofàn","завтрак"],
+"免费":["miǎnfèi","бесплатный"],
+"离":["lí","находиться на расстоянии от"],
+"远":["yuǎn","далеко"],
+"一个班":["yí ge bān","одна учебная группа"],
+"学生":["xuésheng","ученик, студент"],
+"报名费":["bàomíngfèi","регистрационный взнос"],
+"wifi":["Wi-Fi","Wi-Fi"],
+"一个月多少钱":["yí ge yuè duōshao qián","сколько стоит один месяц"],
+"什么时候上课":["shénme shíhou shàngkè","когда проходят занятия"],
+"什么时候开始":["shénme shíhou kāishǐ","когда начинается"],
+"什么问题":["shénme wèntí","какая проблема"],
+"保修":["bǎoxiū","гарантийный ремонт"],
+"保留":["bǎoliú","сохранить, отложить"],
+"修":["xiū","ремонтировать"],
+"公斤":["gōngjīn","килограмм"],
+"几岁":["jǐ suì","сколько лет"],
+"几点开始":["jǐ diǎn kāishǐ","во сколько начинается"],
+"出租":["chūzū","сдавать в аренду"],
+"出租吗":["chūzū ma","сдаётся ли"],
+"到":["dào","до, прибывать"],
+"剪头发":["jiǎn tóufa","стричь волосы"],
+"包括早饭":["bāokuò zǎofàn","включать завтрак"],
+"取消预约":["qǔxiāo yùyuē","отменить запись"],
+"可以预约":["kěyǐ yùyuē","можно записаться"],
+"号":["hào","размер, номер"],
+"吃的":["chī de","еда, то, что можно поесть"],
+"哪天":["nǎ tiān","в какой день"],
+"图书证":["túshūzhèng","читательский билет"],
+"在哪儿":["zài nǎr","где находится"],
+"多少":["duōshao","сколько"],
+"多少人":["duōshao rén","сколько человек"],
+"多少公斤":["duōshao gōngjīn","сколько килограммов"],
+"多少学生":["duōshao xuésheng","сколько учеников"],
+"多少行李":["duōshao xíngli","сколько багажа"],
+"寄":["jì","отправлять почтой"],
+"工作人员":["gōngzuò rényuán","сотрудник"],
+"师傅":["shīfu","мастер, специалист"],
+"年龄":["niánlíng","возраст"],
+"快点":["kuài diǎn","быстрее"],
+"打包":["dǎbāo","упаковать, взять с собой"],
+"打车":["dǎchē","вызвать или взять такси"],
+"换时间":["huàn shíjiān","изменить время"],
+"提前":["tíqián","заранее"],
+"改预约":["gǎi yùyuē","перенести запись"],
+"时间表":["shíjiānbiǎo","расписание"],
+"最低价":["zuìdījià","самая низкая цена"],
+"最便宜":["zuì piányi","самый дешёвый"],
+"有吗":["yǒu ma","есть ли"],
+"有多少学生":["yǒu duōshao xuésheng","сколько учеников"],
+"有时间":["yǒu shíjiān","есть свободное время"],
+"有票":["yǒu piào","есть билеты"],
+"有货":["yǒu huò","есть в наличии"],
+"有饭":["yǒu fàn","есть питание"],
+"查":["chá","проверять, искать"],
+"水管":["shuǐguǎn","водопроводная труба"],
+"水费":["shuǐfèi","плата за воду"],
+"没网":["méi wǎng","нет интернета"],
+"漏水":["lòushuǐ","протекать"],
+"理发师":["lǐfàshī","парикмахер"],
+"电费":["diànfèi","плата за электричество"],
+"留":["liú","оставить, отложить"],
+"看一下房子":["kàn yíxià fángzi","посмотреть квартиру"],
+"租金":["zūjīn","арендная плата"],
+"网络坏了":["wǎngluò huài le","интернет не работает"],
+"能预约":["néng yùyuē","можно записаться"],
+"行李多少":["xíngli duōshao","сколько багажа"],
+"试听课":["shìtīngkè","пробное занятие"],
+"辣吗":["là ma","острое ли"],
+"还有票":["hái yǒu piào","ещё есть билеты"],
+"还租":["hái zū","ещё сдаётся"],
+"退款":["tuìkuǎn","возврат денег"],
+"送来":["sòng lái","доставить сюда"],
+"送餐":["sòngcān","доставка еды"],
+"邮寄":["yóujì","отправлять почтой"],
+"配件":["pèijiàn","запчасть, комплектующая"],
+"重启":["chóngqǐ","перезапустить"],
+"银行卡":["yínhángkǎ","банковская карта"],
+"闭馆":["bìguǎn","закрытие музея или библиотеки"],
+"需要什么":["xūyào shénme","что требуется"],
+"餐":["cān","питание, приём пищи"]
+};
+function vocabHTML(words, attrName, idx){
+ return words.map(w=>{
+   const data=VOCAB[w]||["",""];
+   const attr=attrName ? `${attrName}="${idx}" data-word="${w}"` : `data-general="${w}"`;
+   return `<button class="vocab-card" ${attr}>
+     <div class="vocab-hanzi">${w}</div>
+     <div class="vocab-pinyin">${data[0]}</div>
+     <div class="vocab-ru">${data[1]}</div>
+   </button>`;
+ }).join("");
+}
+
+function makeVariants(q){
+ const zh=q[0];
+ const list=[zh];
+ const push=x=>{if(x && !list.includes(x)) list.push(x)};
+ // conversational simplifications
+ push(zh.replace(/^请问，?/,""));
+ push(zh.replace(/^您好，?/,""));
+ push(zh.replace(/^请问，?/,"").replace(/^您好，?/,""));
+ push(zh.replace("是多少","多少"));
+ push(zh.replace("一共",""));
+ push(zh.replace("大概",""));
+ push(zh.replace("你们",""));
+ push(zh.replace("请问，","").replace("大概",""));
+ // topic-specific natural alternates
+ if(zh.includes("什么时候开始")) push(zh.replace("什么时候开始","几点开始"));
+ if(zh.includes("几点开始")) push(zh.replace("几点开始","什么时候开始"));
+ if(zh.includes("一共上多长时间")) push(zh.replace("一共上多长时间","要上多久"));
+ if(zh.includes("学费是多少")) { push("学费多少钱？"); push("这个课程多少钱？"); }
+ if(zh.includes("一个班有多少学生")) { push("一个班多少人？"); push("班里有多少学生？"); }
+ if(zh.includes("一个房间一晚上多少钱")) { push("房间一晚上多少钱？"); push("住一晚上多少钱？"); push("房费是多少？"); }
+ if(zh.includes("房费包括早饭吗")) { push("包括早饭吗？"); push("有早饭吗？"); }
+ if(zh.includes("几点可以入住")) { push("什么时候可以入住？"); push("几点能入住？"); }
+ if(zh.includes("免费的Wi-Fi")) { push("房间里有Wi-Fi吗？"); push("Wi-Fi免费吗？"); }
+ if(zh.includes("离市中心远吗")) { push("酒店离市中心远不远？"); push("从酒店到市中心远吗？"); }
+ if(zh.includes("几点开门，几点关门")) { push("博物馆什么时候开门，什么时候关门？"); push("博物馆的开放时间是什么？"); }
+ if(zh.includes("门票多少钱一张")) { push("门票多少钱？"); push("一张票多少钱？"); }
+ if(zh.includes("学生有优惠吗")) { push("学生票打折吗？"); push("学生可以买优惠票吗？"); }
+ if(zh.includes("可以拍照吗")) { push("里面能拍照吗？"); push("博物馆里允许拍照吗？"); }
+ if(zh.includes("怎么去博物馆")) { push("去博物馆怎么走？"); push("到博物馆怎么走？"); }
+ return list.filter((x,i,a)=>x && a.indexOf(x)===i).slice(0,5);
+}
+
+function taskKeywords(q){
+ const zh=q[0];
+ const map=[
+  ["什么时候开始",["什么时候","开始"]],["几点开始",["几点","开始"]],
+  ["多长时间",["多长时间","多久"]],["多少钱",["多少钱","多少","价格","费用","学费","房费","运费"]],
+  ["多少学生",["多少学生","多少人"]],["有多少学生",["多少学生","多少人"]],
+  ["包括早饭",["包括早饭","有早饭","含早饭"]],["入住",["入住","住进去"]],
+  ["Wi-Fi",["wi-fi","wifi","网络"]],["市中心",["市中心"]],
+  ["优惠",["优惠","打折","学生票"]],["拍照",["拍照","照相"]],["怎么去",["怎么去","怎么走","到"]],
+  ["有时间",["有时间","能预约","可以预约"]],["证件",["证件","护照","身份证"]],
+  ["地址",["地址","在哪儿"]],["改时间",["改时间","改预约","换时间"]],
+  ["出租车",["出租车","打车"]],["刷卡",["刷卡","银行卡"]],["行李",["行李","箱子"]],
+  ["外卖",["外卖","送餐"]],["辣不辣",["辣不辣","辣吗"]],["送到",["送到","送来"]],
+  ["最低消费",["最低消费","最低价"]],["现金",["现金"]],
+  ["修",["修","修理"]],["保证",["保证","保修"]],["零件",["零件","配件"]],
+  ["漏水",["漏水","水管"]],["尽快",["尽快","马上","快点"]],
+  ["有货",["有货","有吗"]],["黑色",["黑色"]],["尺码",["尺码","号"]],
+  ["打折",["打折","优惠"]],["留",["留","保留"]],
+  ["课程表",["课程表","时间表","什么时候上课"]],["体验课",["体验课","试听课"]],
+  ["会员费",["会员费","一个月多少钱"]],["游泳池",["游泳池"]],["教练",["教练"]],
+  ["适合几岁",["几岁","年龄"]],["星期几",["星期几","哪天"]],["带什么",["带什么","需要什么"]],
+  ["关门",["关门","闭馆"]],["借书证",["借书证","图书证"]],["罚款",["罚款"]],
+  ["多少行李",["多少行李","行李多少"]],["多少公斤",["多少公斤","公斤"]],
+  ["提前多长时间",["提前","多长时间","多久"]],["选座位",["选座位","座位"]],
+  ["有饭",["有饭","餐","吃的"]],
+  ["寄",["寄","邮寄"]],["查询",["查询","查"]],["包装",["包装","打包"]],["护照",["护照"]],
+  ["理发",["理发","剪头发"]],["发型师",["发型师","理发师"]],["取消预约",["取消预约","取消"]],
+  ["出租吗",["出租","还租"]],["房租",["房租","租金"]],["押金",["押金"]],
+  ["水电费",["水电费","水费","电费"]],["看房",["看房","看一下房子"]],
+  ["还有票",["还有票","有票"]],["最便宜",["最便宜","最低价"]],["座位",["座位"]],
+  ["退票",["退票","退款"]],
+  ["不能上网",["不能上网","没网","网络坏了"]],["怎么回事",["怎么回事","什么问题"]],
+  ["重新启动",["重新启动","重启"]],["维修人员",["维修人员","师傅","工作人员"]]
+ ];
+ const out=[];
+ map.forEach(([k,v])=>{if(zh.toLowerCase().includes(k.toLowerCase())) out.push(...v)});
+ return [...new Set(out)];
+}
+
+function validateAnswer(input, q){
+ const raw=input.trim();
+ if(!raw) return {state:"bad",msg:"Поле пока пустое."};
+ const n=normalizeChinese(raw);
+ const hardErrors=[
+  ["去在","去在 говорить нельзя. Выберите 去 + место или 在 + место + действие."],
+  ["怎么样去","Для «как добраться» используйте 怎么去 / 怎么走, а не 怎么样去."],
+  ["做照片","Нужно 拍照片, а не 做照片."],
+  ["这个照片","Нужно 这张照片, потому что счётное слово для фотографии — 张."]
+ ];
+ for(const [bad,msg] of hardErrors){if(n.includes(normalizeChinese(bad))) return {state:"bad",msg};}
+ if(n.includes("会不会拍照") && q[0].includes("可以拍照")) return {state:"bad",msg:"Здесь спрашиваем о разрешении: 可以拍照吗？"};
+ const variants=makeVariants(q).map(normalizeChinese);
+ if(variants.includes(n)) return {state:"ok",msg:"Отлично: это один из естественных вариантов."};
+ const kws=taskKeywords(q);
+ const hit=containsAny(n,kws);
+ const hasQuestion=/[吗呢？?]|(多少|几|怎么|什么|是不是|有没有|能不能|可不可以|远不远|辣不辣)/.test(raw);
+ if(hit && hasQuestion) return {state:"ok",msg:"Засчитано: смысл вопроса передан правильно, формулировка допустима."};
+ if(hit) return {state:"warn",msg:"Смысл понятен, но лучше оформить фразу именно как вопрос."};
+ return {state:"warn",msg:"Автоматическая проверка не увидела ключевой смысл. Сравните с вариантами ниже или спросите преподавателя."};
+}
+
+function taskWords(q){
+ const zh=q[0];
+ const base=taskKeywords(q);
+ const extra=[];
+ if(zh.includes("多少钱")) extra.push("价格","费用","大概");
+ if(zh.includes("什么时候")||zh.includes("几点")) extra.push("开始","开门","关门","可以");
+ if(zh.includes("怎么去")) extra.push("坐","地铁","公交车","走");
+ if(zh.includes("多长时间")) extra.push("大概","需要","一共");
+ return [...new Set([...base,...extra])].slice(0,10);
+}
+
+function renderTasks(){
+ const s=S[current];
+ const box=$("taskList"); box.innerHTML="";
+ s[5].slice(0,5).forEach((q,i)=>{
+   const variants=makeVariants(q);
+   const words=taskWords(q);
+   const row=document.createElement("div");
+   row.className="task-row";
+   row.innerHTML=`
+    <div class="task-head"><div class="task-num">${i+1}</div><div class="task-text">${q[2]}</div></div>
+    <div class="task-tools">
+      <button class="btn secondary" data-words="${i}">📚 Слова</button>
+      <button class="btn secondary" data-variants="${i}">💬 Варианты</button>
+    </div>
+    <div class="vocab-grid hidden" id="words_${i}">${vocabHTML(words,"data-insert",i)}</div>
+    <input class="answer-input" id="ans_${i}" placeholder="Введите свой вопрос по-китайски">
+    <div class="controls" style="margin-top:8px">
+      <button class="btn good" data-check="${i}">Проверить</button>
+    </div>
+    <div class="feedback" id="fb_${i}"></div>
+    <div class="variant-list hidden" id="variants_${i}">
+      ${variants.map((v,idx)=>`<div class="variant"><span class="level-badge ${idx===0?'level-natural':idx===1?'level-simple':'level-formal'}">${idx===0?'основной':idx===1?'проще':'вариант'}</span><div class="cn">${v}</div></div>`).join("")}
+    </div>`;
+   box.appendChild(row);
+ });
+ document.querySelectorAll("[data-check]").forEach(b=>b.onclick=()=>checkOne(+b.dataset.check));
+ document.querySelectorAll("[data-words]").forEach(b=>b.onclick=()=>document.getElementById("words_"+b.dataset.words).classList.toggle("hidden"));
+ document.querySelectorAll("[data-variants]").forEach(b=>b.onclick=()=>{
+ const box=document.getElementById("variants_"+b.dataset.variants);
+ const hidden=box.classList.toggle("hidden");
+ b.textContent=hidden ? "💬 Варианты" : "🙈 Скрыть варианты";
+});
+ document.querySelectorAll("[data-insert]").forEach(b=>b.onclick=()=>{
+   const inp=$("ans_"+b.dataset.insert);
+   inp.value += (inp.value && !inp.value.endsWith(" ") ? " " : "") + b.dataset.word;
+   inp.focus();
+ });
+ $("score").textContent="";
+ $("generalWords").className="vocab-grid"; $("generalWords").innerHTML=vocabHTML(s[4]);
+ document.querySelectorAll("[data-general]").forEach(b=>b.onclick=()=>{
+   const first=$("ans_0");
+   first.value += (first.value && !first.value.endsWith(" ") ? " " : "") + b.dataset.general;
+   first.focus();
+ });
+}
+
+function checkOne(i){
+ const q=S[current][5][i];
+ const input=$("ans_"+i).value;
+ const r=validateAnswer(input,q);
+ const fb=$("fb_"+i);
+ fb.className="feedback "+r.state;
+ fb.textContent=r.msg;
+ return r.state==="ok";
+}
+function checkAll(){
+ let ok=0;
+ for(let i=0;i<5;i++) if(checkOne(i)) ok++;
+ $("score").textContent=`Результат: ${ok} из 5 вопросов засчитаны.`;
+}
+function renderList(){
+ const el=$("list"); el.innerHTML="";
+ S.forEach((s,i)=>{const b=document.createElement("button");b.className="item"+(i===current?" active":"");b.innerHTML=`<b>${i+1}. ${s[1]}</b>`;b.onclick=()=>{current=i;render()};el.appendChild(b)})
+}
+function render(){
+ const s=S[current];
+ $("title").textContent=s[1]; $("desc").textContent=s[2]; $("mission").textContent="Задача: "+s[3];
+ $("avatar").textContent=s[0]; $("phoneTitle").textContent=s[1]; $("phoneStatus").textContent="Готово к звонку"; $("callPromptList").innerHTML=s[5].slice(0,5).map((q,i)=>`<div class="call-prompt"><div class="call-prompt-num">${i+1}</div><div>${q[2]}</div></div>`).join("");
+ $("hints").innerHTML=s[4].map(x=>`<span class="chip">${x}</span>`).join("");
+ $("answers").innerHTML=s[5].map((q,i)=>`<div class="q"><div class="cn">${i+1}. ${q[0]}</div><div class="py">${q[1]}</div><div class="ru">${q[2]}</div></div>`).join("");
+ $("hintsBox").classList.add("hidden"); $("answersBox").classList.add("hidden"); renderTasks(); renderList();
+}
+function ring(){
+ if(timer)return;
+ try{
+  audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+  $("phoneStatus").textContent="Звоним… тууу… тууу…";
+  let c=0;
+  timer=setInterval(()=>{
+   const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+   o.frequency.value=425;g.gain.value=.12;o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.7);
+   c++; if(c===3){clearInterval(timer);timer=null;setTimeout(()=>{$("phoneStatus").textContent="Вам ответили. Начинайте говорить!"; if(speechSynthesis){const u=new SpeechSynthesisUtterance("您好，请问有什么可以帮助您？");u.lang="zh-CN";speechSynthesis.speak(u)}},450)}
+  },1400);
+ }catch(e){$("phoneStatus").textContent="Начинайте говорить!"}
+}
+function hang(){if(timer){clearInterval(timer);timer=null}$("phoneStatus").textContent="Звонок завершён"; if(window.speechSynthesis)speechSynthesis.cancel()}
+$("callBtn").onclick=ring;$("callMain").onclick=ring;$("hangBtn").onclick=hang;
+$("hintsBtn").onclick=()=> $("hintsBox").classList.toggle("hidden");
+$("answersBtn").onclick=()=> $("answersBox").classList.toggle("hidden");
+$("randomBtn").onclick=()=>{current=Math.floor(Math.random()*S.length);render()};
+
+$("generalWordsBtn").onclick=()=> $("generalWordsBox").classList.toggle("hidden");
+$("checkAllBtn").onclick=checkAll;
+$("clearBtn").onclick=()=>{
+ for(let i=0;i<5;i++){ $("ans_"+i).value=""; $("fb_"+i).textContent=""; $("model_"+i).classList.add("hidden"); }
+ $("score").textContent=""; $("generalWordsBox").classList.add("hidden");
+};
+
+$("recordBtn").onclick=async()=>{
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  chunks=[]; recorder=new MediaRecorder(stream);
+  recorder.ondataavailable=e=>chunks.push(e.data);
+  recorder.onstop=()=>{const blob=new Blob(chunks,{type:"audio/webm"});audioURL=URL.createObjectURL(blob);$("recordStatus").textContent="Запись готова.";stream.getTracks().forEach(t=>t.stop())};
+  recorder.start();$("recordStatus").textContent="Идёт запись...";
+ }catch(e){$("recordStatus").textContent="Нет доступа к микрофону."}
+};
+$("stopBtn").onclick=()=>{if(recorder&&recorder.state==="recording")recorder.stop()};
+$("playBtn").onclick=()=>{if(audioURL)new Audio(audioURL).play();else $("recordStatus").textContent="Сначала запишите ответ."};
+render();
+</script>
+</body>
+</html>
